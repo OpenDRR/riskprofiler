@@ -1,2 +1,2 @@
 # riskprofiler
-Platform to Support Disaster Resilience
+Web Application to Support Disaster Resilience
