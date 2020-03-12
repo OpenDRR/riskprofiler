@@ -1,0 +1,11 @@
+<footer id="wb-info">
+	{% if page.footer %}
+	<div class="landscape">
+		<nav class="container wb-navcurr">
+			<h2 class="wb-inv">{{ page.i18n.tmpl-about-government[lang] }}</h2>
+			{% include footercontent.html %}
+		 </nav>
+	</div>
+	{% endif %}
+	{% include footerbrand.html %}
+</footer>

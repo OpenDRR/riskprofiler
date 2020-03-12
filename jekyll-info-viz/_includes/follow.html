@@ -1,0 +1,49 @@
+{% if page.pageType contains "theme, topic, gcaudience" %}
+{% else %}
+<div class="row">
+  <div class="col-xs-12 col-md-auto pull-right">
+{% endif %}
+    <section class="followus">
+      <h2>{{ site.data.i18n[so-title.lang] | escape }}</h2>
+      <ul>
+        <li><a href="#facebook" class="facebook wb-lbx"><span class="wb-inv">Facebook</span></a></li>
+        <li><a href="#" class="twitter" rel="external"><span class="wb-inv">Twitter</span></a></li>
+        <li><a href="#youtube" class="youtube wb-lbx"><span class="wb-inv">YouTube</span></a></li>
+        <li><a href="#" class="flickr" rel="external"><span class="wb-inv">Flickr</span></a></li>
+        <li><a href="#" class="googleplus" rel="external"><span class="wb-inv">Google+</span></a></li>
+        <li><a href="#" class="pinterest" rel="external"><span class="wb-inv">Pinterest</span></a></li>
+        <li><a href="#" class="linkedin" rel="external"><span class="wb-inv">LinkedIn</span></a></li>
+        <li><a href="#" class="instagram" rel="external"><span class="wb-inv">Instagram</span></a></li>
+        <li><a href="#" class="rss" rel="external"><span class="wb-inv">{{ site.data.i18n[so-rss.lang] | escape }}</span></a></li>
+        <li><a href="#" class="email" rel="external"><span class="wb-inv">{{ site.data.i18n[so-email.lang] | escape }}</span></a></li>
+        <li><a href="#" class="periscope" rel="external"><span class="wb-inv">Periscope</span></a></li>
+      </ul>
+    </section>
+    <section id="facebook" class="mfp-hide modal-dialog modal-content overlay-def">
+      <header class="modal-header">
+        <h2 class="modal-title">Facebook</h2>
+      </header>
+      <div class="modal-body">
+        <ul class="list-unstyled lst-spcd">
+          <li><a href="#" rel="external">{{ site.data.i18n[so-facebook1.lang] | escape }}</a></li>
+          <li><a href="#" rel="external">{{ site.data.i18n[so-facebook2.lang] | escape }}</a></li>
+        </ul>
+      </div>
+    </section>
+    <section id="youtube" class="mfp-hide modal-dialog modal-content overlay-def">
+      <header class="modal-header">
+        <h2 class="modal-title">YouTube</h2>
+      </header>
+      <div class="modal-body">
+        <ul class="list-unstyled lst-spcd">
+          <li><a href="#" rel="external">{{ site.data.i18n[so-youtube1.lang] | escape }}</a></li>
+          <li><a href="#" rel="external">{{ site.data.i18n[so-youtube2.lang] | escape }}</a></li>
+          <li><a href="#" rel="external">{{ site.data.i18n[so-youtube3.lang] | escape }}</a></li>
+        </ul>
+      </div>
+    </section>
+{% if page.pageType contains "theme, topic, gcaudience" %}
+{% else %}
+  </div>
+</div>
+{% endif %}

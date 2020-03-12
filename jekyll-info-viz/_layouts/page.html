@@ -1,0 +1,50 @@
+---
+layout: default
+---
+{% include promotion.html %}
+{% if page.secondarymenu == true %}
+<div class="container">
+  <div class="row">
+    <main property="mainContentOfPage" class="col-md-9 col-md-push-3" typeof="WebPageElement">
+{% else %}
+    <main property="mainContentOfPage" class="{% unless page.noMainContainer %}container{% endunless %}
+    {% case page.pageType %}
+      {% when 'institution' %}
+        gc-instttn
+      {% when 'organization' %}
+        gc-orgnztn
+      {% when 'theme' %}
+        gc-theme
+      {% when 'news' %}
+        gc-news
+      {% when 'advance service' %}
+        gc-advnc-srvc
+    {% endcase %}" typeof="WebPageElement">{% endif %}
+{% unless page.noContentTitle %}
+  {% assign navclass = page.pageclass | split: " " %}
+  {% unless navclass contains "page-type-nav" %}
+      <h1 property="name" id="wb-cont">{{ page.contentTitle }}</h1>
+  {% endunless %}
+{% endunless %}
+      {{ content }}
+      {% if page.deptfeatures %}
+        {% include deptfeatures.html %}
+      {% endif %}
+{%if page.dateModified %}
+  {% include datemodified.html %}
+{% else %}
+  {% assign date= "now" | date: "%Y-%m-%d" %}
+  {% include datemodified.html content=date %}
+{% endif %}
+</main>
+{% if page.secondarymenu == true %}
+  <nav class="wb-sec col-md-3  col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
+    <h2 id="wb-sec-h" class="wb-inv">{{ page.i18n.tmpl-section-menu[page.lang] }}</h2>
+    {% include secondarymenu.html %}
+  </nav>
+</div>
+</div>
+{% endif %}
+{% if page.armslength == true %}
+  {% include armslength-footer.html %}}
+{% endif %}

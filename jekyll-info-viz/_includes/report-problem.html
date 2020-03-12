@@ -1,0 +1,61 @@
+
+					<div class="gc-rprt-prblm">
+						<div class="gc-rprt-prblm-frm gc-rprt-prblm-tggl">
+							<form action="#">
+								<fieldset>
+									<legend><span class="field-name">{% if page.lang == "en" %}Please select all that apply: {% else %}Veuillez cocher toutes les réponses pertinentes&nbsp;:{% endif %}</span></legend>
+										<div class="checkbox">
+											<label for="problem1"><input type="checkbox" data-reveal="#broken" name="problem" value="Something is broken" id="problem1" />{% if page.lang == "en" %}Something is broken{% else %}Quelque chose ne fonctionne pas{% endif %}</label>
+										</div>
+										<div class="form-group hide" id="broken">
+											<label for="problem1-detail">{% if page.lang == "en" %}Provide more details (optional):{% else %}Fournissez plus des détails (optionnel)&nbsp;:{% endif %}</label>
+											<input type="text" class="form-control full-width" id="problem1-detail">
+										</div>
+										<div class="checkbox">
+											<label for="problem2"><input type="checkbox" data-reveal="#spelling" name="problem" value="It has spelling or grammar mistakes" id="problem2" />{% if page.lang == "en" %}The page has spelling or grammar mistakes{% else %}Il y a des erreurs d’orthographe ou de grammaire{% endif %}</label>
+										</div>
+										<div class="form-group hide" id="spelling">
+											<label for="problem2-detail">{% if page.lang == "en" %}Provide more details (optional):{% else %}Fournissez plus des détails (optionnel)&nbsp;:{% endif %}</label>
+											<input type="text" class="form-control full-width" id="problem2-detail">
+										</div>
+										<div class="checkbox">
+											<label for="problem3"><input type="checkbox" data-reveal="#wrong" name="problem" value="The information is wrong" id="problem3" />{% if page.lang == "en" %}The information is wrong{% else %}L’information est erronée{% endif %}</label>
+										</div>
+										<div class="form-group hide" id="wrong">
+											<label for="problem3-detail">{% if page.lang == "en" %}Provide more details (optional):{% else %}Fournissez plus des détails (optionnel)&nbsp;:{% endif %}</label>
+											<input type="text" class="form-control full-width" id="problem3-detail">
+										</div>
+										<div class="checkbox">
+											<label for="problem4"><input type="checkbox" data-reveal="#outdated" name="problem" value="The information is outdated" id="problem4" />{% if page.lang == "en" %}The information is outdated{% else %}L’information n’est plus à jour{% endif %}</label>
+										</div>
+										<div class="form-group hide" id="outdated">
+											<label for="problem4-detail">{% if page.lang == "en" %}Provide more details (optional):{% else %}Fournissez plus des détails (optionnel)&nbsp;:{% endif %}</label>
+											<input type="text" class="form-control full-width" id="problem4-detail">
+										</div>
+										<div class="checkbox">
+											<label for="problem5"><input type="checkbox" data-reveal="#find" name="problem" value="I can’t find what I’m looking for" id="problem5" />{% if page.lang == "en" %}I can’t find what I’m looking for{% else %}Je ne trouve pas ce que je cherche{% endif %}</label>
+										</div>
+										<div class="form-group hide" id="find">
+											<label for="problem5-detail">{% if page.lang == "en" %}Describe what you’re looking for (optional):{% else %}Décrivez ce que vous cherchez (optionnel)&nbsp;:{% endif %}</label>
+											<input type="text" class="form-control full-width" id="problem5-detail">
+										</div>
+										<div class="checkbox">
+											<label for="problem6"><input type="checkbox" data-reveal="#confusing" name="problem" value="It’s confusing" id="problem6" />{% if page.lang == "en" %}Other{% else %}Autre{% endif %}</label>
+										</div>
+										<div class="form-group hide" id="confusing">
+											<label for="problem6-detail">{% if page.lang == "en" %}Provide more details (optional):{% else %}Fournissez plus des détails (optionnel)&nbsp;:{% endif %}</label>
+											<input type="text" class="form-control full-width" id="problem6-detail">
+										</div>
+								</fieldset>
+								<button type="submit" class="btn btn-primary wb-toggle" data-toggle='{"stateOff": "hide", "stateOn": "show", "selector": ".gc-rprt-prblm-tggl"}'>{% if page.lang == "en" %}Submit{% else %}Soumettre{% endif %}</button>
+							</form>
+						</div>
+						<div class="gc-rprt-prblm-thnk gc-rprt-prblm-tggl hide">
+							<h3>{% if page.lang == "en" %}Thank you for your help!{% else %}Merci de votre aide!{% endif %}</h3>
+							{% if page.lang == "en" %}
+							<p>You will not receive a reply. For enquiries, please <a href="https://www.canada.ca/en/contact.html">contact us</a>.</p>
+							{% else %}
+							<p>Vous ne recevrez pas de réponse. Pour toute question, s’il vous plaît <a href="https://www.canada.ca/fr/contact.html">contactez-nous</a>.</p>
+							{% endif %}
+						</div>
+					</div>

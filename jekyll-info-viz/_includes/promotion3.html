@@ -1,0 +1,19 @@
+<aside class="jumbotron sub-promo visible-md visible-lg">
+	<div class="container">
+		<div class="row">
+			<h2 class="wb-inv">{{ page.i18n.tmpl-promo-title[page.lang] }}</h2>
+			<div class="col-md-6 col-offset-1">
+				<h2 class="h3">{{ page.title-promo1 }}</h2>
+				<p>{{ page.desc-promo1 }}</p>
+				<p class="text-center">
+					<a href="video-{{ page.lang }}.html" class="btn btn-primary text-center">{% if page.lang == "en" %}See the video{% else %}Voir la vidéo{% endif %}</a>
+				</p>
+			</div>
+			<div class="col-md-5 profileimage">
+				<a href="video-{{ page.lang }}.html">
+					<img src="http://dev3.canada.ca/video/{{ page.src-promo-video }}" alt="{{ page.desc-promo1 }}}" class="thumbnail" />
+				</a>
+			</div>
+		</div>
+	</div>
+</aside>
