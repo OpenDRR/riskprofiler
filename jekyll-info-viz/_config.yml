@@ -1,0 +1,287 @@
+# Site configuration
+# 1. Files excluded from Jekyll builds
+# 2. Installed Gems
+# 3. Gem settings
+# 4. Jekyll settings
+# 5. Collections
+# 6. Jekyll collections settings
+# 7. Site settings
+
+# 1. Files excluded from Jekyll builds
+exclude:
+- README.md
+- CODE_OF_CONDUCT.md
+- CONTRIBUTING.md
+- screenshot.png
+- LICENSE*
+- SECURITY.md
+- CNAME
+- "*.tmp"
+- Gemfile
+- Gemfile.lock
+- gcweb-jekyll.gemspec
+- .jekyll-cache
+- node_modules
+- vendor/bundle/
+- vendor/cache/
+- vendor/gems/
+- vendor/ruby/
+
+# 2. Installed Gems
+
+# 3. Gem settings
+
+# 4. Jekyll settings
+compress_html:
+  clippings: all
+  comments:
+  ignore:
+    envs: []
+  blanklines: true
+  profile: false
+quiet: false
+timezone: America/Toronto # Timezone for blog posts and alike
+themeJS: true
+verbose: false
+
+# 5. Collections
+
+# 6. Jekyll collections settings
+collections:
+  pages:
+    output: true
+    permalink: /:path
+  layout:
+    name: home
+    values:
+      altLangPrefix: home
+      layout: page
+      pageclass: home
+
+# 7. Site settings
+analytics_adobe: ""
+analytics_google: ""
+analytics_google_anonymize_ip: ""
+assets: "https://wet-boew.github.io/themes-dist"
+baseurl: ""
+css_inline: false # Will insert all styles into a single <style> block in the <head> element and remove the style <link> reference
+description:
+  en: "Jekyll variant for GCWeb theme" # English site description and default description
+  fr: "Adaption Jekyll du theme GCWeb" # French site description and default description
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: pages
+    values:
+      footer: true
+      i18n:
+        tmpl-about-government:
+          en: About government
+          fr: Au sujet du gouvernement
+        tmpl-about-site:
+          en: About this site
+          fr: À propos de ce site
+        tmpl-accountsettings:
+          en: Account settings
+          fr: Paramètres du compte
+        tmpl-archive-paragraph:
+          en: You can use it for research or reference.
+          fr: ous pouvez la consulter à des fins de recherche ou à titre de référence.
+        tmpl-archive-title:
+          en: We have archived this page and will not be updating it.,
+          fr: Nous avons archivé cette page et elle ne sera plus mise à jour.
+        tmpl-arms-description:
+          en: We are a federal institution that is part of the [portfolio name] portfolio. We operate at arm’s length from the Government of Canada.
+          fr: Nous sommes une institution fédérale qui fait partie du portefeuille de [nom du portefeuille]. Nous fonctionnons sans lien de dépendance avec le gouvernement.
+        tmpl-arms-image-alt:
+          en: Department name
+          fr: Nom du département
+        tmpl-date-mod:
+          en: Date modified
+          fr: Date de modification&#160;
+        tmpl-de-description:
+          en: Brief description of the feature being promoted.
+          fr: Brève description de l’élément en vedette.
+        tmpl-de-title:
+          en: Features
+          fr: En vedette
+        tmpl-de-title-link:
+          en: "[Feature hyperlink text]"
+          fr: "[Texte du lien à l’élément en vedette]"
+        tmpl-feedback:
+          en: Report a problem on this page
+          fr: Signaler un problème sur cette page
+        tmpl-gc-sig:
+          en: Government of Canada
+          fr: Gouvernement du Canada
+        tmpl-gc-wmms:
+          en: Symbol of the Government of Canada
+          fr: Symbole du gouvernement du Canada
+        tmpl-home:
+          en: Home
+          fr: Accueil
+        tmpl-lang-dir:
+          en: ltr
+          fr: ltr
+        tmpl-lang-native:
+          en: English
+          fr: Français
+        tmpl-lang-select:
+          en: Language selection
+          fr: Sélection de la langue
+        tmpl-menu-footer-about-contact-text:
+          en: Contact us
+          fr: Contactez-nous
+        tmpl-menu-footer-about-contact-link:
+          en: https://www.canada.ca/en/contact.html
+          fr: https://www.canada.ca/fr/contact.html
+        tmpl-menu-footer-about-departments-text:
+          en: Departments and agencies
+          fr: Ministères et organismes
+        tmpl-menu-footer-about-departments-link:
+          en: https://www.canada.ca/en/government/dept.html
+          fr: https://www.canada.ca/fr/gouvernement/min.html
+        tmpl-menu-footer-about-military-text:
+          en: Public service and military
+          fr: Fonction publique et force militaire
+        tmpl-menu-footer-about-military-link:
+          en: https://www.canada.ca/en/government/publicservice.html
+          fr: https://www.canada.ca/fr/gouvernement/fonctionpublique.html
+        tmpl-menu-footer-about-news-text:
+          en: News
+          fr: Nouvelles
+        tmpl-menu-footer-about-news-link:
+          en: https://www.canada.ca/en/news.html
+          fr: https://www.canada.ca/fr/nouvelles.html
+        tmpl-menu-footer-about-treaties-text:
+          en: Treaties, laws and regulations
+          fr: Traités, lois et règlements
+        tmpl-menu-footer-about-treaties-link:
+          en: https://www.canada.ca/en/government/system/laws.html
+          fr: https://www.canada.ca/fr/gouvernement/systeme/lois.html
+        tmpl-menu-footer-about-reporting-text:
+          en: Government-wide reporting
+          fr: Rapports à l'échelle du gouvernement
+        tmpl-menu-footer-about-reporting-link:
+          en: https://www.canada.ca/en/transparency/reporting.html
+          fr: https://www.canada.ca/fr/transparence/rapports.html
+        tmpl-menu-footer-about-pm-text:
+          en: Prime Minister
+          fr: Premier ministre
+        tmpl-menu-footer-about-pm-link:
+          en: https://pm.gc.ca/eng
+          fr: https://pm.gc.ca/fra
+        tmpl-menu-footer-about-government-text:
+          en: How government works
+          fr: Comment le gouvernement fonctionne
+        tmpl-menu-footer-about-government-link:
+          en: https://www.canada.ca/en/government/system.html
+          fr: https://www.canada.ca/fr/gouvernement/systeme.html
+        tmpl-menu-footer-about-open-text:
+          en: Open government
+          fr: ouvernement ouvert
+        tmpl-menu-footer-about-open-link:
+          en: https://open.canada.ca/en/
+          fr: https://ouvert.canada.ca/
+        tmpl-menu-footer-communications-social-text:
+          en: Social media
+          fr: Médias sociaux
+        tmpl-menu-footer-communications-social-link:
+          en: https://www.canada.ca/en/social.html
+          fr: https://www.canada.ca/fr/sociaux.html
+        tmpl-menu-footer-communications-mobile-text:
+          en: Mobile applications
+          fr: Applications mobiles
+        tmpl-menu-footer-communications-mobile-link:
+          en: https://www.canada.ca/en/mobile.html
+          fr: ttps://www.canada.ca/fr/mobile.html
+        tmpl-menu-footer-communications-about-text:
+          en: About Canada.ca
+          fr: À propos de Canada.ca
+        tmpl-menu-footer-communications-about-link:
+          en: https://www1.canada.ca/en/newsite.html
+          fr: https://www1.canada.ca/fr/nouveausite.html
+        tmpl-menu-footer-communications-terms-text:
+          en: Terms and conditions
+          fr: Avis
+        tmpl-menu-footer-communications-terms-link:
+          en: https://www.canada.ca/en/transparency/terms.html
+          fr: https://www.canada.ca/fr/transparence/avis.html
+        tmpl-menu-footer-communications-privacy-text:
+          en: Privacy
+          fr: Confidentialité
+        tmpl-menu-footer-communications-privacy-link:
+          en: https://www.canada.ca/en/transparency/privacy.html
+          fr: https://www.canada.ca/fr/transparence/confidentialite.html
+        tmpl-promo-title:
+          en: Promotions
+          fr: Promotions
+        tmpl-register:
+          en: Register
+          fr: Inscription
+        tmpl-search:
+          en: Search
+          fr: Recherche
+        tmpl-search-site:
+          en: Search Canada.ca
+          fr: Rechercher dans Canada.ca
+        tmpl-section-menu:
+          en: Section menu
+          fr: Menu de la section
+        tmpl-sign-on-info:
+          en: Sign-on information
+          fr: Information de l'utilisateur actuel
+        tmpl-signed-in-as:
+          en: Signed in as
+          fr: Connecté en tant que
+        tmpl-signin:
+          en: Sign in
+          fr: Ouvrir une session
+        tmpl-signout:
+          en: Sign out
+          fr: Fermer la session
+        tmpl-skip-about-site:
+          en: Skip to About this site
+          fr: Passer à «&#160;À propos de ce site&#160;»
+        tmpl-skip-cont:
+          en: Skip to main content
+          fr: Passer au contenu principal
+        tmpl-skip-section:
+          en: Skip to section menu
+          fr: Passer au menu de la section
+        tmpl-space:
+          en: "&#32;"
+          fr: "&#32;"
+        tmpl-terms:
+          en: Terms and conditions
+          fr: Avis
+        tmpl-toppage:
+          en: Top of Page
+          fr: Haut de la page
+        tmpl-you-are-here:
+          en: You are here
+          fr: Vous êtes ici&#160;
+      layout: "page"
+      javascripts:
+      lang: "en"
+      langtoggle: true
+      noMainContainer: false
+      noContentTitle: false
+      share: true
+      sitemenu: true
+      sitesearch: true
+      stylesheets:
+
+encoding: utf-8 # Make sure the encoding is right
+email: ""
+repo: "https://github.com/wet-boew/gcweb-jekyll"
+# service_worker: false # Will turn off the service worker if set to false
+stylesheets:
+  - href: "https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity: "sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+    crossorigin: "anonymous"
+theme-name: GCWeb
+title: "gcweb-jekyll" # Site name or title
+wetSiteRoot: "https://wet-boew.github.io/wet-boew"
