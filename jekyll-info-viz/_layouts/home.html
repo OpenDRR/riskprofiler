@@ -1,0 +1,179 @@
+---
+layout: page
+---
+{% assign lang = page.lang %} {% assign i18n = site.data.i18n-home %}
+<div class="experimental bg-cover" data-bgimg="https://www.canada.ca/content/dam/canada/carousel/bkg-home-banner.jpg">
+	<div class="container p-0 p-sm-3">
+		<div class="well header-rwd brdr-0 brdr-rds-0 text-white bg-gctheme">
+			<h1 property="name" id="wb-cont">{{ page.contentTitle }}</h1>
+			<p class="mrgn-tp-md">{{ i18n.byline[lang] }}</p>
+		</div>
+	</div>
+	<div class="bg-gctheme opct-90">
+		<div class="container">
+			<div class="row">
+				<div class="mrgn-tp-md mrgn-bttm-md col-xs-12">
+					<p class="pull-left text-white mrgn-bttm-0">{{ i18n.de-title[lang] }}&nbsp;</p>
+					<p class="pull-left mrgn-bttm-0"><a class="stretched-link text-white" href="#">{{ i18n.de-title-link[lang] }}</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<section class="home-most-requested well well-sm brdr-0">
+	<div class="container">
+		<h2 class="mrgn-tp-md">{{ i18n.tmpl-most-rquested[lang] }}</h2>
+		<ul class="wb-eqht list-unstyled mrgn-tp-md mrgn-bttm-sm lst-spcd-2 list-responsive">
+			<li><a href="https://www.canada.ca/en/government/sign-in-online-account.html">{{ i18n.tmpl-most-requested-item-1[lang] | escape }}</a></li>
+			<li><a href="https://www.canada.ca/en/services/benefits/ei.html">{{ i18n.tmpl-most-requested-item-2[lang] | escape }}</a></li>
+			<li><a href="https://www.canada.ca/en/services/benefits/publicpensions.html">{{ i18n.tmpl-most-requested-item-3[lang] | escape }}</a></li>
+			<li><a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-passports.html">{{ i18n.tmpl-most-requested-item-4[lang] | escape }}</a></li>
+			<li><a href="https://weather.gc.ca/canada_e.html">{{ i18n.tmpl-most-requested-item-5[lang] | escape }}</a></li>
+			<li><a href="https://www.canada.ca/en/government/grants-funding.html">{{ i18n.tmpl-most-requested-item-6[lang] | escape }}</a></li>
+			<li><a href="https://www.canada.ca/en/government/change-address.html">{{ i18n.tmpl-most-requested-item-7[lang] | escape }}</a></li>
+			<li><a href="http://www.healthycanadians.gc.ca/recall-alert-rappel-avis/index-eng.php">{{ i18n.tmpl-most-requested-item-8[lang] | escape }}</a></li>
+		</ul>
+	</div>
+</section>
+
+
+<section class="gc-srvinfo container">
+	<h2 class="wb-inv">{{ i18n.tmpl-srinfo[lang] | escape }}</h2>
+
+	<div class="wb-eqht row">
+
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/jobs.html">{{ i18n.tmpl-jobs[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-jobs-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/immigration-citizenship.html">{{ i18n.tmpl-immigration[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-immigration-desc[lang] | escape }}</p>
+		</div>
+
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://travel.gc.ca">{{ i18n.tmpl-travel[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-travel-desc[lang] | escape }}</p>
+		</div>
+
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/business.html">{{ i18n.tmpl-business[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-business-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/benefits.html">{{ i18n.tmpl-benefits[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-benefits-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/health.html">{{ i18n.tmpl-health[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-health-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/taxes.html">{{ i18n.tmpl-taxes[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-taxes-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/environment.html">{{ i18n.tmpl-environment[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-environment-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/defence.html">{{ i18n.tmpl-security[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-security-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/culture.html">{{ i18n.tmpl-culture[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-culture-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/policing.html">{{ i18n.tmpl-justice[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-justice-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/transport.html">{{ i18n.tmpl-transport[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-transport-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://international.gc.ca/world-monde/index.aspx?lang=eng">{{ i18n.tmpl-international[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-international-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/finance.html">{{ i18n.tmpl-finance[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-finance-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/science.html">{{ i18n.tmpl-science[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-science-desc[lang] | escape }}</p>
+		</div>
+	</div>
+</section>
+
+<section class="gc-srvinfo container mrgn-bttm-lg">
+	<h2>{{ i18n.tmpl-focus[lang] }}</h2>
+	<div class="wb-eqht row">
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.aadnc-aandc.gc.ca/eng/1461766373625/1461766394598">{{ i18n.tmpl-indigenous[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-indigenous-desc[lang] | escape }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/veterans.html">{{ i18n.tmpl-veterans[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-veterans-desc[lang] }}</p>
+		</div>
+		<div class="col-lg-4 col-md-6">
+			<h3><a href="https://www.canada.ca/en/services/youth.html">{{ i18n.tmpl-youth[lang] | escape }}</a></h3>
+			<p>{{ i18n.tmpl-youth-desc[lang] | escape }}</p>
+		</div>
+	</div>
+</section>
+
+<section class="home-your-gov gc-srvinfo well well-sm brdr-0">
+	<div class="container">
+		<h2>Your government</h2>
+		<div class="row mrgn-bttm-md">
+			<div class="col-lg-7 col-xs-12 col-md-6">
+				<div class="wb-eqht row">
+					<div class="col-lg-6">
+						<h3><a href="https://www.canada.ca/en/contact.html">Contact us</a></h3>
+						<p>Department and agency contacts, change your address</p>
+					</div>
+					<div class="col-lg-6">
+						<h3><a href="https://www.canada.ca/en/government/dept.html">Departments and agencies</a></h3>
+						<p>A list of current government and related organizations</p>
+					</div>
+					<div class="col-lg-6">
+						<h3><a href="https://www.canada.ca/en/government/system.html">How government works</a></h3>
+						<p>Government structure, priorities, finances and regulations</p>
+					</div>
+					<div class="col-lg-6">
+						<h3><a href="https://open.canada.ca/en">Open government</a></h3>
+						<p>Accessible government, open information and data, open dialogue</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="container">
+	<h2>Government initiatives</h2>
+	<div class="row">
+		<div class="col-sm-6">
+			<a class="figcaption" href="#">
+				<figure class="well well-sm brdr-rds-0">
+					<img class="img-responsive full-width" src="{{ site.assets }}/img/520x200.png" alt=""/>
+					<figcaption class="h5">[Feature hyperlink text]</figcaption>
+					<p>Brief description of the feature being promoted.</p>
+				</figure>
+			</a>
+		</div>
+		<div class="col-sm-6">
+			<a class="figcaption" href="#">
+				<figure class="well well-sm brdr-rds-0">
+					<img class="img-responsive full-width" src="{{ site.assets }}/img/520x200.png" alt=""/>
+					<figcaption class="h5">[Feature hyperlink text]</figcaption>
+					<p>Brief description of the feature being promoted.</p>
+				</figure>
+			</a>
+		</div>
+	</div>
+</section>

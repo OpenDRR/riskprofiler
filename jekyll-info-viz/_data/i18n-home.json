@@ -1,0 +1,66 @@
+{
+  "byline": {"en": "The official website of the Government of Canada", "fr": "Le site officiel du gouvernement du Canada"},
+  "de-title": {"en": "Featured", "fr": "En vedette&nbsp;"},
+  "de-title-link": {"en": "[Feature hyperlink text]", "fr": "[Lien à l’élément en vedette]"},
+  "tmpl-most-requested": {"en": "Most requested", "fr": "En demande"},
+  "tmpl-most-requested-item-1": {"en": "Login to an account", "fr": "Se connecter à un compte"},
+  "tmpl-most-requested-item-2": {"en": "Employment Insurance and leave", "fr": "Assurance-emploi et congés"},
+  "tmpl-most-requested-item-3": {"en": "Public pensions (CPP and OAS)", "fr": "Pensions publiques (RPC et SV)"},
+  "tmpl-most-requested-item-4": {"en": "Get a passport", "fr": "Obtenir un passeport"},
+  "tmpl-most-requested-item-5": {"en": "Weather", "fr": "Météo"},
+  "tmpl-most-requested-item-6": {"en": "Grants and funding", "fr": "Subventions et financement"},
+  "tmpl-most-requested-item-7": {"en": "Change your address", "fr": "Changer votre adresse"},
+  "tmpl-most-requested-item-8": {"en": "Product recalls and alerts", "fr": "Rappels et avis de sécurité"},
+  "tmpl-srvinfo": {"en": "Services and information", "fr": "Services et renseignements"},
+  "tmpl-jobs": {"en": "Jobs", "fr": "Emplois"},
+  "tmpl-jobs-desc": {"en": "Find a job, training, hiring programs, work permits, Social Insurance Number (SIN)", "fr": "Trouver un emploi, formation, programmes d'embauche, permis de travail, numéro d'assurance sociale (NAS)"},
+  "tmpl-immigration": {"en": "Immigration and citizenship", "fr": "Immigration et citoyenneté"},
+  "tmpl-immigration-desc": {"en": "Visit, work, study, immigrate, refugees, permanant residents, apply, check status", "fr": "Visiter, travailler, étudier, immigrer, réfugiés, résidents permanents, présenter une demande, vérifier l'état de la demande"},
+  "tmpl-travel": {"en": "Travel and tourism", "fr": "Voyage et tourisme"},
+  "tmpl-travel-desc": {"en": "In Canada or abroad, advice, advisories, passports, visit Canada, events, attractions", "fr": "Au Canada ou à l'étranger, conseils, avis, passeports, visiter le Canada, événements, attractions"},
+  "tmpl-business": {"en": "Business and industry", "fr": "Entreprises et industrie"},
+  "tmpl-business-desc": {"en": "Starting a business, permits, copyright, business support, selling to government", "fr": "Démarrer une entreprise, permis, propriété intellectuelle, soutien aux entreprises, vendre au gouvernement"},
+  "tmpl-benefits": {"en": "Benefits", "fr": "Prestation"},
+  "tmpl-benefits-desc": {"en": "EI, family and sickness leave, pensions, housing, student aid, disabilities", "fr": "Assurance emploi, congés familiaux et congés de maladie, pensions, logement, aide financière aux études, personnes invalides"},
+  "tmpl-health": {"en": "Health", "fr": "Santé"},
+  "tmpl-health-desc": {"en": "Food, nutrition, diseases, vaccines, drugs, product safety and recalls", "fr": "Alimentation, nutrition, maladies, vaccins, médicaments, sécurité des produits et rappels"},
+  "tmpl-taxes": {"en": "Taxes", "fr": "Impôts"},
+  "tmpl-taxes-desc": {"en": "Income tax, payroll, GST/HST, contribution limits, tax credits, charities", "fr": "Impôt sur le revenu, TPS/TVH, limites de contribution, credits d’impôt, organismes de charité"},
+  "tmpl-environment": {"en": "Environment and natural resources", "fr": "Environnement et ressources naturelles"},
+  "tmpl-environment-desc": {"en": "Weather, climate, agriculture, wildlife, pollution, conservation, fisheries", "fr": "Météo, climat, agriculture, faune, pollution, conservation, pêches"},
+  "tmpl-security": {"en": "National security and defence", "fr": "Sécurité nationale et défense"},
+  "tmpl-security-desc": {"en": "Military, transportation and cyber security, securing the border, counter-terrorism", "fr": "Militaire, cybersécurité, sûreté des transports, sécuriser la frontière, contre-terrorisme"},
+  "tmpl-culture": {"en": "Culture, history and sport", "fr": "Culture, histoire et sport"},
+  "tmpl-culture-desc": {"en": "Arts, media, heritage, official languages, national identity and funding", "fr": "Arts, médias, patrimoine, langues officielles, identité nationale et financement"},
+  "tmpl-justice": {"en": "Policing, justice and emergencies", "fr": "Services de police, justice et urgences"},
+  "tmpl-justice-desc": {"en": "Safety, justice system, prepare for emergencies, services for victims of crime", "fr": "Sécurité, justice, se préparer en cas d'urgence, services aux victimes d'actes criminels"},
+  "tmpl-transport": {"en": "Transport and infrastructure", "fr": "Transport et infrastructure"},
+  "tmpl-transport-desc": {"en": "Aviation, marine, road, rail, dangerous goods, infrastructure projects", "fr": "Aviation, transport maritime, transport routier, transport ferroviaire, marchandises dangereuses, projets d'infrastructure"},
+  "tmpl-international": {"en": "Canada and the world", "fr": "Le Canada et le monde"},
+  "tmpl-international-desc": {"en": "Foreign policy, trade agreements, development work, global issues", "fr": "Politique étrangère, ententes commerciales, développement international, enjeux mondiaux"},
+  "tmpl-finance": {"en": "Money and finances", "fr": "Argent et finances"},
+  "tmpl-finance-desc": {"en": "Personal finance, credit reports, fraud protection, paying for education", "fr": "Finances personnelles, dossiers de crédit, se protéger de la fraude, financer votre éducation"},
+  "tmpl-science": {"en": "Science and innovation", "fr": "Science et innovation"},
+  "tmpl-science-desc": {"en": "Scientific research on health, environment and space, grants and funding", "fr": "Recherche scientifique sur la santé, l'environnement et l'espace, subventions et financement"},
+  "tmpl-focus": {"en": "Focus on", "fr": ""},
+  "tmpl-indigenous": {"en": "Indigenous peoples", "fr": ""},
+  "tmpl-indigenous-desc": {"en": "Programs and services for First Nations, Inuit and Métis", "fr": ""},
+  "tmpl-veterans": {"en": "Veterans", "fr": ""},
+  "tmpl-veterans-desc": {"en": "Services for current and former military, <abbr title=\"Royal Canadian Mounted Police\">RCMP</abbr> and their families", "fr": ""},
+  "tmpl-youth": {"en": "Youth", "fr": ""},
+  "tmpl-youth-desc": {"en": "Programs and services for teenagers and young adults", "fr": ""}
+}
+/*   Your government
+  Contact us
+  Department and agency contacts, change your address
+  Departments and agencies
+  A list of current government and related organizations
+  How government works
+  Government structure, priorities, finances and regulations
+  Open government
+  Accessible government, open information and data, open dialogue
+  Government initiatives
+  [Feature hyperlink text]
+  Brief description of the feature being promoted.
+  [Feature hyperlink text]
+  Brief description of the feature being promoted. */

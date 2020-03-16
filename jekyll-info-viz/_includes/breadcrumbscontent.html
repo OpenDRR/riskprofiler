@@ -1,0 +1,12 @@
+{% unless page.pageclass contains "home" %}
+  {% if page.breadcrumbs %}
+    {% for breadcrumb in page.breadcrumbs %}
+      <li><a href="{{ breadcrumb.link | relative_url }}">{{ breadcrumb.title }}</a></li>
+    {% endfor %}
+  {% else %}
+<li>
+  <a href="{{ site.wetSiteRoot }}/index-{{ page.lang }}.html">{{ page.i18n.tmpl-home[page.lang] | escape }}</a>
+</li>
+<li>{{ page.contentTitle }}</li>
+  {% endif %}
+{% endunless %}

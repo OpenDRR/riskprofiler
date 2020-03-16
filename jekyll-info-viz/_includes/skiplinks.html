@@ -1,0 +1,13 @@
+<nav>
+		<ul id="wb-tphp">
+			<li class="wb-slc">
+				<a class="wb-sl" href="#wb-cont">{{ page.i18n.tmpl-skip-cont[page.lang] }}</a>
+			</li> {% if page.footer == true %}
+			<li class="wb-slc visible-sm visible-md visible-lg">
+				<a class="wb-sl" href="#wb-info">{{ page.i18n.tmpl-skip-about-site[page.lang] }}</a>
+			</li>{% endif %} {% if page.secondarymenu == true %}
+			<li class="wb-slc visible-md visible-lg">
+				<a class="wb-sl" href="#wb-sec">{{ page.i18n.tmpl-skip-section[page.lang] }}</a>
+			</li>{% endif %}
+		</ul>
+	</nav>

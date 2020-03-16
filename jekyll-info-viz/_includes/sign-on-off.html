@@ -1,0 +1,17 @@
+<section id="wb-so">
+	<h2 class="wb-inv">{{ page.i18n.tmpl-sign-on-info[page.lang] }}</h2>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+	{% if signed == "off" %}
+				<button class="btn btn-default" type="button">{{ page.i18n.tmpl-register[page.lang] }}</button>
+				<button class="btn btn-primary" type="button">{{ page.i18n.tmpl-signin[page.lang] }}</button>
+	{% else %}
+				<span class="mrgn-rght-md">{{ page.i18n.tmpl-signed-in-as[page.lang] }} <span class="wb-so-uname">John Doe</span></span>
+				<button class="btn btn-default" type="button">{{ page.i18n.tmpl-accountsettings[page.lang] }}</button>
+				<button class="btn btn-primary" type="button">{{ page.i18n.tmpl-signout[page.lang] }}</button>
+	{% endif %}
+			</div>
+		</div>
+	</div>
+</section>
