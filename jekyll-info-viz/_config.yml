@@ -63,9 +63,8 @@ analytics_adobe: ""
 analytics_google: ""
 analytics_google_anonymize_ip: ""
 assets: "https://wet-boew.github.io/themes-dist"
-url: opendrr.github.io
-baseurl: /jekyll-info-viz
-baseurl: ""
+url: "opendrr.github.io"
+baseurl: "/jekyll-info-viz"
 css_inline: false # Will insert all styles into a single <style> block in the <head> element and remove the style <link> reference
 description:
   en: "Jekyll variant for GCWeb theme" # English site description and default description
