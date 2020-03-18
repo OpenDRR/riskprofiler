@@ -1,6 +1,0 @@
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-  <script src="{{ site.assets }}/{{ site.theme-name }}/wet-boew/js/wet-boew.min.js"></script>
-  {% if site.themeJS == true %}<script src="{{ site.assets }}/{{ site.theme-name }}/js/theme.min.js"></script>{% endif %}
-  {% if section == "mobile-centre" %}<script src="{{ site.assets }}/js/whole-record-link.min.js"></script>{% endif %}
-  {% if page.javascripts %}{% for script in page.javascripts %}<script {% for attr in script %}{% if attr[0] == 'src' or attr[0] == 'data-main' %}{{ attr[0] }}="{{ attr[1] | relative_url }}" {% else %}{{ attr[0] }}="{{ attr[1] }}" {% endif %}{% endfor %}></script>{% endfor %}{% endif %}
