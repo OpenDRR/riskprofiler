@@ -1,5 +1,5 @@
 # riskprofiler
-Web Application to Support Disaster Resilience
+Web Application to Support Disaster Resilience / Application web pour soutenir la résilience aux catastrophes
 
 ## Progress Update
 
