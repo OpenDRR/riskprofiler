@@ -3,6 +3,9 @@ Web Application to Support Disaster Resilience / Application web pour soutenir l
 
 ## Progress Update
 
+### 2020-12-10
+* Planned - review of feedback on initial wireframes
+
 ### 2020-12-03
 
 * Inital [wireframe concepts](https://github.com/OpenDRR/riskprofiler/tree/master/docs/ux/2020-2021/wireframes/2020-12-03) presented by HabitatSeven
