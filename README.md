@@ -9,6 +9,7 @@ Web Application to Support Disaster Resilience / Application web pour soutenir l
 
 ### 2020-12-10
 * Review of feedback on initial wireframes
+* [Meeting minutes](https://github.com/OpenDRR/riskprofiler/wiki/Design-Meeting-Internal-December-10,-2020)
 
 ### 2020-12-03
 
