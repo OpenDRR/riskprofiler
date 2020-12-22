@@ -3,8 +3,11 @@ Web Application to Support Disaster Resilience / Application web pour soutenir l
 
 ## Progress Update
 
+### 2020-12-17
+* Reviewed initial concepts from Habitat Seven and provided feedback
+
 ### 2020-12-10
-* Planned - review of feedback on initial wireframes
+* Review of feedback on initial wireframes
 
 ### 2020-12-03
 
