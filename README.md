@@ -6,7 +6,7 @@ Web Application to Support Disaster Resilience / Application web pour soutenir l
 ### 2021-01-21
 
 ### 2021-01-14
-* Reviewed municipal view concepts from Habitat Seven and provided feedback
+* Reviewed municipal view [wireframe concepts](https://github.com/OpenDRR/riskprofiler/tree/master/docs/ux/2020-2021/wireframes/2021-01-14) from Habitat Seven and provided feedback
 * [Meeting minutes](https://github.com/OpenDRR/riskprofiler/wiki/Design-Meeting-Internal-January-14,-2021)
 
 ### 2021-01-07
