@@ -3,6 +3,10 @@ Web Application to Support Disaster Resilience / Application web pour soutenir l
 
 ## Progress Update
 
+### 2021-01-21
+
+### 2021-01-14
+
 ### 2021-01-07
 * Reviewed initial concepts from Habitat Seven and provided feedback
 * [Meeting minutes](https://github.com/OpenDRR/riskprofiler/wiki/Design-Meeting-Internal-January-7,-2021)
