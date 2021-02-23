@@ -3,6 +3,18 @@ Web Application to Support Disaster Resilience / Application web pour soutenir l
 
 ## Progress Update
 
+### 2021-02-18
+* Reviewed [wireframe concepts](https://github.com/OpenDRR/riskprofiler/tree/master/docs/ux/2020-2021/wireframes/2021-02-18) from Habitat Seven and provided feedback.
+* [Meeting minutes](https://github.com/OpenDRR/riskprofiler/wiki/Design-Meeting-Internal-February-18,-2021)
+
+### 2021-02-11
+* Reviewed [wireframe concepts](https://github.com/OpenDRR/riskprofiler/tree/master/docs/ux/2020-2021/wireframes/2021-02-11) from Habitat Seven and provided feedback.
+* [Meeting minutes](https://github.com/OpenDRR/riskprofiler/wiki/Design-Meeting-Internal-February-11,-2021)
+
+### 2021-02-04
+* Reviewed [wireframe concepts](https://github.com/OpenDRR/riskprofiler/tree/master/docs/ux/2020-2021/wireframes/2021-02-04) from Habitat Seven and provided feedback.
+* [Meeting minutes](https://github.com/OpenDRR/riskprofiler/wiki/Design-Meeting-Internal-February-4,-2021)
+
 ### 2021-01-28
 * Reviewed municipal view [wireframe concepts](https://github.com/OpenDRR/riskprofiler/tree/master/docs/ux/2020-2021/wireframes/2021-01-28) from Habitat Seven and provided feedback.
 * [Meeting minutes](https://github.com/OpenDRR/riskprofiler/wiki/Design-Meeting-Internal-January-28,-2021)
