@@ -1,6 +1,10 @@
 # riskprofiler
 Web Application to Support Disaster Resilience / Application web pour soutenir la résilience aux catastrophes
 
+## Milestones
+
+<img width="1081" alt="Screen Shot 2021-05-20 at 10 54 37 AM" src="https://user-images.githubusercontent.com/2255248/119026245-cbf52280-b959-11eb-9597-8eb40b22d1f9.png">
+
 ## Progress Update
 
 ### 2021-02-18
