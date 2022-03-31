@@ -27,6 +27,7 @@ services:
       - ./wp-app:/var/www/html
       - ./static-files:/var/www/html/site/assets/plugins/simply-static/static-files
       - ./db-backup:/usr/src/db-backup
+      - ./bin/wait-for-it.sh:/usr/local/bin/wait-for-it
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: "${DB_NAME}"
@@ -36,11 +37,16 @@ services:
       - db
       - wordpress
     command: >
-      sh -c 'sleep 30;
+      sh -c 'echo "Waiting for the db container to be ready...";
+        bash /usr/local/bin/wait-for-it db:3306 -t 60;
         if ! wp core is-installed; then
           echo "Importing WordPress database for RiskProfiler...";
           wp db import /usr/src/db-backup/wp_habitatseven_riskprofiler.sql;
+        else
+          echo "WordPress database was previously installed, skipping import."
         fi;
+        echo "To enter the WP-CLI container, run:";
+        echo "    docker exec -it riskprofiler-cms_wpcli_1 /bin/bash";
         sleep infinity'
 
   pma:
