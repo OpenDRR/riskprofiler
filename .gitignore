@@ -20,6 +20,7 @@ node_modules/
 # ignore log files and databases
 *.log
 *.sql
+!db-backup/*.sql
 *.sqlite
 
 **/.DS_Store
