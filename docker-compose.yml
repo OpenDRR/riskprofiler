@@ -45,6 +45,17 @@ services:
         else
           echo "WordPress database was previously installed, skipping import."
         fi;
+        if [[ -n $WP_ADMIN_USER && -n $WP_ADMIN_EMAIL && -n $WP_ADMIN_PASSWORD ]]; then
+          echo "Creating WordPress admin user \"${WP_ADMIN_USER}\"..."
+          wp user create "${WP_ADMIN_USER}" "${WP_ADMIN_EMAIL}" --role=administrator --user_pass="${WP_ADMIN_PASSWORD}";
+          echo "Updating admin email address to \"${WP_ADMIN_EMAIL}\"...";
+          wp option update admin_email "${WP_ADMIN_EMAIL}";
+        else
+          echo "Warning: WP_ADMIN_{USER,EMAIL,PASSWORD} not defined.";
+          echo "         WordPress admin user not automatically created.";
+          echo "See";
+          echo "https://developer.wordpress.org/cli/commands/user/create/WordPress";
+        fi;
         echo "To enter the WP-CLI container, run:";
         echo "    docker exec -it riskprofiler-cms_wpcli_1 /bin/bash";
         sleep infinity'
