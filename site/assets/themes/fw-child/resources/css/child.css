@@ -1,0 +1,928 @@
+@charset "UTF-8";
+@import './../vendor/font-awesome-pro/css/all.css';
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap");
+:root {
+  --swiper-theme-color: #d90429;
+  --swiper-pagination-bullet-inactive-color: #8d99ae;
+}
+
+@font-face {
+  font-family: "RPSans";
+  src: url("./../fonts/RPSans.woff") format("woff");
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "RPSans";
+  src: url("./../fonts/RPSans-Medium.woff") format("woff");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "RPSans";
+  src: url("./../fonts/RPSans-Bold.woff") format("woff");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "RPTitle";
+  src: url("./../fonts/RPTitle.woff") format("woff");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "RPIcons";
+  src: url("./../vendor/RPIcons-v1.0/fonts/RPIcons.eot?y0lbwn");
+  src: url("./../vendor/RPIcons-v1.0/fonts/RPIcons.eot?y0lbwn#iefix") format("embedded-opentype"), url("./../vendor/RPIcons-v1.0/fonts/RPIcons.ttf?y0lbwn") format("truetype"), url("./../vendor/RPIcons-v1.0/fonts/RPIcons.woff?y0lbwn") format("woff"), url("./../vendor/RPIcons-v1.0/fonts/RPIcons.svg?y0lbwn#RPIcons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+.rp-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "RPIcons" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-rank:before {
+  content: "";
+}
+
+.icon-chart:before {
+  content: "";
+}
+
+.icon-arrow-left:before {
+  content: "";
+}
+
+.icon-search:before {
+  content: "";
+}
+
+.icon-filter:before {
+  content: "";
+}
+
+.icon-sort:before {
+  content: "";
+}
+
+h6 {
+  font-weight: normal;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-outline-primary,
+.btn-outline-secondary {
+  color: #2b2c42;
+}
+
+.jumbo-btn {
+  border: none;
+  border-bottom: 0.375rem solid #d90429;
+}
+.jumbo-btn.btn-white {
+  color: #000;
+}
+
+.data-cols h6 {
+  margin-bottom: 0.125rem;
+  font-size: 0.625rem;
+  color: #9595a0;
+}
+.data-cols p {
+  margin-bottom: 0;
+}
+
+.font-size-xs {
+  font-size: 0.625rem;
+}
+
+.font-size-sm {
+  font-size: 0.75rem;
+}
+
+.font-size-lg {
+  font-size: 1.25rem;
+}
+
+.font-size-xl {
+  font-size: 1.5rem;
+}
+
+.font-size-2xl {
+  font-size: 1.875rem;
+}
+
+.breadcrumb {
+  font-family: "RPSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.breadcrumb-item.tip {
+  color: #8d99ae;
+}
+
+[data-toggle=collapse] {
+  cursor: pointer;
+}
+
+.accordion .card-header {
+  transition: 0.25s;
+}
+.accordion .card-header i {
+  transition: 0.25s;
+}
+.accordion .card-header.open {
+  color: #d90429;
+}
+.accordion .card-header.open i {
+  transform: rotate(180deg);
+}
+
+input.text-white::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+input.text-white::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+input.text-white::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+input.text-white:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+input.text-white:-moz-placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.spinner-border {
+  border-color: #8d99ae;
+  border-left-color: transparent;
+}
+
+#spinner {
+  top: auto;
+  bottom: 52%;
+  transform: translate(-50%, 0%);
+}
+
+#spinner-progress {
+  position: fixed;
+  top: 51%;
+  left: -9999px;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #8d99ae;
+  opacity: 0;
+  transition: left 0s ease 0.25s, opacity 0.25s ease 0s;
+  z-index: 2100;
+}
+
+body.spinner-on #spinner-progress {
+  transition: left 0s ease 0s, opacity 0.25s ease 0s;
+  left: 50%;
+  opacity: 1;
+}
+
+#main-header {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: #ecf1f4;
+  font-family: "RPSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-weight: 500;
+  z-index: 100;
+}
+#main-header a {
+  color: #2b2c42;
+}
+
+#header-logo img {
+  max-width: 60px;
+  margin: auto;
+}
+#header-logo .block-type-animation {
+  height: 60px;
+}
+
+#header-wordmark img {
+  max-width: 120px;
+}
+
+#header-primary {
+  font-size: 1.125rem;
+}
+#header-primary .current-nav-item a {
+  background-color: #fff;
+}
+#header-primary .nav-item:not(.current-nav-item) a:hover {
+  background-color: rgba(221, 224, 231, 0.4);
+}
+#header-primary a {
+  position: relative;
+  transition: 0.25s;
+}
+#header-primary a:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 0;
+  background-color: #d90429;
+  transition: 0.25s;
+}
+#header-primary a:hover {
+  color: #d90429;
+}
+#header-primary a:hover:after {
+  height: 0.375rem;
+}
+
+#header-secondary {
+  margin-bottom: 1.3rem;
+  font-size: 0.6875rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+#main-footer {
+  background-color: #ecf1f4;
+  font-size: 0.75rem;
+}
+
+#footer-logo img {
+  width: 100%;
+  max-width: 50px;
+}
+#footer-logo .image-wrap {
+  align-items: center;
+}
+
+.app-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.app-page #main-header {
+  position: relative;
+}
+.app-page #main-header a:after {
+  display: none;
+}
+.app-page #spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  left: -9999px;
+  opacity: 0;
+  transition: left 0s ease 0.25s, opacity 0.25s ease 0s;
+  background-color: rgba(255, 255, 255, 0.75);
+  z-index: 1900;
+}
+.app-page.spinner-on #spinner-overlay {
+  transition: left 0s ease 0s, opacity 0.25s ease 0s;
+  left: 0;
+  opacity: 1;
+}
+.app-page main {
+  flex-grow: 1;
+  z-index: initial;
+}
+.app-page .app-main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ecf1f4;
+  font-size: 0.875rem;
+}
+.app-page .app-main .section-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.app-page .app-main[data-mode=scenario-detail] .app-head .app-controls {
+  left: -25vw;
+  width: 0;
+}
+.app-page .app-main[data-mode=scenario-detail] .app-head .app-head-back {
+  opacity: 1;
+  left: 0;
+  width: 3rem;
+}
+.app-page .app-main[data-mode=scenario-detail].indicator-selected.charts-on .app-charts {
+  left: 25%;
+  opacity: 1;
+  transition: left 0.25s ease 0s, opacity 0.1s ease 0s;
+}
+.app-page .app-main[data-mode=scenario-detail].indicator-selected.charts-on .leaflet-left {
+  left: 50%;
+}
+.app-page .app-main[data-mode=scenario-detail].indicator-selected.charts-on .legend .items {
+  width: 50vw;
+}
+.app-page .app-main[data-mode=scenario-detail] .leaflet-control-container .leaflet-control-attribution {
+  opacity: 0;
+}
+.app-page .app-main[data-mode=risk-detail] .app-head .app-controls {
+  left: -25vw;
+  width: 0;
+}
+.app-page .app-main[data-mode=risk-detail] .app-head .app-head-back {
+  opacity: 1;
+  left: 0;
+  width: 3rem;
+}
+.app-page .app-container {
+  position: relative;
+  flex-grow: 1;
+}
+.app-page .app-head {
+  display: flex;
+}
+.app-page .app-head-back {
+  position: relative;
+  top: 0;
+  left: -3rem;
+  width: 0rem;
+  height: 3rem;
+  opacity: 0;
+  transition: 0.25s;
+  background-color: #d90429;
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 3rem;
+  text-align: center;
+  cursor: pointer;
+}
+.app-page .app-head-back:hover {
+  background-color: #8b0707;
+}
+.app-page .app-controls {
+  position: relative;
+  left: 0;
+  width: 25vw;
+  transition: 0.25s;
+  background-color: #8d99ae;
+  color: #fff;
+}
+.app-page .app-controls .app-controls-content {
+  display: flex;
+  height: 3rem;
+  transition: 0.25s;
+}
+.app-page .app-controls .control-toggles {
+  line-height: 3rem;
+  cursor: pointer;
+}
+.app-page .app-controls .control-toggle {
+  background-color: #50576c;
+  transition: 0.25s;
+}
+.app-page .app-controls .control-toggle:hover {
+  background-color: #5b637b;
+}
+.app-page .app-controls .control-toggle.open {
+  background-color: #636b80;
+}
+.app-page .app-sidebar {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25%;
+  height: 100%;
+  background-color: rgba(141, 153, 174, 0.92);
+  box-shadow: 0.25rem 0 rgba(43, 44, 66, 0.1);
+  transition: 0.25s;
+  z-index: 10;
+}
+.app-page .app-sidebar-control {
+  display: none;
+  background-color: #636b80;
+  color: #fff;
+}
+.app-page .app-sidebar-control .sort-item {
+  display: flex;
+  align-items: center;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  transition: 0.25s;
+  cursor: pointer;
+}
+.app-page .app-sidebar-control .sort-item[data-sort-order=desc] i {
+  transform: rotate(180deg);
+}
+.app-page .app-sidebar-control .sort-item:hover {
+  background-color: #50576c;
+}
+.app-page .app-sidebar-control .sort-item.selected {
+  background-color: #dde0e7;
+  color: #2b2c42;
+}
+.app-page .app-sidebar-control .sort-item.selected i {
+  opacity: 1;
+  color: #d90429;
+}
+.app-page .app-sidebar-control .sort-item h6 {
+  font-size: 0.75rem;
+}
+.app-page .app-sidebar-control .sort-item i {
+  font-size: 0.875rem;
+  opacity: 0.25;
+  transition: 0.25s;
+}
+.app-page .app-sidebar-content {
+  flex-grow: 1;
+  overflow: auto;
+}
+.app-page .app-charts {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0.25rem 0 rgba(43, 44, 66, 0.1);
+  opacity: 0;
+  transition: left 0.25s ease 0s, opacity 0.1s ease 0.15s;
+  z-index: 5;
+}
+.app-page .app-charts .chart-tab-content {
+  padding: 0.75rem;
+}
+.app-page .app-charts .chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background-color: #ecf1f4;
+  font-size: 0.75rem;
+}
+.app-page .app-charts .legend-item {
+  display: flex;
+  align-items: center;
+  flex: 0 0 50%;
+}
+.app-page .app-charts .legend-item .symbol {
+  width: 10px;
+  height: 10px;
+  margin-right: 0.75rem;
+  border-radius: 50%;
+}
+.app-page .app-charts .sticky-top {
+  box-shadow: 0 -1px #ecf1f4;
+}
+.app-page .app-charts .chart-tabs {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+.app-page .app-charts .chart-tabs a {
+  padding: 0.125rem 0.625rem;
+  color: #2b2c42;
+  transition: 0.25s;
+}
+.app-page .app-charts .highcharts-container {
+  overflow: visible;
+}
+.app-page #chart-data-placeholder caption {
+  display: none;
+}
+.app-page .app-breadcrumb {
+  transition: 0.25s;
+}
+.app-page .app-breadcrumb .breadcrumb {
+  height: 3rem;
+  padding-left: 1.75rem;
+  align-items: center;
+}
+.app-page .app-breadcrumb .breadcrumb-item {
+  padding-right: 0.25rem;
+}
+.app-page .app-breadcrumb .breadcrumb-item:not(:first-child):before {
+  content: "";
+  border: 5px solid transparent;
+  border-left-color: #9595a0;
+}
+.app-page .togglebox {
+  margin-right: 0.75rem;
+  border-radius: 50px;
+}
+.app-page .togglebox .switch {
+  box-shadow: none;
+  border-radius: 50%;
+  border: 3px solid #ecf1f4;
+}
+.app-page .togglebox[data-state=on] .switch {
+  background-color: #fff;
+  border-color: #8d99ae;
+}
+.app-page .togglebox.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.app-page h6 {
+  font-size: 0.625rem;
+}
+.app-page .app-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.app-page #map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.app-page .leaflet-left {
+  left: 25%;
+  transition: 0.25s;
+}
+.app-page .leaflet-left .leaflet-control {
+  margin-left: 1rem;
+}
+.app-page .leaflet-bottom .leaflet-control-zoom {
+  margin-bottom: 1rem;
+}
+.app-page .leaflet-bottom.leaflet-left {
+  z-index: 1001;
+}
+.app-page .leaflet-control-container .leaflet-control-attribution {
+  font-size: 0.625rem;
+  opacity: 1;
+  transition: opacity 0.25s;
+}
+.app-page .leaflet-control-container .leaflet-control-layers,
+.app-page .leaflet-control-container .leaflet-control-zoom {
+  border: none;
+}
+.app-page .leaflet-control-container .leaflet-control-layers a,
+.app-page .leaflet-control-container .leaflet-control-zoom a {
+  width: 50px;
+  height: 50px;
+  font-size: 25px;
+  line-height: 50px;
+  border-radius: 0;
+  border-bottom: none;
+  margin-bottom: 1rem;
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.2);
+  transition: 0.25s;
+}
+.app-page .leaflet-control-container .leaflet-control-layers a:hover,
+.app-page .leaflet-control-container .leaflet-control-zoom a:hover {
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.3);
+}
+.app-page .leaflet-control-container .leaflet-control-layers a:last-child,
+.app-page .leaflet-control-container .leaflet-control-zoom a:last-child {
+  margin-bottom: 0;
+}
+.app-page .leaflet-tooltip {
+  padding: 0.25rem 0.375rem;
+  border-radius: 0;
+}
+.app-page[data-sidebar-width=half] .app-sidebar {
+  width: 50%;
+}
+.app-page[data-sidebar-width=half] .leaflet-left {
+  left: 50%;
+}
+.app-page.admin-bar {
+  height: calc(100vh - 32px);
+}
+.app-page .legend {
+  margin: 0 !important;
+}
+.app-page .legend h6 {
+  margin-bottom: 0;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+  pointer-events: none;
+  text-shadow: 0 1px #fff;
+}
+.app-page .legend .items {
+  display: flex;
+  width: 75vw;
+  transition: 0.25s;
+}
+.app-page .legend .legend-item {
+  flex-grow: 1;
+  height: 0.75rem;
+  opacity: 0.8;
+}
+.app-page .leaflet-pulsing-icon {
+  box-shadow: none;
+}
+.app-page .leaflet-pulsing-icon:after {
+  box-shadow: 0 0 0 2px #2b2c42 !important;
+}
+
+.home #main-header {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.home #header-primary a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.home #hero h1 {
+  font-size: 3.75rem;
+}
+@media (max-width: 1200px) {
+  .home #hero h1 {
+    font-size: calc(1.5rem + 3vw);
+  }
+}
+.home #quick-links {
+  font-size: 1.25rem;
+  font-family: "RPSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-weight: 500;
+}
+.home #quick-links li {
+  margin-bottom: 0.5rem;
+}
+.home main p {
+  font-size: 1.25rem;
+}
+
+#home-features h6 {
+  color: #9595a0 !important;
+}
+
+#home-training:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% * (11 / 12));
+  height: 100%;
+  background-color: rgba(236, 241, 244, 0.6);
+}
+#home-training .carousel-controls * {
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+}
+#home-training .carousel-controls .carousel-pagination {
+  order: 1;
+}
+#home-training .carousel-controls .carousel-pagination .swiper-pagination {
+  position: relative;
+  bottom: auto;
+  text-align: left;
+}
+#home-training .carousel-controls .arrow-prev {
+  order: 2;
+}
+#home-training .carousel-controls .arrow-next {
+  order: 3;
+  margin-left: 1rem;
+}
+
+.scenario-cluster {
+  width: 40px;
+  height: 40px;
+  font-size: 1.125rem;
+  line-height: 40px;
+  text-align: center;
+  font-family: "RPTitle", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background: #d90429;
+  color: #fff;
+  border-radius: 50%;
+}
+
+.sidebar-item {
+  position: relative;
+}
+.sidebar-item.scenario {
+  border: 0px solid #fff;
+  transition: 0.25s;
+  box-shadow: 0 0.5rem 1rem rgba(43, 44, 66, 0.15);
+  cursor: pointer;
+}
+.sidebar-item.scenario .sidebar-item-body {
+  position: relative;
+  z-index: 2;
+}
+.sidebar-item.scenario .data-cols p {
+  font-size: 0.75rem;
+}
+.sidebar-item.scenario .sidebar-button {
+  background-color: #d90429;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: "RPSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  transition: all 0.25s ease 0s;
+  opacity: 0;
+  max-height: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.sidebar-item.scenario .sidebar-button:hover {
+  background-color: #8b0707;
+}
+.sidebar-item.scenario.selected {
+  border: 3px solid #fff;
+  box-shadow: 0 0.375rem 0.625rem rgba(43, 44, 66, 0.4);
+}
+.sidebar-item.scenario.selected .sidebar-button {
+  opacity: 1;
+  max-height: 100px;
+  padding: 0.75rem;
+  pointer-events: auto;
+  transition: all 0.25s ease 0.15s;
+}
+
+.sidebar-detail.scenario .card-header {
+  font-family: "RPTitle", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1.125rem;
+}
+.sidebar-detail.scenario .indicator-item {
+  cursor: pointer;
+}
+.sidebar-detail.scenario .indicator-item.selected {
+  color: #d90429;
+}
+.sidebar-detail.scenario li.indicator-item {
+  transition: 0.25s;
+}
+.sidebar-detail.scenario li.indicator-item:hover {
+  background-color: #dde0e7;
+}
+.sidebar-detail.scenario li.indicator-item.selected {
+  background-color: #dee2e6;
+}
+
+.sidebar-item.city {
+  padding-top: 0.5rem;
+  font-weight: 500;
+  transition: 0.25s;
+}
+.sidebar-item.city .sidebar-item-value {
+  width: 15%;
+  font-family: "RPTitle", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+.sidebar-item.city .sidebar-item-header {
+  font-size: 0.8125rem;
+}
+.sidebar-item.city .sidebar-item-province {
+  font-size: 0.625rem;
+  color: #8d99ae;
+}
+.sidebar-item.city.hover {
+  background-color: #ecf1f4;
+}
+.sidebar-item.city.selected {
+  background-color: #dee2e6;
+}
+
+.risk-popup {
+  color: #d90429;
+}
+.risk-popup .leaflet-popup-content {
+  min-width: 25vw;
+  margin: 0;
+}
+.risk-popup .risk-popup-city {
+  font-size: 1.25rem;
+}
+
+#download-table-head {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+.admin-bar #download-table-head {
+  top: 32px;
+}
+
+.post-preview.type-download {
+  font-size: 0.75rem;
+}
+.post-preview.type-download p {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  font-family: "RPSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-weight: 500;
+}
+.post-preview.type-download .btn {
+  line-height: 1;
+}
+.post-preview.type-download .btn i {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.post-preview.type-download .btn:hover {
+  color: #fff;
+}
+.post-preview.type-download .btn:hover i {
+  color: #fff;
+}
+
+.swiper-pagination-bullet {
+  transition: 0.25s;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.togglebox-input {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  opacity: 0;
+}
+
+.togglebox {
+  display: block;
+  width: calc(1rem + 1.25rem);
+  position: relative;
+  background-color: #ecf1f4;
+  transition: background-color 0.25s;
+  color: #fff;
+  line-height: 1;
+  cursor: grab;
+  overflow: hidden;
+}
+.togglebox .togglebox-track {
+  width: calc((1rem + 1.25rem) * 2);
+  margin-left: -1rem;
+  white-space: nowrap;
+  transition: 0.25s;
+}
+.togglebox .on,
+.togglebox .off {
+  display: inline-block;
+  width: 1rem;
+  line-height: 1.25rem;
+  text-align: center;
+  vertical-align: top;
+}
+.togglebox .switch {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: #8d99ae;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition: 0.25s;
+  vertical-align: top;
+}
+.togglebox:hover .switch {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.togglebox[data-state=on] {
+  background-color: #8d99ae;
+}
+.togglebox[data-state=on] .togglebox-track {
+  margin-left: 0;
+}
+
+/*# sourceMappingURL=child.css.map */
