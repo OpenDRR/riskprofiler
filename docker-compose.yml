@@ -9,7 +9,7 @@ services:
     volumes:
       - ./config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
       - ./wp-app:/var/www/html  # Full WordPress project
-      - ./static-files:/var/www/html/site/assets/plugins/simply-static/static-files
+      - ./html_static:/var/www/html_static
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: "${DB_NAME}"
@@ -30,40 +30,22 @@ services:
     volumes:
       - ./config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
       - ./wp-app:/var/www/html
-      - ./static-files:/var/www/html/site/assets/plugins/simply-static/static-files
       - ./db-backup:/usr/src/db-backup
       - ./bin/wait-for-it.sh:/usr/local/bin/wait-for-it
+      - ./bin/init-db-and-generate-static-site.sh:/usr/local/bin/init-db-and-generate-static-site
+      - ./html_static:/var/www/html_static
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: "${DB_NAME}"
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: "${DB_ROOT_PASSWORD}"
+      WP_ADMIN_USER:          # read from .env
+      WP_ADMIN_EMAIL:         # read from .env
+      WP_ADMIN_PASSWORD:      # read from .env
     depends_on:
       - db
       - wordpress
-    command: >
-      sh -c 'echo "Waiting for the db container to be ready...";
-        bash /usr/local/bin/wait-for-it db:3306 -t 60;
-        if ! wp core is-installed; then
-          echo "Importing WordPress database for RiskProfiler...";
-          wp db import /usr/src/db-backup/wp_habitatseven_riskprofiler.sql;
-        else
-          echo "WordPress database was previously installed, skipping import."
-        fi;
-        if [[ -n $WP_ADMIN_USER && -n $WP_ADMIN_EMAIL && -n $WP_ADMIN_PASSWORD ]]; then
-          echo "Creating WordPress admin user \"${WP_ADMIN_USER}\"..."
-          wp user create "${WP_ADMIN_USER}" "${WP_ADMIN_EMAIL}" --role=administrator --user_pass="${WP_ADMIN_PASSWORD}";
-          echo "Updating admin email address to \"${WP_ADMIN_EMAIL}\"...";
-          wp option update admin_email "${WP_ADMIN_EMAIL}";
-        else
-          echo "Warning: WP_ADMIN_{USER,EMAIL,PASSWORD} not defined.";
-          echo "         WordPress admin user not automatically created.";
-          echo "See";
-          echo "https://developer.wordpress.org/cli/commands/user/create/WordPress";
-        fi;
-        echo "To enter the WP-CLI container, run:";
-        echo "    docker exec -it riskprofiler-cms_wpcli_1 /bin/bash";
-        sleep infinity'
+    command: /usr/local/bin/init-db-and-generate-static-site
 
   pma:
     image: phpmyadmin:5.1.3     # https://hub.docker.com/_/phpmyadmin/
