@@ -1,0 +1,36 @@
+name: Export static site for RiskProfiler.ca
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  export-static-site:
+    runs-on: ubuntu-20.04
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    env:
+      DOCKER_BUILDKIT: 1
+      TZ: America/Vancouver
+
+    steps:
+      - name: Checkout OpenDRR/riskprofiler-cms
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Run "docker compose up" to export static site for Risk Profiler
+        run: |
+          export DOCKER_WP_UID_GID="$(id -u):$(id -g)"
+          docker compose up --abort-on-container-exit --exit-code-from wpcli
+
+      - name: Deploy to gh-pages branch as GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html_static/simply-static-output
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: simply-static-debug-log
+          path: wp-app/site/assets/plugins/simply-static/debug.txt
