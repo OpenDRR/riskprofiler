@@ -20,11 +20,12 @@ import_db() {
 	fi
 }
 
-disable_wp_auto_update() {
-	echo "Disabling WordPress auto-update"
-	wp option update auto_update_core_dev 'disabled'
-	wp option update auto_update_core_major 'disabled'
-	wp option update auto_update_core_minor 'disabled'
+update_wp_core_and_simply_static() {
+	# Updating WordPress core and Simply Static adds about 1 minute to the build.
+	echo "Updating WordPress core and Simply Static plugin..."
+	wp core update
+	wp plugin update simply-static
+	wp core update-db
 }
 
 create_wp_admin_user() {
@@ -118,9 +119,18 @@ simply_static_site_export() {
 main() {
 	echo "Running $0 as $(id -u):$(id -g)"
 
+	# Set $HOME to somewhere writable so that e.g. "wp update core"
+	# can write to $WP_CLI_CACHE_DIR which defaults to $HOME/.wp-cli/cache
+	export HOME="/tmp/${UID}"
+	mkdir -p "${HOME}"
+
 	import_db
-	disable_wp_auto_update
 	create_wp_admin_user
+
+	# Updating WordPress core and Simply Static would add about 1 minute to the build,
+	# thus disabled by default.
+	#update_wp_core_and_simply_static
+
 	configure_simply_static
 	simply_static_site_export
 
