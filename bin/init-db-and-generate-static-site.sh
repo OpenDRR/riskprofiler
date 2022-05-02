@@ -6,6 +6,8 @@
 # and generate static HTML files using Simply Static plugin, for the
 # Risk Profiler website to be published at https://www.riskprofiler.ca/
 
+set -eo pipefail
+
 import_db() {
 	echo "Waiting for the db container to be ready..."
 	bash /usr/local/bin/wait-for-it db:3306 -t 60
@@ -95,19 +97,21 @@ configure_simply_static() {
 	wp option get simply-static
 }
 
-generate_static_site() {
+simply_static_site_export() {
 	set -x
 	wp cron event schedule 'simply_static_site_export_cron'
+	#wp cron event run 'simply_static_site_export_cron'
 	wp cron event list
 	wp cron event run --due-now
-
-	until wp option pluck simply-static 'archive_status_messages' 'done' >/dev/null; do
-		sleep 5
-		# The site export task often gets interrupted or stuck for some yet-to-be-determined reason.
-		# Thankfully, the "wp cron event run --all" (not --due-now) command is able to resume the export.
-		wp cron event run --all
-	done
 	set +x
+
+	# Wait until Simply Static export finishes (normally less than 1 minute)
+	timeout 2m bash -c "until wp option pluck simply-static 'archive_status_messages' 'done' >/dev/null; do sleep 1; done"
+	# The export shouldn't get interrupted unless there are errors such as such as WP_SITEURL got set to http:///site/ (empty hostname).
+	# Inserting "wp cron event run --all" to the wait loop above may be able to force the interrupted task to completion,
+	# but the export may be incomplete, and should only be used in "emergency".
+
+	# Show status messages from the completed Simply Static export run
 	wp option pluck simply-static 'archive_status_messages'
 }
 
@@ -118,7 +122,7 @@ main() {
 	disable_wp_auto_update
 	create_wp_admin_user
 	configure_simply_static
-	generate_static_site
+	simply_static_site_export
 
 	sleep 1
 	echo "Done!"
