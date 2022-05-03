@@ -72,14 +72,16 @@ configure_simply_static() {
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-bar.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-filter.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-sort.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/detail.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/items.php
 	EOF
 
 	wp option patch update simply-static 'additional_files' <<-EOF
 		/var/www/html/site/assets/themes/fw-child/resources/css/child.css.map
-		/var/www/html/site/assets/themes/fw-child/resources/vendor/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js.map
+		/var/www/html/site/assets/themes/fw-child/resources/css/highcharts.css.map
+		/var/www/html/site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/highcharts.js.map
 		/var/www/html/site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/modules/export-data.js.map
+		/var/www/html/site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/modules/exporting.js.map
+		/var/www/html/site/assets/themes/fw-child/resources/vendor/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js.map
 		/var/www/html/site/assets/themes/fw-parent/resources/css/global.css.map
 		/var/www/html/site/assets/themes/fw-parent/resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js.map
 		/var/www/html/site/assets/uploads/2021/10/lf20_mmrbfbcv.json
@@ -116,6 +118,46 @@ simply_static_site_export() {
 	wp option pluck simply-static 'archive_status_messages'
 }
 
+fixup_static_site() {
+	pushd /var/www/html_static
+	if [[ -e riskprofiler ]]; then
+		suffix=1
+		while [[ -e riskprofiler.old.$suffix ]]; do
+			suffix=$((suffix+1))
+		done
+		mv riskprofiler "riskprofiler.old.${suffix}"
+	fi
+	cp -a simply-static-output riskprofiler
+
+	cd riskprofiler
+
+	# The relative path to the animated logo is currently wrong in HTML files
+	# in the second-level directory
+	for i in */index.html; do
+		sed -E -i 's#data-anim-path="\.\/site#data-anim-path="../site#' "${i}"
+	done
+
+	# Change PHP file paths to relative paths to allow serving from subdirectories
+	sed -E -i "s#url: '/site#url: '../site#" site/assets/themes/fw-child/resources/js/profiler.js
+
+	# Read and display names of scenarios from WordPress posts
+	# Example: scenarios=([0]="georgia-strait" [1]="val-des-bois" [2]="cascadia-interface-best-fault" [3]="sidney" [4]="leech-river-full-fault")
+	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
+	declare -p scenarios
+
+	# Download scenario/ redirects
+	for i in "${scenarios[@]}"; do
+		mkdir -p "scenario/${i}"
+		curl -o "scenario/${i}/index.html" "http://riskprofiler.demo/${i}/"
+	done
+
+	# Fix links to redirects
+	sed -E -i 's#("url":")(https?:\\/\\/)?[^/]+/?#\1..\\/..\\/..\\/..\\/..\\/#' site/assets/themes/fw-child/template/scenarios/items.php
+	sed -E -i 's#"url":".[^"]*#&index.html#' site/assets/themes/fw-child/template/scenarios/items.php
+
+	popd
+}
+
 main() {
 	echo "Running $0 as $(id -u):$(id -g)"
 
@@ -133,11 +175,13 @@ main() {
 
 	configure_simply_static
 	simply_static_site_export
+	fixup_static_site
 
-	sleep 1
 	echo "Done!"
-	echo "Static site exported to: html_static/simply-static-output/"
-	echo "Simply Static debug log: wp-app/site/assets/plugins/simply-static/debug.txt"
+	echo
+	echo "Raw static site export: html_static/simply-static-output/"
+	echo " Site export debug log: wp-app/site/assets/plugins/simply-static/debug.txt"
+	echo "  Fixed-up static site: html_static/riskprofiler/"
 
 	if [[ "${KEEP_WPCLI_RUNNING,,}" =~ ^(true|1|y|yes|on)$ ]]; then
 		echo

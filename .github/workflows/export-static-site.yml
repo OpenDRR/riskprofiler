@@ -28,7 +28,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./html_static/simply-static-output
+          publish_dir: ./html_static/riskprofiler
 
       - uses: actions/upload-artifact@v3
         with:
