@@ -185,7 +185,7 @@ main() {
 
 	if [[ "${KEEP_WPCLI_RUNNING,,}" =~ ^(true|1|y|yes|on)$ ]]; then
 		echo
-		echo "To enter the WP-CLI container, run:"
+		echo "Since KEEP_WPCLI_RUNNING is true, you may enter WP-CLI container using:"
 		echo "    docker exec -it riskprofiler-cms_wpcli_1 /bin/bash"
 		sleep infinity
 	fi
