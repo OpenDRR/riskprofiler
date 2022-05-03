@@ -119,7 +119,13 @@ simply_static_site_export() {
 }
 
 fixup_static_site() {
+	# Read and display names of scenarios from WordPress posts
+	# Example: scenarios=([0]="georgia-strait" [1]="val-des-bois" [2]="cascadia-interface-best-fault" [3]="sidney" [4]="leech-river-full-fault")
+	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
+	declare -p scenarios
+
 	pushd /var/www/html_static
+
 	if [[ -e riskprofiler ]]; then
 		suffix=1
 		while [[ -e riskprofiler.old.$suffix ]]; do
@@ -139,11 +145,6 @@ fixup_static_site() {
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
 	sed -E -i "s#url: '/site#url: '../site#" site/assets/themes/fw-child/resources/js/profiler.js
-
-	# Read and display names of scenarios from WordPress posts
-	# Example: scenarios=([0]="georgia-strait" [1]="val-des-bois" [2]="cascadia-interface-best-fault" [3]="sidney" [4]="leech-river-full-fault")
-	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
-	declare -p scenarios
 
 	# Download scenario/ redirects
 	for i in "${scenarios[@]}"; do
