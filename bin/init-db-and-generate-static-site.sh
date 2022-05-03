@@ -119,6 +119,8 @@ simply_static_site_export() {
 }
 
 fixup_static_site() {
+	set -x
+
 	# Read and display names of scenarios from WordPress posts
 	# Example: scenarios=([0]="georgia-strait" [1]="val-des-bois" [2]="cascadia-interface-best-fault" [3]="sidney" [4]="leech-river-full-fault")
 	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
@@ -149,13 +151,34 @@ fixup_static_site() {
 	# Download scenario/ redirects
 	for i in "${scenarios[@]}"; do
 		mkdir -p "scenario/${i}"
-		curl -o "scenario/${i}/index.html" "http://riskprofiler.demo/${i}/"
+		# curl option -f, --fail ensures the it fails on 404 not found errors.
+		# While curl option -L, --location allows it to follow e.g. 301 redirects
+		# to give non-empty HTML output, it is best avoided unless necessary
+		# so as to discover any problems early.
+		curl --fail -o "scenario/${i}/index.html" "http://riskprofiler.demo/scenario/${i}/"
 	done
 
 	# Fix links to redirects
 	sed -E -i 's#("url":")(https?:\\/\\/)?[^/]+/?#\1..\\/..\\/..\\/..\\/..\\/#' site/assets/themes/fw-child/template/scenarios/items.php
 	sed -E -i 's#"url":".[^"]*#&index.html#' site/assets/themes/fw-child/template/scenarios/items.php
 
+	popd
+	set +x
+}
+
+check_for_empty_files() {
+	pushd /var/www/html_static/riskprofiler
+
+	mapfile -t empty_files < <(find . -empty)
+	if [[ ${#empty_files[@]} -ne 0 ]]; then
+		echo
+		echo "Error! The following files/directories are found to be empty:"
+		echo
+		IFS=$'\n' eval 'echo "${empty_files[*]}"'
+		echo
+		echo "Aborting."
+		exit 1
+	fi
 	popd
 }
 
@@ -177,6 +200,8 @@ main() {
 	configure_simply_static
 	simply_static_site_export
 	fixup_static_site
+
+	check_for_empty_files
 
 	echo "Done!"
 	echo
