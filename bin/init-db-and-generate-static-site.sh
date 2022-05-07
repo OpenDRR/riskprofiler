@@ -115,8 +115,9 @@ simply_static_site_export() {
 	# The export shouldn't get interrupted unless there are errors such as such as WP_SITEURL got set to http:///site/ (empty hostname).
 	# Inserting "wp cron event run --all" to the wait loop above may be able to force the interrupted task to completion,
 	# but the export may be incomplete, and should only be used in "emergency".
-	timeout 2m bash -c "until wp option pluck simply-static 'archive_status_messages' 'done' >/dev/null; do sleep 1; done" \
-		|| ( error_code=$?; [[ $error_code == 143 ]] && echo "simply_static_site_export_cron timed out"; exit "${error_code}" )
+	duration="3m"
+	timeout "${duration}" bash -c "until wp option pluck simply-static 'archive_status_messages' 'done' >/dev/null; do sleep 1; done" \
+		|| ( errcode=$?; [[ $errcode == 143 || $errcode == 124 ]] && echo "simply_static_site_export_cron timed out in ${duration}"; exit "${errcode}" )
 
 	# Show status messages from the completed Simply Static export run
 	wp option pluck simply-static 'archive_status_messages'
