@@ -187,7 +187,19 @@ check_for_empty_files() {
 	popd
 }
 
+finish() {
+	set +x
+	if [[ "${KEEP_WPCLI_RUNNING,,}" =~ ^(true|1|y|yes|on)$ ]]; then
+		echo
+		echo "Since KEEP_WPCLI_RUNNING is true, you may enter WP-CLI container using:"
+		echo "    docker exec -it riskprofiler-cms_wpcli_1 /bin/bash"
+		sleep infinity
+	fi
+}
+
 main() {
+	trap finish EXIT
+
 	echo "Running $0 as $(id -u):$(id -g)"
 
 	# Set $HOME to somewhere writable so that e.g. "wp update core"
@@ -213,13 +225,6 @@ main() {
 	echo "Raw static site export: html_static/simply-static-output/"
 	echo " Site export debug log: wp-app/site/assets/plugins/simply-static/debug.txt"
 	echo "  Fixed-up static site: html_static/riskprofiler/"
-
-	if [[ "${KEEP_WPCLI_RUNNING,,}" =~ ^(true|1|y|yes|on)$ ]]; then
-		echo
-		echo "Since KEEP_WPCLI_RUNNING is true, you may enter WP-CLI container using:"
-		echo "    docker exec -it riskprofiler-cms_wpcli_1 /bin/bash"
-		sleep infinity
-	fi
 }
 
 main "$@"
