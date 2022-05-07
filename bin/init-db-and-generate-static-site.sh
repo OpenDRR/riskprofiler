@@ -136,7 +136,7 @@ fixup_static_site() {
 	if [[ -e riskprofiler ]]; then
 		suffix=1
 		while [[ -e riskprofiler.old.$suffix ]]; do
-			suffix=$((suffix+1))
+			((suffix++))
 		done
 		mv riskprofiler "riskprofiler.old.${suffix}"
 	fi
