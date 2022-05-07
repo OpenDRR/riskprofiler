@@ -52,6 +52,9 @@ configure_simply_static() {
 
 	# Link to e.g. ./scenarios/index.html instead of ./scenarios/
 	wp option patch update simply-static 'destination_url_type' 'offline'
+
+	# Enable use_cron for simply_static_site_export_cron to work
+	wp option patch insert simply-static 'use_cron' 'on' || \
 	wp option patch update simply-static 'use_cron' 'on'
 
 	# "wp option patch update" would set 'debugging_mode' to integer 1,
