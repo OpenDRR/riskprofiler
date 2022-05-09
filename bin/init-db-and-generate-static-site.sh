@@ -44,8 +44,10 @@ create_wp_admin_user() {
 
 configure_simply_static() {
 	echo "Configuring Simply Static..."
-
 	set -x
+
+	wp option update blogdescription ''
+
 	wp option patch update simply-static 'temp_files_dir' '/var/www/html/site/assets/plugins/simply-static/static-files/'
 	wp option patch update simply-static 'delivery_method' 'local'
 	wp option patch update simply-static 'local_dir' '/var/www/html_static/simply-static-output/'
