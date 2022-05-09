@@ -91,6 +91,8 @@ configure_simply_static() {
 		/var/www/html/site/assets/themes/fw-parent/resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js.map
 		/var/www/html/site/assets/uploads/2021/10/lf20_mmrbfbcv.json
 		/var/www/html/site/assets/uploads/2021/10/lf20_vx8bv90p.json
+		/var/www/html/site/assets/uploads/2021/10/riskprofiler-lottie1.json
+		/var/www/html/site/assets/uploads/2021/10/riskprofiler-lottie3.json
 		/var/www/html/site/wp-includes/images/w-logo-blue-white-bg.png
 	EOF
 
