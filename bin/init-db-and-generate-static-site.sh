@@ -71,8 +71,11 @@ configure_simply_static() {
 			->save();
 	EOF
 
-	wp option patch update simply-static 'additional_urls' <<-EOF
+	# Add additional URLs
+	additional_urls=(
 		http://riskprofiler.demo/favicon.ico
+		http://riskprofiler.demo/fr/scenario/
+		http://riskprofiler.demo/scenario/
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/detail.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/filter.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/items.php
@@ -80,8 +83,18 @@ configure_simply_static() {
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-filter.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-sort.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/items.php
-	EOF
+	)
+	# Read and display names of scenarios from WordPress posts
+	# Example: scenarios=([0]="georgia-strait" [1]="val-des-bois" [2]="cascadia-interface-best-fault" [3]="sidney" [4]="leech-river-full-fault")
+	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
+	declare -p scenarios
+	for i in "${scenarios[@]}"; do
+		additional_urls+=( "http://riskprofiler.demo/fr/scenario/${i}/" )
+		additional_urls+=( "http://riskprofiler.demo/scenario/${i}/" )
+	done
+	IFS=$'\n' eval 'echo "${additional_urls[*]}"' | wp option patch update simply-static 'additional_urls'
 
+	# Add additional files
 	wp option patch update simply-static 'additional_files' <<-EOF
 		/var/www/html/site/assets/themes/fw-child/resources/css/child.css.map
 		/var/www/html/site/assets/themes/fw-child/resources/css/highcharts.css.map
@@ -132,11 +145,6 @@ simply_static_site_export() {
 fixup_static_site() {
 	set -x
 
-	# Read and display names of scenarios from WordPress posts
-	# Example: scenarios=([0]="georgia-strait" [1]="val-des-bois" [2]="cascadia-interface-best-fault" [3]="sidney" [4]="leech-river-full-fault")
-	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
-	declare -p scenarios
-
 	pushd /var/www/html_static
 
 	if [[ -e riskprofiler ]]; then
@@ -158,16 +166,6 @@ fixup_static_site() {
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
 	sed -E -i "s#url: '/site#url: '../site#" site/assets/themes/fw-child/resources/js/profiler.js
-
-	# Download scenario/ redirects
-	for i in "${scenarios[@]}"; do
-		mkdir -p "scenario/${i}"
-		# curl option -f, --fail ensures the it fails on 404 not found errors.
-		# While curl option -L, --location allows it to follow e.g. 301 redirects
-		# to give non-empty HTML output, it is best avoided unless necessary
-		# so as to discover any problems early.
-		curl --fail -o "scenario/${i}/index.html" "http://riskprofiler.demo/scenario/${i}/"
-	done
 
 	# Fix links to redirects
 	sed -E -i 's#("url":")(https?:\\/\\/)?[^/]+/?#\1..\\/..\\/..\\/..\\/..\\/#' site/assets/themes/fw-child/template/scenarios/items.php
