@@ -51,6 +51,8 @@ configure_simply_static() {
 	wp option patch update simply-static 'local_dir' '/var/www/html_static/simply-static-output/'
 
 	# Link to e.g. ./scenarios/index.html instead of ./scenarios/
+	wp option patch update simply-static 'destination_scheme' ''
+	wp option patch update simply-static 'destination_host' '.'
 	wp option patch update simply-static 'destination_url_type' 'offline'
 
 	# Enable use_cron for simply_static_site_export_cron to work
