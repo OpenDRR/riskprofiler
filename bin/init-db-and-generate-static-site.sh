@@ -171,6 +171,9 @@ fixup_static_site() {
 	sed -E -i 's#("url":")(https?:\\/\\/)?[^/]+/?#\1..\\/..\\/..\\/..\\/..\\/#' site/assets/themes/fw-child/template/scenarios/items.php
 	sed -E -i 's#"url":".[^"]*#&index.html#' site/assets/themes/fw-child/template/scenarios/items.php
 
+	# Point to index.html for AWS S3
+	sed -E -i 's#'/scenario'#'/scenario/index.html'#' site/assets/themes/fw-child/resources/js/rp_scenarios.js
+
 	popd
 	set +x
 }
