@@ -174,6 +174,9 @@ fixup_static_site() {
 	# Point to index.html for AWS S3
 	sed -E -i 's#'/scenario'#'/scenario/index.html'#' site/assets/themes/fw-child/resources/js/rp_scenarios.js
 
+	# Switch from staging to production server
+	sed -i 's/stage\.riskprofiler\.ca/riskprofiler\.ca/' site/assets/themes/fw-child/resources/js/rp_{scenarios,risks}.js
+
 	popd
 	set +x
 }
