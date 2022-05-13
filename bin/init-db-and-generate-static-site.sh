@@ -76,6 +76,7 @@ configure_simply_static() {
 		http://riskprofiler.demo/favicon.ico
 		http://riskprofiler.demo/fr/scenario/
 		http://riskprofiler.demo/scenario/
+		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/control-bar.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/detail.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/filter.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/items.php
@@ -165,14 +166,17 @@ fixup_static_site() {
 	done
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
-	sed -E -i "s#url: '/site#url: '../site#" site/assets/themes/fw-child/resources/js/profiler.js
+	sed -E -i "s#url(:| =) '/site#url\1 '../site#" site/assets/themes/fw-child/resources/js/profiler.js
 
-	# Fix links to redirects
-	sed -E -i 's#("url":")(https?:\\/\\/)?[^/]+/?#\1..\\/..\\/..\\/..\\/..\\/#' site/assets/themes/fw-child/template/scenarios/items.php
-	sed -E -i 's#"url":".[^"]*#&index.html#' site/assets/themes/fw-child/template/scenarios/items.php
+	# Prevent erroneous prepending of "/site/assets/themes/fw-child/template/"
+	sed -i "s#settings.url.charAt(0) == '/'#& || settings.url.charAt(0) == '.'#" site/assets/themes/fw-child/resources/js/profiler.js
+
+	# Change "./scenario/" to "../scenario/"
+	sed -E -i 's#("url":")(\.\\/scenario\\/)#\1\.\2#' scenario/index.html site/assets/themes/fw-child/template/scenarios/items.php
 
 	# Point to index.html for AWS S3
-	sed -E -i 's#'/scenario'#'/scenario/index.html'#' site/assets/themes/fw-child/resources/js/rp_scenarios.js
+	sed -E -i 's#"url":".[^"]*#&index.html#' scenario/index.html site/assets/themes/fw-child/template/scenarios/items.php
+	sed -i "s#\(plugin_settings\.lang_prepend + '/scenario\)'#'..' + \1/index.html'#" site/assets/themes/fw-child/resources/js/rp_scenarios.js
 
 	# Switch from staging to production server
 	sed -i 's/stage\.riskprofiler\.ca/riskprofiler\.ca/' site/assets/themes/fw-child/resources/js/rp_{scenarios,risks}.js
