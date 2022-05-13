@@ -160,9 +160,12 @@ fixup_static_site() {
 	cd riskprofiler
 
 	# The relative path to the animated logo is currently wrong in HTML files
-	# in the second-level directory
+	# in second- and third-level directories
 	for i in */index.html; do
-		sed -E -i 's#data-anim-path="\.\/site#data-anim-path="../site#' "${i}"
+		sed -i 's#data-anim-path="\.\/site#data-anim-path="../site#' "${i}"
+	done
+	for i in */*/index.html; do
+		sed -i 's#data-anim-path="\.\/site#data-anim-path="../../site#' "${i}"
 	done
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
@@ -173,10 +176,14 @@ fixup_static_site() {
 
 	# Change "./scenario/" to "../scenario/"
 	sed -E -i 's#("url":")(\.\\/scenario\\/)#\1\.\2#' scenario/index.html site/assets/themes/fw-child/template/scenarios/items.php
+	# Change "./fr/" to "../../fr/"
+	sed -E -i 's#("url":")(\.\\/fr\\/)#\1\..\\/.\2#' fr/scenario/index.html
 
 	# Point to index.html for AWS S3
-	sed -E -i 's#"url":".[^"]*#&index.html#' scenario/index.html site/assets/themes/fw-child/template/scenarios/items.php
-	sed -i "s#\(plugin_settings\.lang_prepend + '/scenario\)'#'..' + \1/index.html'#" site/assets/themes/fw-child/resources/js/rp_scenarios.js
+	sed -E -i 's#"url":".[^"]*#&index.html#' \
+		scenario/index.html site/assets/themes/fw-child/template/scenarios/items.php
+	sed -i "s#\(plugin_settings\.lang_prepend + '/scenario\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
+		site/assets/themes/fw-child/resources/js/rp_scenarios.js
 
 	# Switch from staging to production server
 	sed -i 's/stage\.riskprofiler\.ca/riskprofiler\.ca/' site/assets/themes/fw-child/resources/js/rp_{scenarios,risks}.js
