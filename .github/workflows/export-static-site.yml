@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
+
+concurrency: export-static-site
 
 jobs:
   export-static-site:
@@ -19,7 +23,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Run "docker compose up" to export static site for Risk Profiler
+      - name: Run "docker compose up" to export static site for RiskProfiler
         run: |
           export DOCKER_WP_UID_GID="$(id -u):$(id -g)"
           docker compose up --abort-on-container-exit --exit-code-from wpcli
@@ -32,5 +36,28 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
+          name: riskprofiler-ca-static-site
+          path: html_static/riskprofiler
+
+      - uses: actions/upload-artifact@v3
+        with:
           name: simply-static-debug-log
           path: wp-app/site/assets/plugins/simply-static/debug.txt
+
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: Create tarball and ZIP file of static site
+        run: |
+          rp_ver="${GITHUB_REF/refs\/tags\//}"
+          cd html_static
+          GZIP=-9v tar cvzf riskprofiler.ca-static-site-${rp_ver}.tar.gz riskprofiler
+          zip -9rv riskprofiler.ca-static-site-${rp_ver}.zip riskprofiler
+
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: Upload tarball and ZIP file as release assets
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'html_static/*.tar.gz;html_static/*.zip'
+          tags: true
+          draft: false
