@@ -1,13 +1,15 @@
-const geoapi_url = 'https://geo-api.stage.riskprofiler.ca'
-const elastic_url = 'https://api.stage.riskprofiler.ca'
+const geoapi_url = 'https://geo-api.riskprofiler.ca'
+const elastic_url = 'https://riskprofiler.ca'
 
 // var feature_index = "opendrr_dsra_sim9p0_cascadiainterfacebestfault_indicators_s",
 var charts_to_process = [],
-		feature_index_prop = "sH_PGAXX",
+		feature_index_prop = "sH_PGA",
 		base_url = elastic_url + '/',
 		featureLimit = 10000,
 		markers = [],
 		scroll_id = null;
+
+		var test = false;
 
 // scenario profiler
 // v1.0
@@ -39,7 +41,8 @@ var charts_to_process = [],
         'previous': null,
         'settings': {
           'shake': [
-            { min: 11, max: 15, agg: '5km', prop: 'sH_PGA_max', bbox: true, limit: 500 },
+            { min: 14, max: 15, agg: '1km', prop: 'sH_PGA_max', bbox: true, limit: 500 },
+            { min: 11, max: 13, agg: '5km', prop: 'sH_PGA_max', bbox: true, limit: 500 },
             { min: 8, max: 10, agg: '10km', prop: 'sH_PGA_max', bbox: true, limit: 100 },
             { min: 4, max: 7, agg: '25km', prop: 'sH_PGA_max', bbox: false, limit: 100 },
             { min: 1, max: 3, agg: '50km', prop: 'sH_PGA_max', bbox: false, limit: 100
@@ -64,46 +67,51 @@ var charts_to_process = [],
 					bbox: null,
 					shake_grid: null,
 					shake_choro: null,
-					choro: null
+					choro: null,
+					tiles: null
 				},
 				markers: null,
+				popup: null,
 				selected_marker: null,
 				selected_feature: null,
 				geojsonLayer: null,
-				current_zoom: 4,
+				current_zoom: 3,
 				last_zoom: -1,
-				zoom_changed_agg: false
+				defaults: {
+					coords: [60, -110],
+					zoom: 3
+				}
 			},
 			charts: {
 				enabled: true,
 				container: $('.app-charts'),
 				elements: [
 					{
-						name: 'Building Type (G)',
+						name: rp.building_type + ' (G)',
 						field: 'E_BldgTypeG',
 						size: 100,
 						object: null
 					},
 					{
-						name: 'Building Type (S)',
+						name: rp.building_type + ' (S)',
 						field: 'E_BldgTypeS',
 						size: 100,
 						object: null
 					},
 					{
-						name: 'Design Level',
+						name: rp.design_level,
 						field: 'E_BldgDesLev',
 						size: 6,
 						object: null
 					},
 					{
-						name: 'Occupancy Class (G)',
+						name: rp.occupancy_class + ' (G)',
 						field: 'E_BldgOccG',
 						size: 29,
 						object: null
 					},
 					{
-						name: 'Occupancy Class (S1)',
+						name: rp.occupancy_class + ' (S1)',
 						field: 'E_BldgOccS1',
 						size: 29,
 						object: null
@@ -113,19 +121,19 @@ var charts_to_process = [],
 			breadcrumbs: {
 				'init': [
 					{
-						text: 'Select a marker to retrieve data',
+						text: rp.crumb_select_marker,
 						class: 'tip'
 					}
 				],
 				'select': [
 					{
-						text: 'Scenario',
+						text: rp.crumb_scenario,
 						id: 'breadcrumb-scenario-name'
 					}
 				],
 				'detail': [
 					{
-						text: 'Scenario Detail',
+						text: rp.crumb_scenario_detail,
 						id: 'breadcrumb-scenario-name'
 					},
 					{
@@ -138,9 +146,21 @@ var charts_to_process = [],
 			current_view: 'init',
 			scenario: {},
 			indicator: {},
+			prev_indicator: null,
 			legend: {
 				max: 0,
-        grades: []
+        grades: [],
+				colors: [
+					'#ffffcc',
+					'#ffeda0',
+					'#fed976',
+					'#feb24c',
+					'#fd8d3c',
+					'#fc4e2a',
+					'#e31a1c',
+					'#bd0026',
+					'#800026'
+				]
 			},
 			colors: {
 				marker: '#9595a0',
@@ -151,6 +171,8 @@ var charts_to_process = [],
 				feature_count: 0,
 				update_count: 0
 			},
+			lang_prepend: '',
+			dbl: false,
       debug: false
     };
 
@@ -177,6 +199,12 @@ var charts_to_process = [],
         console.log('initializing')
       }
 
+			if ($('body').hasClass('lang-fr')) {
+				plugin_settings.lang_prepend = '/fr'
+			}
+
+			//plugin_instance._get_max_vals()
+
 			//
 			// SETUP UX STUFF
 			//
@@ -195,12 +223,14 @@ var charts_to_process = [],
 			// OBJECT
 
 	    plugin_settings.map.object = L.map('map', {
-				zoomControl: false
-			}).setView([55,-105], plugin_settings.map.current_zoom)
+				zoomControl: false,
+				maxZoom: 15,
+				crs: L.CRS.EPSG4326,
+			}).setView(plugin_settings.map.defaults.coords, plugin_settings.map.defaults.zoom)
 
-			plugin_settings.map.object.on('fullscreenchange', function () {
-				plugin_settings.map.object.invalidateSize()
-			})
+			// plugin_settings.map.object.on('fullscreenchange', function () {
+			// 	plugin_settings.map.object.invalidateSize()
+			// })
 
 			// CONTROLS
 
@@ -232,7 +262,7 @@ var charts_to_process = [],
 			// shakemap - for shakemap data
 			plugin_settings.map.panes.shakemap = plugin_settings.map.object.createPane('shakemap')
 			plugin_settings.map.panes.shakemap.style.zIndex = 560
-			// plugin_settings.map.panes.shakemap.style.pointerEvents = 'all'
+			plugin_settings.map.panes.shakemap.style.pointerEvents = 'all'
 
 			// epicenter - for selected scenario epicenter
 			plugin_settings.map.panes.epicenter = plugin_settings.map.object.createPane('epicenter')
@@ -258,14 +288,17 @@ var charts_to_process = [],
 
 			plugin_settings.map.legend.onAdd = function () {
 
-				var div = L.DomUtil.create('div', 'info legend'),
-						grades = [].concat(plugin_settings.legend.grades).reverse(),
-						prepend = plugin_settings.indicator.legend.prepend,
-						append = plugin_settings.indicator.legend.append,
-						aggregation = plugin_settings.indicator.aggregation
+				// console.log(plugin_settings.legend)
 
-				// switch (aggregation[plugin_settings.api.aggregation]['rounding']) {
-				switch (aggregation[plugin_settings.aggregation.current.agg]['rounding']) {
+				var div = L.DomUtil.create('div', 'info legend'),
+						legend = plugin_settings.indicator.legend
+						grades = legend.values,
+						prepend = legend.prepend,
+						append = legend.append,
+						aggregation = plugin_settings.indicator.aggregation,
+						current_agg = plugin_settings.aggregation.current.agg
+
+				switch (aggregation[current_agg]['rounding']) {
 					case -9 :
 						append = 'billion ' + append
 						break
@@ -283,31 +316,21 @@ var charts_to_process = [],
 
 				legend_markup += '<div class="items">'
 
-        // #ffffcc
-        // #ffeda0
-        // #fed976
-        // #feb24c
-        // #fd8d3c
-        // #fc4e2a
-        // #e31a1c
-        // #bd0026
-        // #800026
-
 				for (var i = 1; i <= grades.length; i++) {
 
-          var row_color = plugin_instance._choro_color(grades[i - 1])
-
 					var row_markup = '<div class="legend-item" data-toggle="tooltip" data-placement="top" style="background-color: '
-            + row_color + ';"'
+            + plugin_settings.legend.colors[i - 1] + ';"'
 						+ ' title="'
 						+ prepend
-						+ grades[i - 1].toLocaleString(undefined, { maximumFractionDigits: aggregation[plugin_settings.aggregation.current.agg]['decimals'] })
+						+ plugin_instance._round(grades[i - 1], aggregation[current_agg]['rounding']).toLocaleString(undefined, {
+								maximumFractionDigits: aggregation[current_agg]['decimals']
+							})
 
 					if (grades[i]) {
 
 						row_markup += ' – '
 							+ prepend
-							+ grades[i].toLocaleString(undefined, { maximumFractionDigits: aggregation[plugin_settings.aggregation.current.agg]['decimals'] })
+							+ plugin_instance._round(grades[i], aggregation[current_agg]['rounding']).toLocaleString(undefined, { maximumFractionDigits: aggregation[current_agg]['decimals'] })
 							+ ' '
 							+ append
 
@@ -325,44 +348,6 @@ var charts_to_process = [],
 
 				legend_markup	+= '</div>'
 
-				// legend_markup = '<p class="mb-1"><i style="background:'
-				// 	+ plugin_instance._choro_color(grades[0]) + '"></i> '
-				// 	+ prepend
-				// 	+ '0 – '
-				// 	+ prepend
-				// 	+ grades[0].toLocaleString(undefined, { maximumFractionDigits: aggregation[plugin_settings.api.aggregation]['decimals'] })
-				// 	+ ' '
-				// 	+ append
-				// 	+ '</p>'
-
-				// for (var i = 0; i < grades.length; i++ ) {
-				//
-				// 	var row_markup = '<p class="mb-1">'
-				// 		+ '<i style="background-color:' + plugin_instance._choro_color(grades[i] + 1) + '"></i> '
-				//
-				// 	row_markup += prepend
-				// 		+ grades[i].toLocaleString(undefined, { maximumFractionDigits: aggregation[plugin_settings.api.aggregation]['decimals'] })
-				//
-				// 	if (grades[i + 1]) {
-				//
-				// 		row_markup += ' – '
-				// 			+ prepend
-				// 			+ grades[i + 1].toLocaleString(undefined, { maximumFractionDigits: aggregation[plugin_settings.api.aggregation]['decimals'] })
-				// 			+ ' '
-				// 			+ append
-				//
-				// 	} else {
-				//
-				// 		row_markup += '+ ' + append
-				//
-				// 	}
-				//
-				// 	row_markup += '</p>'
-				//
-				// 	legend_markup += row_markup
-				//
-				// }
-
 				div.innerHTML = legend_markup
 
 				return div
@@ -371,9 +356,15 @@ var charts_to_process = [],
 
 			// BASEMAP
 
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					pane: 'basemap',
-			    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			// 		pane: 'basemap',
+			//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			// }).addTo(plugin_settings.map.object)
+
+			L.tileLayer( 'https://osm-{s}.gs.mil/tiles/default_pc/{z}/{x}/{y}.png', {
+		      subdomains: '1234',
+		      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+		      detectRetina: true
 			}).addTo(plugin_settings.map.object)
 
 			// CLUSTERS
@@ -396,103 +387,61 @@ var charts_to_process = [],
 				clusterPane: 'markers'
 			})
 
-			// layer for choropleth
+			// POPUPS
 
-			var selection
+			plugin_settings.map.popup = L.popup({
+				pane: 'data'
+			})
 
-			plugin_settings.map.layers.choro = L.geoJSON([], {
-				style: {
-					fillColor: '#aaa',
-					fillOpacity: 0.7,
-					color: '#4b4d4d',
-					weight: 0,
-					opacity: 0.8
-				},
-				pane: 'data',
-				onEachFeature: function(feature, layer) {
+			plugin_settings.map.object.on('popupopen', function(e) {
 
-					var prop_key = plugin_settings.indicator.key + ((plugin_settings.indicator.retrofit !== false) ? '_' + plugin_settings.api.retrofit : '')
+				// console.log('open', e.popup._source)
 
-          var stroke = 0.4
+			})
 
-          if (plugin_settings.indicator.key == 'sH_PGA') {
-            prop_key = 'sH_PGA_max'
-            stroke = 0
-          }
+			plugin_settings.map.object.on('popupclose', function(e) {
 
-					plugin_settings.api.features[feature.id] = layer
+				if (
+					plugin_settings.map.object.hasLayer(plugin_settings.map.layers.tiles)
+				) {
 
-					// var rounded_color = feature.properties[prop_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.api.aggregation]['rounding'])
-					var rounded_color = feature.properties[prop_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
+					// if there's a selected feature
 
-					layer.setStyle({
-						fillColor: plugin_instance._choro_color(rounded_color),
-            weight: stroke
-					})
+					if (plugin_settings.map.selected_feature != null) {
 
-					layer.bindPopup(function(e) {
+						// reset it
 
-						return L.Util.template('<p>'
-							+ plugin_settings.indicator.legend.prepend
-							+ e.feature.properties[prop_key].toLocaleString(undefined, { maximumFractionDigits: plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['decimals'] }) + ' '
-							+ plugin_settings.indicator.legend.append
-							+ '</p>')
+	          plugin_settings.map.layers.tiles.resetFeatureStyle(plugin_settings.map.selected_feature)
 
-					}).on({
+						plugin_settings.map.selected_feature = null
 
-						click: function(e) {
+	        }
 
-							if (selection) {
+					setTimeout(function() {
 
-                // console.log(selection.feature)
+						// if a new feature has NOT been selected,
+						// update the charts
 
-								// reset style of previously selected feature
-								selection.setStyle(plugin_instance._choro_style(selection.feature))
-
-							}
-
-							selection = e.target
-							selection.setStyle(plugin_instance._choro_selected_style())
-
-							plugin_settings.map.selected_feature = selection.feature
-
-							if (
-								plugin_settings.charts.enabled == true &&
-								plugin_settings.indicator.key !== 'sH_PGA'
-							) {
-								plugin_instance.get_charts()
-							}
-
-						},
-
-						popupclose: function(e) {
-
-              // console.log(e.target.feature)
-
-							// reset the shape's style
-							selection.setStyle(plugin_instance._choro_style(e.target.feature))
-
-							plugin_settings.map.selected_feature = null
-
-							if (
-								plugin_settings.charts.enabled == true &&
-								plugin_settings.indicator.key !== 'sH_PGA'
-							) {
-								plugin_instance.get_charts()
-							}
-
+						if (
+							plugin_settings.map.selected_feature == null &&
+							plugin_settings.charts.enabled == true &&
+							plugin_settings.indicator.key !== 'sH_PGA'
+						) {
+							console.log('reset charts')
+							plugin_instance.get_charts()
 						}
 
-					})
+					}, 500)
 
 				}
-			}).addTo(plugin_settings.map.object)
+
+			})
 
 			//
 			// FILTER
 			//
 
-			$(document).profiler('get_controls', 'scenarios')
+			// $(document).profiler('get_controls', 'scenarios')
 
 			// $('.app-controls .control-toggle').click(function() {})
 
@@ -518,8 +467,10 @@ var charts_to_process = [],
 
 			// GET SCENARIO LIST
 
+			console.log('..' + plugin_settings.lang_prepend + '/scenario/index.html')
+
 			$(document).profiler('get_sidebar', {
-				url: 'scenarios/items.php',
+				url: '..' + plugin_settings.lang_prepend + '/scenario/index.html',
 				success: function(data) {
 
 					// GEOJSON
@@ -623,7 +574,7 @@ var charts_to_process = [],
 						var init_id = window.location.hash,
 								init_item = $('body').find(init_id)
 
-						console.log(window.location.hash, $('body').find(init_id))
+						// console.log(window.location.hash, $('body').find(init_id))
 
 						// trigger click the item
 
@@ -725,7 +676,7 @@ var charts_to_process = [],
 
 									$('#chart-data-placeholder').find('table').addClass('table table-responsive')
 
-									$('#data-modal .modal-title').html(plugin_settings.indicator.label + ' by ' + request.name)
+									$('#data-modal .modal-title').html(plugin_settings.indicator.label + ' ' + rp.by + ' ' + request.name)
 
 									$('#data-modal').modal('show')
 
@@ -816,34 +767,32 @@ var charts_to_process = [],
 
         var this_indicator = JSON.parse($(this).attr('data-indicator'))
 
-        if (this_indicator.key != plugin_settings.indicator.key) {
+        if (
+					this_indicator.key != plugin_settings.indicator.key &&
+					!$(this).hasClass('selected')
+				) {
 
-    			if (!$(this).hasClass('selected')) {
+  				// close popup
 
-    				// close popup
+  				plugin_settings.map.object.closePopup()
 
-    				plugin_settings.map.object.closePopup()
+  				// switch retrofit off
 
-    				// switch retrofit off
+  				if ($('#retrofit-toggle .togglebox').attr('data-state') == 'on') {
+  					$('#retrofit-toggle .togglebox').trigger('click')
+  				}
 
-    				if ($('#retrofit-toggle .togglebox').attr('data-state') == 'on') {
-    					$('#retrofit-toggle .togglebox').trigger('click')
-    				}
+  				// set classes
 
-    				// set classes
+  				$('.app-sidebar').find('.indicator-item').removeClass('selected')
+  				$(this).addClass('selected')
 
-    				$('.app-sidebar').find('.indicator-item').removeClass('selected')
-    				$(this).addClass('selected')
+  				// update layer
 
-    				// update layer
+  				plugin_instance.set_indicator(this_indicator)
+  				plugin_instance.get_layer()
 
-    				plugin_instance.set_indicator(this_indicator)
-    				plugin_instance.get_layer()
-
-    			}
-
-        }
-
+  			}
 			})
 
 
@@ -854,7 +803,7 @@ var charts_to_process = [],
 				plugin_instance.do_breadcrumb('init')
 
 				$(document).profiler('get_sidebar', {
-					url: 'scenarios/items.php',
+					url: '..' + plugin_settings.lang_prepend + '/scenario/index.html',
 					before: function() {
 
 						plugin_settings.current_view = 'init'
@@ -872,11 +821,20 @@ var charts_to_process = [],
 						$('.leaflet-data-pane path').remove()
 						$('.leaflet-shakemap-pane path').remove()
 
+						plugin_settings.map.object.removeLayer(plugin_settings.map.layers.tiles)
+
+						plugin_settings.map.layers.tiles = null
+						plugin_settings.map.layers.shake_grid = null
+						plugin_settings.map.selected_feature = null
+
 						// remove the legend
 						plugin_settings.map.legend.remove()
 
 						// reset the map view
-						plugin_settings.map.object.setView([55,-105], 4)
+						plugin_settings.map.object.setView(
+							plugin_settings.map.defaults.coords,
+							plugin_settings.map.defaults.zoom
+						)
 
 						// close popups
 						plugin_settings.map.object.closePopup()
@@ -892,11 +850,16 @@ var charts_to_process = [],
 						$('.app-main').attr('data-mode', '')
 						$('.app-main').removeClass('indicator-selected')
 
+						// disable chart toggle
+						$('#chart-togglebox').togglebox('disable')
+
 						// reset the last_zoom flag
 						plugin_settings.map.last_zoom = -1
 
 						// empty the current scenario object
 						plugin_settings.scenario = {}
+
+						plugin_settings.prev_indicator = null
 
 						// reset the history state
 						$(document).profiler('do_history')
@@ -956,7 +919,8 @@ var charts_to_process = [],
 					plugin_settings.map.object.closePopup()
 
 					if (plugin_settings.current_view == 'detail') {
-						plugin_instance.fetch_geoapi(null, false) // don't do legend
+						plugin_instance.get_layer()
+						// plugin_instance.fetch_geoapi(null, false) // don't do legend
 					}
 
 				}
@@ -999,15 +963,20 @@ var charts_to_process = [],
 		set_indicator: function(indicator) {
 
 			var plugin_instance = this
-			//var plugin_item = this.item
 			var plugin_settings = plugin_instance.options
-			//var plugin_elements = plugin_settings.elements
+
+			if (typeof plugin_settings.indicator.key !== 'undefined') {
+				plugin_settings.prev_indicator = plugin_settings.indicator.key
+			}
 
 			plugin_settings.indicator = indicator
 
-			if (indicator.key == 'sH_PGAXX') {
+			if (indicator.key == 'sH_PGA') {
 				plugin_settings.api.limit = 1000
 			}
+
+			// reset the previous agg
+			plugin_settings.aggregation.previous = null
 
 			// console.log(indicator)
 
@@ -1057,6 +1026,8 @@ var charts_to_process = [],
 			if (settings.scenario != null) {
 
 				plugin_settings.scenario = settings.scenario
+
+				console.log(plugin_settings.scenario)
 
 				// select the marker
 
@@ -1133,6 +1104,8 @@ var charts_to_process = [],
 
 			// load the detail sidebar template
 
+			console.log(plugin_settings.scenario.url)
+
 			$(document).profiler('get_sidebar', {
 				url: plugin_settings.scenario.url,
 				before: function() {
@@ -1162,6 +1135,8 @@ var charts_to_process = [],
 					// hide the markers pane
 					plugin_settings.map.panes.markers.style.display = 'none'
 
+					plugin_instance.do_breadcrumb('detail')
+
 					// get ready to call the API
 
 					plugin_instance.get_layer()
@@ -1187,8 +1162,6 @@ var charts_to_process = [],
 						$('.app-sidebar').find('.collapse').prev().removeClass('open')
 
 					})
-
-					plugin_instance.do_breadcrumb('detail')
 
 					$('.app-breadcrumb .breadcrumb').find('#breadcrumb-scenario-name').text(plugin_settings.scenario.title)
 
@@ -1217,46 +1190,36 @@ var charts_to_process = [],
 
 				plugin_settings.map.panes.bbox.style.display = ''
 
-				$.ajax({
-					url: plugin_settings.api.base_URL + settings.scenario.key.toLowerCase() + '_shakemap?f=json',
-					success: function(data) {
+				var bounds = [
+					[settings.scenario.bounds.sw_lat, settings.scenario.bounds.sw_lng],
+					[settings.scenario.bounds.ne_lat, settings.scenario.bounds.ne_lng]
+				]
 
-						// console.log('success', data)
+				// remove existing
 
-						var box_coords = data.extent.spatial.bbox[0]
+				if (plugin_settings.map.layers.bbox) {
+					plugin_settings.map.object.removeLayer(plugin_settings.map.layers.bbox)
+				}
 
-						// define rectangle geographical bounds
+				// create an orange rectangle
 
-						var bounds = [[box_coords[1], box_coords[0]], [box_coords[3], box_coords[2]]]
+				plugin_settings.map.layers.bbox = L.rectangle(bounds, {
+					color: "#f05a23",
+					weight: 1,
+					pane: 'bbox'
+				}).addTo(plugin_settings.map.object)
 
-						if (plugin_settings.map.layers.bbox) {
-							plugin_settings.map.object.removeLayer(plugin_settings.map.layers.bbox)
-						}
+				// zoom the map to the rectangle bounds
 
-						// create an orange rectangle
-
-						plugin_settings.map.layers.bbox = L.rectangle(bounds, {
-							color: "#f05a23",
-							weight: 1,
-							pane: 'bbox'
-						}).addTo(plugin_settings.map.object)
-
-						// zoom the map to the rectangle bounds
-
-						plugin_settings.map.object.fitBounds(bounds, {
-							paddingTopLeft: [$(window).outerWidth() / 4, 0]
-						})
-
-						// spinner
-						$('body').removeClass('spinner-on')
-						$('#spinner-progress').text('')
-
-					}
+				plugin_settings.map.object.fitBounds(bounds, {
+					paddingTopLeft: [$(window).outerWidth() / 4, 0]
 				})
 
+				// spinner
+				$('body').removeClass('spinner-on')
+				$('#spinner-progress').text('')
 
 			}
-
 
 		},
 
@@ -1292,73 +1255,19 @@ var charts_to_process = [],
 				plugin_settings.legend.max = 0
 
 				// empty the API data array
-				plugin_settings.api.data = []
+				// plugin_settings.api.data = []
 
 				// LAYER TYPE:
 				// if shakemap, run the elasticsearch function,
 				// if anything else, run the geoAPI function
 
-				if (plugin_settings.indicator.key == 'sH_PGAXX') {
+				// plugin_settings.map.panes.data.style.display = ''
 
-					// swap pane display
+				// if (plugin_settings.map.object.hasLayer(plugin_settings.map.layers.tiles)) {
+				// 	plugin_settings.map.object.removeLayer(plugin_settings.map.layers.tiles)
+				// }
 
-					// hide choro layer & data pane
-					plugin_settings.api.features = []
-					plugin_settings.map.layers.choro.clearLayers()
-					// plugin_settings.map.object.removeLayer(plugin_settings.map.layers.choro)
-					// plugin_settings.map.panes.data.style.display = 'none'
-
-					// show shakemap pane
-					plugin_settings.map.panes.shakemap.style.display = ''
-
-					plugin_settings.elastic.merc = new SphericalMercator({
-		        size: 256
-		      });
-
-					// create shakemap geoJSON object
-
-					plugin_settings.map.layers.shake_choro = L.geoJSON(null, {
-						pane: 'shakemap',
-						style: {
-							fillColor: '#aaa',
-							weight: 0.4,
-							opacity: 1,
-							color: 'white',
-							dashArray: '0',
-							fillOpacity: 0.5
-						},
-						onEachFeature: function(feature, layer) {
-
-							layer.setStyle({
-								fillColor: plugin_instance.getFeatureColor(feature.properties[feature_index_prop])
-							})
-
-						}
-					}).addTo(plugin_settings.map.object)
-
-					// create shakemap grid object
-
-					plugin_settings.map.layers.shake_grid = L.featureGroup([]).addTo(plugin_settings.map.object)
-
-				} else {
-
-					// not shakemap
-
-					// pane/layer visibility
-
-					// plugin_settings.map.layers.shake_choro.clearLayers()
-					// plugin_settings.map.layers.shake_grid.clearLayers()
-
-					// plugin_settings.map.object.removeLayer(plugin_settings.map.layers.shake_choro)
-					// plugin_settings.map.object.removeLayer(plugin_settings.map.layers.shake_grid)
-
-					plugin_settings.map.panes.data.style.display = ''
-					// plugin_settings.map.panes.shakemap.style.display = 'none'
-
-
-
-
-				}
+				// console.log(plugin_settings.map.layers.tiles)
 
 				if (plugin_settings.indicator.key == 'sH_PGA') {
 
@@ -1440,13 +1349,23 @@ var charts_to_process = [],
 
       var fetch = false
 
-      // go through the aggregation settings to find the right keys
+      // go through the aggregation settings
+			// to find the right keys
       // for the current indicator and zoom level
 
       var agg_key = 'default'
 
       if (plugin_settings.indicator.key == 'sH_PGA') {
         agg_key = 'shake'
+
+				// temp until other shakemap aggs are available
+
+				plugin_settings.aggregation.settings.shake[0].agg = '1km'
+				plugin_settings.aggregation.settings.shake[1].agg = '1km'
+				plugin_settings.aggregation.settings.shake[2].agg = '1km'
+				plugin_settings.aggregation.settings.shake[3].agg = '1km'
+				plugin_settings.aggregation.settings.shake[4].agg = '1km'
+
       }
 
       plugin_settings.aggregation.settings[agg_key].forEach(function (i) {
@@ -1484,48 +1403,68 @@ var charts_to_process = [],
       // 2. previous aggregation is empty - initial load of scenario
       // 3. current aggregation uses bbox
 
+			// if (
+      //   plugin_settings.aggregation.previous !== null &&
+      //   plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
+      // ) {
+			// 	console.log('fetch - changed agg')
+			// }
+			//
+			// if (
+			// 	plugin_settings.aggregation.previous == null
+      // ) {
+			// 	console.log('fetch - first load')
+			// }
+			//
+			// if (
+      //   plugin_settings.aggregation.current.bbox == true
+      // ) {
+			// 	console.log('fetch - bbox')
+			// }
+
       if (
         (
           plugin_settings.aggregation.previous !== null &&
           plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
         ) ||
-        plugin_settings.aggregation.previous == null ||
-        plugin_settings.aggregation.current.bbox == true
+        plugin_settings.aggregation.previous == null /*||
+        plugin_settings.aggregation.current.bbox == true*/
       ) {
-
-        // console.log('changed agg')
-
-        // plugin_settings.map.zoom_changed_agg = true
 
         // RESET MAP FEATURES
 
         // features
         plugin_settings.api.features = []
 
-        // clear layer
-        plugin_settings.map.layers.choro.clearLayers()
-
         // reset legend max
         plugin_settings.legend.max = 0
 
         // empty the API data array
-        plugin_settings.api.data = []
+        // plugin_settings.api.data = []
 
         // UPDATE PARAMS
 
         // bbox
 
-        if (plugin_settings.aggregation.current.bbox == true) {
-
-          var bounds = plugin_settings.map.object.getBounds()
-
-          plugin_settings.api.bbox = [bounds.getSouthWest().lng, bounds.getSouthWest().lat, bounds.getNorthEast().lng, bounds.getNorthEast().lat]
-
-        } else {
-
-          plugin_settings.api.bbox = null
-
-        }
+        // if (plugin_settings.aggregation.current.bbox == true) {
+				//
+        //   var bounds = plugin_settings.map.object.getBounds()
+				//
+        //   plugin_settings.api.bbox = L.latLngBounds(L.latLng(
+				// 		bounds.getSouthWest().lat,
+				// 		bounds.getSouthWest().lng
+				// 	), L.latLng(
+				// 		bounds.getNorthEast().lat,
+				// 		bounds.getNorthEast().lng
+				// 	))
+				//
+				// 	console.log('bbox', plugin_settings.api.bbox)
+				//
+        // } else {
+				//
+        //   plugin_settings.api.bbox = null
+				//
+        // }
 
         // limit
 
@@ -1537,12 +1476,11 @@ var charts_to_process = [],
       }
 
       if (fetch == true) {
-        // run the geoapi call
-        plugin_instance.fetch_geoapi()
 
-				// plugin_instance.get_tiles()
+        // get the tiles
+				plugin_instance.get_tiles()
+
       }
-
 
 		},
 
@@ -1550,360 +1488,211 @@ var charts_to_process = [],
 
       var plugin_instance = this
       var plugin_settings = plugin_instance.options
-
 			var map = plugin_settings.map.object
 
-			var vectorTileOptions = {
-        rendererFactory: L.canvas.tile,
-        interactive: true,
-        getFeatureId: function(feature) {
-          return feature.properties['csduid']
-        },
-        vectorTileLayerStyles: {
-          dsra_acm7p0_georgiastraitfault_indicators_s: function ( properties ) {
-            var r = properties.sCt_Res90_b0,
-                color = "#666666";
+			// close popups
+			plugin_settings.map.object.closePopup()
 
-            if ( r < 10  ) { fillColor = "#fff176"; }
-            else if ( r >= 10 && r < 50  ) { fillColor = "#ffba00"; }
-            else if ( r >= 50 && r < 100 ) { fillColor = "#ff9000"; }
-            else if ( r >= 100 && r < 300 ) { fillColor = "#ff6500"; }
-            else if ( r > 299 ) { fillColor = "#ff3b00"; }
-
-            return {
-              weight: 0.1,
-              color: color,
-              fillColor: fillColor,
-              fillOpacity: 0.6,
-              fill: true
-            }
-          }
-        }
-      }
-
-      var id = 0;
-
-      var vectorTileLayer = L.vectorGrid.protobuf( 'OpenDRR_dsra_' + plugin_settings.scenario.key.toLowerCase() + '_indicators_s/EPSG_900913/{z}/{x}/{y}.pbf', vectorTileOptions ).addTo( map );
-
-      vectorTileLayer.on( 'click', function ( e ) {
-
-        // if we have a selected feature reset the style
-        if ( id != 0 ) {
-            vectorTileLayer.resetFeatureStyle( id );
-        }
-
-        // set the selected feature id
-        id = e.layer.properties['Sauid'];
-
-        // set the selected feature style
-        setTimeout( function () {
-          vectorTileLayer.setFeatureStyle( id, {
-            fill: true,
-            fillColor: 'blue',
-            color: 'black',
-            weight: 1,
-            fillOpacity: 0.5
-          }, 100 );
-        });
-
-        // add a popup with desired property
-        L.popup().setContent( "<strong>Residents affected after 90 days: </strong>" + e.layer.properties.sCt_Res90_b0.toString() )
-          .setLatLng( e.latlng )
-          .openOn( map );
-
-        L.DomEvent.stop( e );
-      });
-
-		},
-
-		fetch_geoapi: function(url = null, do_legend = true) {
-
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
-
-			var nxt_lnk;
-
-			// if no URL given, use the global geoJSON URL setting
-
-			if ( url == null ) {
-				url = plugin_instance.update_api_url()
+			if (map.hasLayer(plugin_settings.map.layers.tiles)) {
+				map.removeLayer(plugin_settings.map.layers.tiles)
 			}
 
-			$('body').addClass('spinner-on')
-			$('#spinner-progress').text('Retrieving data')
+			// set bounds by the scenario meta
+      var bounds = L.latLngBounds(L.latLng(
+				plugin_settings.scenario.bounds.sw_lat,
+				plugin_settings.scenario.bounds.sw_lng
+			), L.latLng(
+				plugin_settings.scenario.bounds.ne_lat,
+				plugin_settings.scenario.bounds.ne_lng
+			))
 
-			$.getJSON(url, function (data) {
+			// if (plugin_settings.api.bbox != null) {
+			//
+			// 	// if the bbox has been updated
+			//
+			// 	console.log('bbox')
+			//
+			// 	bounds = plugin_settings.api.bbox
+			//
+			// } else {
+			//
+			// 	// use the bounds set by the scenario meta
+			//
+			// 	bounds = L.latLngBounds(L.latLng(
+			// 		plugin_settings.scenario.bounds.sw_lat,
+			// 		plugin_settings.scenario.bounds.sw_lng
+			// 	), L.latLng(
+			// 		plugin_settings.scenario.bounds.ne_lat,
+			// 		plugin_settings.scenario.bounds.ne_lng
+			// 	))
+			//
+			// }
 
-				// console.log('fetching ' + url)
+			var pbf_key = 'dsra_'
+				+ plugin_settings.scenario.key.toLowerCase(),
+					indicator_key = plugin_settings.indicator.key,
+					aggregation = plugin_settings.aggregation.current,
+					feature_ID_key,
+					pane = 'data',
+					layer_key
 
-				// console.log(url, data)
+			plugin_settings.map.panes.data.style.display = ''
 
-				if (typeof data.features !== 'undefined') {
+			if (plugin_settings.indicator.key == 'sH_PGA') {
 
-					// do legend calculations if not retrofit
+				// SHAKEMAP
 
-					if (do_legend == true) {
+				// swap panes
+				// plugin_settings.map.panes.data.style.display = 'none'
+				// plugin_settings.map.panes.shakemap.style.display = ''
 
-						data.features.forEach(function(feature) {
-
-							var feature_val_key = plugin_settings.indicator.key
-
-							if (plugin_settings.indicator.retrofit !== false) {
-								feature_val_key += '_' + plugin_settings.api.retrofit
-							}
-
-              if (plugin_settings.indicator.key == 'sH_PGA') {
-                feature_val_key = 'sH_PGA_max'
-              }
-
-							// check/update max value
-
-							if (feature.properties[feature_val_key] > plugin_settings.legend.max) {
-								plugin_settings.legend.max = feature.properties[feature_val_key]
-							}
-
-						})
-
-					}
-
-					plugin_settings.api.data.push(data)
-
-				}
-
-				// plugin_settings.map.layers.choro.addData(data)
-
-				for (var l in data.links) {
-					lnk = data.links[l]
-
-					if (lnk.rel == 'next') {
-						nxt_lnk = lnk.href
-						break
-					}
-				}
-
-				// if a 'next' link exists, continue loading data
-
-				if (nxt_lnk) {
-
-					// recursive
- 					// inherit do_legend setting
-					plugin_instance.fetch_geoapi(nxt_lnk, do_legend)
-
-				} else {
-
-					if (do_legend == true) {
-
-						console.log('process new legend')
-
-						// determine legend grades
-
-						// var max_step = plugin_settings.legend.max * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.api.aggregation]['rounding'])
-
-            var max_step = plugin_settings.legend.max * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
-
-            var pow = 0,
-                legend_steps = 9,
-								legend_step = 0
-
-						plugin_settings.legend.grades = []
-
-						// console.log('max ' + max_step)
-
-						if (max_step >= 1) {
-
-							while (max_step > 100) {
-								pow += 1
-								max_step = plugin_settings.legend.max / Math.pow(10, pow)
-							}
-
-							// create an array of breaks for the legend values
-
-							legend_step = max_step / legend_steps
-
-							// console.log('step', legend_step)
-
-              for (i = 1; i <= legend_steps; i += 1) {
-                plugin_settings.legend.grades.push((max_step - (legend_step * i)) * Math.pow(10, pow))
-              }
-
-						} else {
-
-							legend_step = max_step / legend_steps
-
-							// console.log('step', legend_step)
-
-              for (i = 1; i <= legend_steps; i += 1) {
-                plugin_settings.legend.grades.push(max_step - (legend_step * i))
-              }
-
-						}
-
-						// console.log('legend', plugin_settings.legend.grades)
-
-					}
-
-					// if (plugin_settings.map.zoom_changed_agg == true) {
-					// 	plugin_settings.map.zoom_changed_agg = false
-					// }
-
-					plugin_instance.process_geoapi()
-
-				}
-			})
-			.fail(function(jqXHR, error) {
-
-				// $( '#alert' ).show()
-				// console.log(error)
-				// $('body').removeClass('spinner-on')
-
-			})
-
-		},
-
-		process_geoapi: function(data) {
-
-      var plugin_instance = this
-      //var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
-      //var plugin_elements = plugin_settings.elements
-
-			// console.log('processing', plugin_settings.api.data)
-
-			$('#spinner-progress').text('Drawing layers')
-
-			// iterate through collections
-
-			if (plugin_settings.indicator.key == 'sH_PGAXX') {
-
-				// if the data is a shakemap
-
-				// hide the geojson pane
-				plugin_settings.map.panes.data.style.display = 'none'
-
-				// show the shakemap pane
-				plugin_settings.map.panes.shakemap.style.display = ''
+				pbf_key += '_shakemap_hexbin_' + aggregation.agg
+				feature_ID_key = 'gridid_1'
+				indicator_key += '_max'
+				// pane = 'shakemap'
+				layer_key = 'shake_grid'
 
 			} else {
 
-				// hide the shakemap pane
-				plugin_settings.map.panes.shakemap.style.display = 'none'
+				// INDICATOR
 
-				// show the geojson pane
-				plugin_settings.map.panes.data.style.display = ''
+				// swap panes
+				// plugin_settings.map.panes.data.style.display = ''
+				// plugin_settings.map.panes.shakemap.style.display = 'none'
 
-				// if the data is geoJSON
+				pbf_key += '_indicators_' + aggregation.agg
+				feature_ID_key = aggregation.prop
 
-				plugin_settings.api.data.forEach(function(collection) {
+				indicator_key += ((plugin_settings.indicator.retrofit !== false) ? '_' + plugin_settings.api.retrofit : '')
 
-					// iterate through the returned features
-
-					collection.features.forEach(function(feature, z) {
-
-						if (typeof plugin_settings.api.features[feature.id] !== 'undefined') {
-
-							// update the feature with the new data
-							// plugin_settings.api.features[feature.id]['properties'] = feature.properties
-
-							// console.log(feature.properties)
-
-              var prop_key = plugin_settings.indicator.key
-
-							if (plugin_settings.indicator.retrofit !== false) {
-								prop_key += '_' + plugin_settings.api.retrofit
-							}
-
-              if (plugin_settings.indicator.key == 'sH_PGA') {
-                prop_key = 'sH_PGA_max'
-              }
-
-							// if the feature already exists on the map,
-
-							// update its properties
-
-							plugin_settings.api.features[feature.id]['feature'] = feature
-
-							// plugin_settings.api.features[feature.id] = feature
-
-							// update its color
-
-              // console.log(prop_key, feature.properties[prop_key])
-
-              var rounded_color = feature.properties[prop_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
-
-							plugin_settings.api.features[feature.id].setStyle({
-								fillColor: plugin_instance._choro_color(rounded_color)
-							}).setPopupContent(function(e) {
-
-								// update the popup content
-
-								return L.Util.template('<p>'
-									+ plugin_settings.indicator.legend.prepend
-									+ feature.properties[prop_key].toLocaleString(undefined, { maximumFractionDigits: plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['decimals'] })
-									+ ' '
-									+ plugin_settings.indicator.legend.append
-									+ '</p>'
-								)
-
-							})
-
-							plugin_settings.logging.update_count += 1
-
-						} else {
-
-							// if not, add the feature
-
-							plugin_settings.map.layers.choro.addData(feature)
-
-							plugin_settings.logging.feature_count += 1
-
-						}
-
-					})
-				})
-
-				// set map bounds to frame loaded features on first load
-
-				if ( plugin_settings.map.last_zoom == -1 ) {
-
-					plugin_settings.map.object.fitBounds(plugin_settings.map.layers.choro.getBounds(), {
-						paddingTopLeft: [$(window).outerWidth() / 2, 0]
-					})
-
-				}
-
-				// if retrofit is off, add the legend
-
-				if (
-          plugin_settings.indicator.key == 'sH_PGA' ||
-          (
-            plugin_settings.indicator.retrofit == true &&
-            plugin_settings.api.retrofit == 'b0'
-          )
-        ) {
-
-					plugin_settings.map.legend.addTo(plugin_settings.map.object)
-
-					$('body').find('.legend-item').tooltip()
-
-				}
-
-				// console.log(plugin_settings.api.data, plugin_settings.api.features)
-
-				console.log('added ' + plugin_settings.logging.feature_count + ' layers, updated ' + plugin_settings.logging.update_count + ' layers')
-
-				plugin_settings.logging.feature_count = 0
-				plugin_settings.logging.update_count = 0
+				// pane = 'data'
+				layer_key = 'tiles'
 
 			}
 
-			// update breadcrumb
+			var shakeTileOptions = {
+	      rendererFactory: L.canvas.tile,
+				pane: pane,
+	      interactive: true,
+	      getFeatureId: function(feature) {
+	        return feature.properties[feature_ID_key]
+	      },
+	      bounds: bounds,
+	      vectorTileLayerStyles: plugin_instance.set_shake_styles(pbf_key, indicator_key)
+	    }
 
-			$('.app-breadcrumb').find('#breadcrumb-scenario-indicator').text(plugin_settings.indicator.label)
+			console.log('add')
 
-			// remove progress
+			// set tile URL
+			proto_URL = elastic_url + '/' + pbf_key + '/EPSG_4326/{z}/{x}/{y}.pbf'
+
+			// load the tiles
+      plugin_settings.map.layers.tiles = L.vectorGrid.protobuf(
+				proto_URL,
+				shakeTileOptions
+			).on('add', function(e) {
+
+				// update the legend
+
+				plugin_settings.legend.grades = plugin_settings.indicator.legend.values
+
+				plugin_settings.map.legend.addTo(plugin_settings.map.object)
+
+				$('body').find('.legend-item').tooltip()
+
+				// update breadcrumb
+
+				$('.app-breadcrumb').find('#breadcrumb-scenario-indicator').text(plugin_settings.indicator.label)
+
+			}).on('click', function (e) {
+
+				L.DomEvent.stop(e)
+
+        // if we have a selected feature, reset the style
+        if (plugin_settings.map.selected_feature != null) {
+          plugin_settings.map.layers.tiles.resetFeatureStyle(plugin_settings.map.selected_feature)
+        }
+
+        // set the selected feature id
+        plugin_settings.map.selected_feature = e.layer.properties[feature_ID_key]
+
+        // set the selected feature style
+        plugin_settings.map.layers.tiles.setFeatureStyle(plugin_settings.map.selected_feature, {
+          fill: true,
+					fillColor: '#9595a0',
+					color: '#2b2c42',
+          weight: 0.8,
+          fillOpacity: 0.5
+        })
+
+        // set the popup content
+        plugin_settings.map.popup.setContent(function() {
+
+					return '<p>'
+						+ plugin_settings.indicator.legend.prepend
+						+ e.layer.properties[indicator_key].toLocaleString(undefined, { maximumFractionDigits: plugin_settings.indicator.aggregation[aggregation.agg]['decimals'] })
+						+ ' '
+						+ plugin_settings.indicator.legend.append
+						+ '</p>'
+
+					})
+	        .setLatLng(e.latlng)
+	        .openOn(map)
+
+				// update charts if necessary
+
+				if (
+					plugin_settings.charts.enabled == true &&
+					plugin_settings.indicator.key !== 'sH_PGA'
+				) {
+					plugin_instance.get_charts()
+				}
+
+      }).addTo(map)
+
+
 			$('body').removeClass('spinner-on')
-			$('#spinner-progress').text('')
 
+		},
+
+		set_shake_styles: function(pbf_key, indicator_key) {
+
+			var plugin_instance = this
+			var plugin_settings = plugin_instance.options
+
+			var layer_style = {},
+					fillColor,
+					weight = 0
+
+			// console.log(pbf_key, indicator_key)
+
+			layer_style[pbf_key] = function(properties) {
+
+				if (indicator_key == 'sH_PGA_max') {
+
+					fillColor = plugin_instance._choro_color( properties[indicator_key] * 100)
+
+				} else {
+
+					var rounded_color = properties[indicator_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
+
+					// console.log('val: ' + properties[indicator_key], 'rounding: ' +  plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'], 'rounded: ' + rounded_color)
+
+					fillColor = plugin_instance._choro_color(rounded_color)
+					weight = 0.4
+				}
+
+				return {
+					fillColor: fillColor,
+					weight: weight,
+					fillOpacity: 0.8,
+					color: '#000000',
+					opacity: 0.6,
+					fill: true
+				}
+			}
+
+			return layer_style
 		},
 
 		set_epicenter: function() {
@@ -1928,14 +1717,18 @@ var charts_to_process = [],
       var plugin_instance = this
       var plugin_settings = plugin_instance.options
 
-			return d >= plugin_settings.legend.grades[0] ? '#800026' :
-				d >= plugin_settings.legend.grades[1] ? '#bd0026' :
-				d >= plugin_settings.legend.grades[2] ? '#e31a1c' :
-				d >= plugin_settings.legend.grades[3] ? '#fc4e2a' :
-				d >= plugin_settings.legend.grades[4] ? '#fd8d3c' :
-				d >= plugin_settings.legend.grades[5] ? '#feb24c' :
-				d >= plugin_settings.legend.grades[6] ? '#fed976' :
-				d >= plugin_settings.legend.grades[7] ? '#ffeda0' :
+			var grades = [].concat(plugin_settings.indicator.legend.values).reverse()
+
+			var rounding = plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding']
+
+			return d >= grades[0] * Math.pow(10, rounding) ? '#800026' :
+				d >= grades[1] * Math.pow(10, rounding) ? '#bd0026' :
+				d >= grades[2] * Math.pow(10, rounding) ? '#e31a1c' :
+				d >= grades[3] * Math.pow(10, rounding) ? '#fc4e2a' :
+				d >= grades[4] * Math.pow(10, rounding) ? '#fd8d3c' :
+				d >= grades[5] * Math.pow(10, rounding) ? '#feb24c' :
+				d >= grades[6] * Math.pow(10, rounding) ? '#fed976' :
+				d >= grades[7] * Math.pow(10, rounding) ? '#ffeda0' :
         '#ffffcc'
 
 		},
@@ -2016,336 +1809,9 @@ var charts_to_process = [],
 
 		},
 
-		tile2long: function(x, z) {
-				return (x/Math.pow( 2, z ) * 360 - 180)
-		},
-
-		tile2lat: function(y, z) {
-			var n = Math.PI-2 * Math.PI * y / Math.pow(2, z)
-
-			return (180/Math.PI * Math.atan(0.5 * (Math.exp(n) -Math.exp(-n))))
-		},
-
-		getFeatureColor: function(v) {
-			return v >= 0.31 ? '#bd0026' :
-				v >= 0.20 ? '#eb3420' :
-				v >= 0.13 ? '#fb7b35' :
-				v >= 0.08 ? '#feb751' :
-				v >= 0.03 ? '#ffe98c' :
-				v >= 0.01 ? '#ffff1d' :
-				'#ffff1d';
-		},
-
-		getBucketColor: function( v ) {
-			return v >= 10000 ? '#bd0026' :
-				v >= 7778 ? '#eb3420' :
-				v >= 5556 ? '#fb7b35' :
-				v >= 3333 ? '#feb751' :
-				v >= 1111 ? '#ffe98c' :
-				v >= 0 ? '#ffff1d' :
-				'#ffff1d';
-		},
-
-		calcPrecision: function() {
-
-      var plugin_instance = this
-      //var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
-      //var plugin_elements = plugin_settings.elements
-
-			let p = ((plugin_settings.map.object.getZoom() * (29/18)) - 1).toFixed(0)
-
-			// p = ++p;
-
-			if (plugin_settings.map.object.getZoom() > 8) {
-
-				p = plugin_settings.map.object.getZoom() + 5
-
-			} else if (plugin_settings.map.object.getZoom() > 6) {
-
-				p = 12
-
-			} else {
-
-				p = 10
-
-			}
-
-			return p
-
-		},
-
-		getGridData: function() {
-
-      var plugin_instance = this,
-					plugin_settings = plugin_instance.options
-
-			$('body').addClass('spinner-on')
-			$('#spinner-progress').text('Retrieving grid data')
-
-			// console.log('getGridData')
-
-			var b = plugin_settings.map.object.getBounds(),
-					b1 = {
-						"tllat": b.getNorthWest().lat > 90 ? 90 : b.getNorthWest().lat,
-						"tllon": b.getNorthWest().lng < -180 ? -180 : b.getNorthWest().lng,
-						"brlat": b.getSouthEast().lat < -90 ? -90 : b.getSouthEast().lat,
-						"brlon": b.getSouthEast().lng > 180 ? 180 : b.getSouthEast().lng
-					}, scroll_id;
-
-			var url = plugin_instance.update_api_url()
-
-			$.ajax({
-					method: "POST",
-					tryCount : 0,
-					retryLimit : 3,
-					crossDomain: true,
-					url: url,
-					data: JSON.stringify({
-						"size": 0,
-						"aggs": {
-							"my_applicable_filters": {
-								"filter": {
-									"bool": {
-										"must": [
-											{
-												"geo_bounding_box": {
-													"coordinates": {
-														"top_left": b1.tllat + ',' + b1.tllon,
-														"bottom_right": b1.brlat + ',' + b1.brlon
-													}
-												}
-											}
-										]
-									}
-								},
-								"aggs": {
-									"avg_my_field": {
-										"avg": {
-											"field": "properties.sH_PGAXX"
-										}
-									},
-									"large-grid": {
-										"geotile_grid": {
-											"field": "coordinates",
-											"precision": plugin_instance.calcPrecision()
-										}
-									}
-								}
-							}
-						}
-					}),
-					headers: { "content-type": "application/json" },
-					success: function(resp) {
-
-						// console.log(url)
-						// console.log('getGridData', resp)
-
-						let markers = [];
-
-						const buckets = resp.aggregations['my_applicable_filters']['large-grid'].buckets;
-
-						buckets.forEach( bucket => {
-
-							splitbucket = bucket.key.split('/');
-
-							let z = splitbucket[0]
-							let x = splitbucket[1]
-							let y = splitbucket[2]
-
-							let lat = plugin_instance.tile2lat(y, z)
-							let lon = plugin_instance.tile2long(x, z)
-
-							markers.push([lat, lon, bucket.doc_count])
-
-							var bbox = plugin_settings.elastic.merc.bbox(x, y, z)
-
-							// define rectangle geographical bounds
-							var bounds = [ [ bbox[1], bbox[0] ], [ bbox[3], bbox[2] ] ]
-
-							// console.log(bucket.doc_count, plugin_instance.getBucketColor( bucket.doc_count ))
-
-							// create an orange rectangle
-							var feature = L.rectangle(bounds, {
-								color: plugin_instance.getBucketColor( bucket.doc_count ),
-								weight: 0,
-								fillOpacity: 0.5,
-								pane: 'shakemap'
-							}).addTo(plugin_settings.map.layers.shake_grid)
-
-						})
-
-						$('body').removeClass('spinner-on')
-						$('#spinner-progress').text('')
-
-					},
-					complete: function() {
-
-						if (plugin_settings.map.last_zoom == -1) {
-							plugin_settings.map.object.fitBounds(plugin_settings.map.layers.shake_grid.getBounds(), {
-								paddingTopLeft: [$(window).outerWidth() / 2, 0]
-							})
-						}
-
-						// update breadcrumb
-
-						$('.app-breadcrumb .breadcrumb').find('#breadcrumb-scenario-indicator').text(plugin_settings.indicator.label)
-
-					},
-					fail: function(error) {
-
-						this.tryCount++
-
-						if (this.tryCount <= this.retryLimit) {
-							// try again
-							$.ajax(this)
-							return
-						}
-
-						console.log('error: ' + error)
-						return
-
-					}
-			})
-
-			// $( '#modal' ).remove();
-		},
-
-		getFeatureData: function(scroll_id) {
-
-			// gets shakemap choropleth
-
-      var plugin_instance = this
-      //var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
-      //var plugin_elements = plugin_settings.elements
-
-			$('body').addClass('spinner-on')
-			$('#spinner-progress').text('Retrieving data')
-
-			console.log('getFeatureData', scroll_id)
-
-			var b = plugin_settings.map.object.getBounds(),
-					b1 = {
-							"tllat": b.getNorthWest().lat > 90 ? 90 : b.getNorthWest().lat,
-							"tllon": b.getNorthWest().lng < -180 ? -180 : b.getNorthWest().lng,
-							"brlat": b.getSouthEast().lat < -90 ? -90 : b.getSouthEast().lat,
-							"brlon": b.getSouthEast().lng > 180 ? 180 : b.getSouthEast().lng
-					}
-
-			var url = plugin_instance.update_api_url(),
-					feature_query = {
-						"size": 1000,
-						"_source": [ "id","type", "geometry.*", "properties." + feature_index_prop ],
-						"query": {
-							"geo_shape": {
-								"geometry": {
-									"shape": {
-										"type": "envelope",
-										"coordinates": [ [ b1.tllon, b1.tllat ], [ b1.brlon, b1.brlat ] ]
-									},
-									"relation": "intersects"
-								}
-							}
-						}
-					}
-
-			if (scroll_id) {
-
-				url = elastic_url + '/_search/scroll'
-
-				feature_query = {
-					'scroll': '1m',
-					'scroll_id': scroll_id
-				}
-
-			}
-
-			$.ajax({
-					method: "POST",
-					tryCount : 0,
-					retryLimit : 3,
-					crossDomain: true,
-					url: url,
-					data: JSON.stringify(feature_query),
-					headers: { "content-type": "application/json" },
-					success: function(resp) {
-
-						var len = plugin_settings.map.layers.shake_choro.getLayers().length;
-
-						if ( len === resp.hits.total.value || len === featureLimit ) {
-								// $( '#modal' ).remove();
-						}
-
-						if ( len < resp.hits.total.value && len < featureLimit ) {
-
-							plugin_instance.addGeoJSONFeatures( resp.hits.hits, function( e ) {
-
-								if ( resp.hits.hits.length > 0 && len <= featureLimit ) {
-									plugin_instance.getFeatureData(resp._scroll_id);
-								}
-
-								if ( plugin_settings.map.layers.shake_choro.getLayers().length >= featureLimit ) {
-										// $( '#alert' ).show();
-								}
-
-							} )
-
-						}
-
-						console.log('spinner off')
-						$('body').removeClass('spinner-on')
-						$('#spinner-progress').text('')
-
-					},
-					complete: function() {
-
-						// update breadcrumb
-
-						$('.app-breadcrumb .breadcrumb').find('#breadcrumb-scenario-indicator').text(plugin_settings.indicator.label)
-
-					},
-					fail: function(error) {
-						this.tryCount++
-
-						if ( this.tryCount <= this.retryLimit ) {
-							//try again
-							$.ajax(this)
-							return;
-						}
-
-						console.log(error)
-						return
-					}
-			})
-
-		},
-
-		addGeoJSONFeatures: function( data, callback ) {
-
-			// adds sH_PGAXX choropleth in the map.layers.shake_choro layer
-
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
-
-				var features = [],
-						source,
-						d;
-
-				data.forEach( feature => {
-					source = feature._source;
-					source.properties._id = feature._id;
-					features.push( source );
-				});
-
-				plugin_settings.map.layers.shake_choro.addData( features );
-
-				if ( callback ) {
-					callback()
-				}
-		},
-
 		get_charts: function(fn_options) {
+
+			// console.log('get charts')
 
 			var plugin_instance = this
 			var plugin_settings = plugin_instance.options
@@ -2395,7 +1861,9 @@ var charts_to_process = [],
 
 				if (plugin_settings.map.selected_feature != null) {
 
-					console.log('add shape ID to chart request', plugin_settings.map.selected_feature.properties.csduid)
+					var match_phrase = {}
+
+					match_phrase['properties.' + plugin_settings.aggregation.current.prop + '.keyword'] = plugin_settings.map.selected_feature
 
 					request_data['query'] = {
 				    "bool": {
@@ -2405,9 +1873,7 @@ var charts_to_process = [],
 				          "bool": {
 				            "should": [
 				              {
-				                "match_phrase": {
-				                  "properties.csduid.keyword": plugin_settings.map.selected_feature.properties.csduid
-				                }
+				                "match_phrase": match_phrase
 				              }
 				            ],
 				            "minimum_should_match": 1
@@ -2458,7 +1924,7 @@ var charts_to_process = [],
 					retryLimit : 3,
 					crossDomain: true,
 					headers: { "content-type": "application/json" },
-					url: elastic_url + '/opendrr_dsra_' + plugin_settings.scenario.key.toLowerCase() + '_indicators_b/_search',
+					url: 'https://api.riskprofiler.ca/opendrr_dsra_' + plugin_settings.scenario.key.toLowerCase() + '_indicators_b/_search',
 					data: JSON.stringify(request_data),
 					success: function(data) {
 
@@ -2476,8 +1942,8 @@ var charts_to_process = [],
 						})
 
 						if (request.field == 'E_BldgTypeG') {
-							console.log('request', request_data)
-							console.log('data', series)
+							// console.log('request', request_data)
+							// console.log('data', series)
 						}
 
 						if (request.object.series.length) {
@@ -2525,6 +1991,153 @@ var charts_to_process = [],
 
 
 			})
+
+		},
+
+		_round: function(num, power) {
+			return num * Math.pow(10, power)
+		},
+
+		_get_max_vals: function() {
+
+			var scenarios = [
+				'SIM9p0_CascadiaInterfaceBestFault',
+				'ACM7p0_GeorgiaStraitFault',
+				'ACM7p3_LeechRiverFullFault',
+				'IDM7p1_Sidney',
+				'SCM7p5_valdesbois'
+			]
+
+			var all_vals = {}
+
+			function doit(url = null) {
+
+				if (url == null) {
+					url = 'https://geo-api.riskprofiler.ca/collections/opendrr_dsra_' + scenarios[0].toLowerCase() + '_indicators_csd/items?lang=en_US&f=json&limit=2000'
+				}
+
+				console.log(url)
+
+				var nxt_lnk
+
+				$.ajax({
+					url: url,
+					success: function(data) {
+
+						var max = 0
+
+						data.features.forEach(function(feature) {
+
+							// console.log(feature)
+
+							for (var key in feature.properties) {
+
+								if (typeof feature.properties[key] == 'number') {
+
+									var key_clean = key.slice(0, -3)
+
+									if (typeof all_vals[key_clean] == 'undefined') {
+										all_vals[key_clean] = {}
+									}
+
+									if (
+										typeof all_vals[key_clean][scenarios[0]] == 'undefined' ||
+										feature.properties[key] > all_vals[key_clean][scenarios[0]]
+									) {
+
+										all_vals[key_clean][scenarios[0]] = feature.properties[key]
+
+									}
+
+								}
+
+
+							}
+
+
+						})
+
+						for (var l in data.links) {
+							lnk = data.links[l]
+
+							if (lnk.rel == 'next') {
+								nxt_lnk = lnk.href
+								break
+							}
+						}
+
+						if (nxt_lnk) {
+
+							console.log('next')
+
+							// recursive
+							doit(nxt_lnk)
+
+						} else {
+
+							console.log('done')
+
+							scenarios.shift()
+
+							if (scenarios.length) {
+
+								doit()
+
+							} else {
+
+								process()
+
+							}
+
+						}
+
+					}
+				})
+
+				console.log('---')
+
+			}
+
+			function process() {
+				console.log(all_vals)
+
+				// console.log(JSON.stringify(all_vals))
+
+				/*
+
+				'indicator' => array (
+					array (
+						'scenario' => y
+						'value' => x
+					),
+					array (
+						'scenario' => y
+						'value' => x
+					),
+				)
+
+
+				*/
+
+				var div = $('<textarea>').appendTo('body').css('height', '200px')
+
+				for (var indicator in all_vals) {
+
+					div.append("'" + indicator + "' => array (")
+
+					for (var scenario in all_vals[indicator]) {
+						div.append("\n\tarray (")
+						div.append("\n\t\t'scenario' => '" + scenario + "',")
+						div.append("\n\t\t'value' => " + all_vals[indicator][scenario])
+						div.append("\n\t),")
+					}
+
+					div.append("\n),\n\n")
+
+				}
+			}
+
+			doit()
 
 		}
 

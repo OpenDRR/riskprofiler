@@ -1,3 +1,5 @@
+const geoapi_url = 'https://geo-api.riskprofiler.ca';
+
 // risk profiler
 // v1.0
 
@@ -17,10 +19,31 @@
 				choropleth: null,
 				selected_polygon: null,
 			},
+			api: {
+				base_URL: geoapi_url + '/collections/opendrr_psra_indicators_',
+				retrofit: 'b0', // or r1
+				aggregation: 'csd', // or s
+				agg_prop: 'csduid', // or Sauid,
+				featureProperties: '', // Limit fetched properties for performance
+				limit: 100,
+				lang: 'en_US',
+				bbox: null,
+				geojson_URL: null,
+				data: [],
+				features: []
+			},
+			variable: {
+				key: 'eC_Fatality',
+				retrofit: 'b0'
+			},
 			colors: {
 				shape: '#8b0707',
 				shape_hover: '#ba0728',
 				shape_select: '#d90429'
+			},
+			sidebar: {
+				list: null,
+				item: null
 			},
       debug: false
     };
@@ -41,6 +64,13 @@
       var plugin_item = this.item;
       var plugin_settings = plugin_instance.options;
       var plugin_elements = plugin_settings.elements;
+
+			$.ajax({
+				url: 'https://api.riskprofiler.ca/opendrr_dsra_sim9p0_cascadiainterfacebestfault_shakemap',
+				success: function(data) {
+					console.log(data)
+				}
+			})
 
       //
       // INITIALIZE
@@ -72,56 +102,46 @@
 
 			// GEOJSON
 
-			plugin_settings.map.geojson = [{
-		    "type": "Feature",
-		    "properties": {
-					id: 1,
-					city: 'Ottawa-Gatineau'
-				},
-		    "geometry": {
-	        "type": "Polygon",
-	        "coordinates": [[
-            [-105, 55],
-				    [-107, 55.5],
-				    [-108, 57],
-				    [-110, 55],
-				    [-108, 54]
-	        ]]
-		    }
-			}, {
-		    "type": "Feature",
-		    "properties": {
-					id: 2,
-					city: 'Vancouver'
-				},
-		    "geometry": {
-	        "type": "Polygon",
-	        "coordinates": [[
-            [-120, 50],
-				    [-122, 53],
-				    [-125, 52]
-	        ]]
-		    }
-			}]
+			// layer for choropleth
 
-			plugin_settings.map.choropleth = L.geoJSON(plugin_settings.map.geojson, {
+			plugin_settings.map.choropleth = L.geoJSON([], {
 		    style: {
 					color: plugin_settings.colors.shape,
-					fillColor: plugin_settings.colors.shape
+					fillColor: plugin_settings.colors.shape,
+					weight: 0.7
 				},
 				onEachFeature: function (feature, layer) {
+
+					var prop_key = plugin_settings.variable.key + '_' + plugin_settings.api.retrofit
 
 					if (typeof feature !== 'undefined') {
 
 						layer
-							.bindPopup(plugin_instance.create_popup(feature.properties.id), {
+							.bindPopup(function(e) {
+
+								var popup_markup = '<div class="d-flex align-items-center">'
+
+									popup_markup += '<h5 class="risk-popup-city flex-grow-1 mb-0 p-2">' + e.feature.properties.csdname + '</h5>'
+									popup_markup += '<div class="risk-popup-rank border-left py-2 px-3 font-size-lg text-primary">' + 'X' + '</div>'
+
+								popup_markup += '</div>'
+
+								popup_markup += '<div class="risk-popup-details bg-light p-2">'
+
+									popup_markup += '<span class="risk-detail-link btn btn-outline-primary" data-id="' + e.feature.properties.csduid + '">View Details</span>'
+
+								popup_markup += '</div>'
+
+								return L.Util.template(popup_markup)
+
+							}, {
 								className: 'risk-popup'
 							})
 							.on('mouseover', function () {
 
 								// if the shape isn't already selected
 
-								if (plugin_settings.map.selected_polygon != feature.properties.id) {
+								if (plugin_settings.map.selected_polygon != feature.properties.csduid) {
 
 									this.setStyle({
 										'color': plugin_settings.colors.shape_hover,
@@ -130,7 +150,7 @@
 
 									$('.sidebar-item').removeClass('hover')
 
-									$('.sidebar-item[data-id="' + feature.properties.id + '"]').addClass('hover')
+									$('.sidebar-item[data-id="' + feature.properties.csduid + '"]').addClass('hover')
 
 								}
 
@@ -142,7 +162,7 @@
 
 								$('.sidebar-item').removeClass('hover')
 
-								if (plugin_settings.map.selected_polygon != feature.properties.id) {
+								if (plugin_settings.map.selected_polygon != feature.properties.csduid) {
 
 									this.setStyle({
 										'color': plugin_settings.colors.shape,
@@ -155,7 +175,7 @@
 							.on('click', function() {
 
 								plugin_instance.item_select({
-									item_id: feature.properties.id,
+									item_id: feature.properties.csduid,
 									polygon: this
 								})
 
@@ -166,6 +186,8 @@
 				}
 
 			}).addTo(plugin_settings.map.object)
+
+			plugin_instance.fetch_geoapi()
 
 			// EVENTS
 
@@ -181,13 +203,25 @@
 			// FILTER
 			//
 
-			$(document).profiler('get_filter', 'risks/filter.php')
+			$(document).profiler('get_controls', 'risks')
 
 			//
 			// SIDEBAR
 			//
 
-			$(document).profiler('get_sidebar', 'risks/items.php')
+			$(document).profiler('get_sidebar', {
+				url: 'risks/items.php',
+				complete: function() {
+
+					plugin_settings.sidebar.list = $('body').find('.sidebar-items .list-group')
+
+					plugin_settings.sidebar.item = plugin_settings.sidebar.list.find('.sidebar-item')[0]
+
+					$('body').addClass('spinner-on')
+					$('#spinner-progress').text('Retrieving data')
+
+				}
+			})
 
 			$('body').on('mouseover', '.sidebar-item.city', function() {
 
@@ -203,7 +237,7 @@
 
 					plugin_settings.map.choropleth.resetStyle().eachLayer(function(layer) {
 
-						if (layer.feature.properties.id == plugin_settings.map.selected_polygon) {
+						if (layer.feature.properties.csduid == plugin_settings.map.selected_polygon) {
 
 							// if the shape is selected
 
@@ -212,7 +246,7 @@
 								'fillColor': plugin_settings.colors.shape_select
 							})
 
-						} else if (this_id == layer.feature.properties.id) {
+						} else if (this_id == layer.feature.properties.csduid) {
 
 							// if the shape matches the hovered sidebar item
 
@@ -241,7 +275,7 @@
 
 					plugin_settings.map.choropleth.resetStyle().eachLayer(function(layer) {
 
-						if (layer.feature.properties.id == plugin_settings.map.selected_polygon) {
+						if (layer.feature.properties.csduid == plugin_settings.map.selected_polygon) {
 
 							layer.setStyle({
 								'color': plugin_settings.colors.shape_select,
@@ -262,10 +296,10 @@
 
 					plugin_settings.map.choropleth.resetStyle().eachLayer(function(layer) {
 
-						if (this_id == layer.feature.properties.id) {
+						if (this_id == layer.feature.properties.csduid) {
 
 							plugin_instance.item_select({
-								item_id: layer.feature.properties.id,
+								item_id: layer.feature.properties.csduid,
 								polygon: layer
 							})
 
@@ -315,6 +349,126 @@
 			})
 
     },
+
+		update_api_url: function() {
+
+      var plugin_instance = this
+      var plugin_settings = plugin_instance.options
+
+			url = plugin_settings.api.base_URL
+					+ plugin_settings.api.aggregation
+					+ '/items?'
+					+ 'lang=' + plugin_settings.api.lang
+					+ '&f=json'
+					+ '&limit=' + plugin_settings.api.limit
+
+			if (plugin_settings.variable.key !== '') {
+
+				url += '&properties=csdname,' + plugin_settings.api.agg_prop
+						+ ','
+					 	+ plugin_settings.variable.key
+  					+ '_'
+						+ plugin_settings.api.retrofit
+      }
+
+      if (plugin_settings.api.bbox !== null) {
+        url += '&bbox=' + plugin_settings.api.bbox
+      }
+
+			plugin_settings.api.geojson_URL = url
+
+			console.log('update_api_url', url)
+
+			return url
+
+		},
+
+		fetch_geoapi: function(url = null, do_legend = true) {
+
+      var plugin_instance = this
+      var plugin_settings = plugin_instance.options
+
+			var nxt_lnk
+
+			$('body').addClass('spinner-on')
+			$('#spinner-progress').text('Retrieving data')
+
+			if ( url == null ) {
+				url = plugin_instance.update_api_url()
+			}
+
+			$.ajax({
+				url: url,
+				success: function(data) {
+
+					console.log(data)
+
+					if (typeof data.features !== 'undefined') {
+
+						plugin_settings.api.data.push(data)
+
+					}
+
+					// for (var l in data.links) {
+					// 	lnk = data.links[l]
+					//
+					// 	if (lnk.rel == 'next') {
+					// 		nxt_lnk = lnk.href
+					// 		break
+					// 	}
+					// }
+					//
+					// // if a 'next' link exists, continue loading data
+					//
+					// if (nxt_lnk) {
+					//
+					// 	// recursive
+	 				// 	// inherit do_legend setting
+					// 	plugin_instance.fetch_geoapi(nxt_lnk, do_legend)
+					//
+					// } else {
+					//
+					// 	plugin_instance.process_geoapi()
+					//
+					// }
+
+					plugin_instance.process_geoapi()
+
+				}
+			})
+
+		},
+
+		process_geoapi: function(data) {
+
+      var plugin_instance = this
+      var plugin_settings = plugin_instance.options
+
+			plugin_settings.api.data.forEach(function(collection) {
+
+				// iterate through the returned features
+
+				// console.log(collection)
+
+				collection.features.forEach(function(feature, z) {
+
+					// console.log(feature)
+
+					plugin_settings.map.choropleth.addData(feature)
+
+					var new_item = $(plugin_settings.sidebar.item).clone().appendTo(plugin_settings.sidebar.list)
+
+					new_item.attr('data-id', feature.properties.csduid)
+					new_item.find('.sidebar-item-header').html(feature.properties.csdname)
+
+				})
+			})
+
+			// remove progress
+			$('body').removeClass('spinner-on')
+			$('#spinner-progress').text('')
+
+		},
 
 		create_popup: function(fn_options) {
 

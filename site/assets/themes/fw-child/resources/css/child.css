@@ -86,6 +86,10 @@ h6 {
   letter-spacing: 0.05em;
 }
 
+.otgs-development-site-front-end {
+  display: none !important;
+}
+
 .btn-outline-primary,
 .btn-outline-secondary {
   color: #2b2c42;
@@ -213,6 +217,7 @@ body.spinner-on #spinner-progress {
 }
 #main-header a {
   color: #2b2c42;
+  transition: 0.25s;
 }
 
 #header-logo img {
@@ -238,7 +243,6 @@ body.spinner-on #spinner-progress {
 }
 #header-primary a {
   position: relative;
-  transition: 0.25s;
 }
 #header-primary a:after {
   content: "";
@@ -259,11 +263,32 @@ body.spinner-on #spinner-progress {
 }
 
 #header-secondary {
-  margin-bottom: 1.3rem;
   font-size: 0.6875rem;
+}
+
+#header-menu-secondary {
+  margin-bottom: 0.8rem;
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+#header-menu-secondary a:hover {
+  color: #d90429;
+}
+
+#header-menu-lang {
+  margin-right: 0.5rem;
+  font-weight: 400;
+}
+#header-menu-lang .menu-item {
+  padding: 0.25rem 0.5rem;
+  text-transform: none;
+}
+#header-menu-lang .menu-item:hover {
+  background-color: #dde0e7;
+}
+#header-menu-lang .menu-item.wpml-ls-current-language {
+  background-color: #fff;
 }
 
 #main-footer {
@@ -615,6 +640,9 @@ body.spinner-on #spinner-progress {
   padding: 0.25rem 0.375rem;
   border-radius: 0;
 }
+.app-page .leaflet-popup {
+  z-index: 10;
+}
 .app-page[data-sidebar-width=half] .app-sidebar {
   width: 50%;
 }
@@ -678,6 +706,15 @@ body.spinner-on #spinner-progress {
 }
 .home main p {
   font-size: 1.25rem;
+}
+.home .block-type-animation .animation {
+  position: static;
+  left: auto;
+  top: auto;
+  transform: none;
+}
+.home .block-type-animation .animation svg {
+  width: 100% !important;
 }
 
 #home-features h6 {

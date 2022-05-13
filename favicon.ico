@@ -1,2 +1,14 @@
-<br />
-<b>Fatal error</b>:  Allowed memory size of 41943040 bytes exhausted (tried to allocate 20480 bytes) in <b>/home/riskprofiler/public_html/site/assets/themes/fw-parent/resources/functions/fields/builder/settings.php</b> on line <b>1395</b><br />
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Redirecting...</title>
+		<meta http-equiv="refresh" content="0;url=./site/wp-includes/images/w-logo-blue-white-bg.png">
+	</head>
+	<body>
+		<script type="text/javascript">
+			window.location = "./site/wp-includes/images/w-logo-blue-white-bg.png";
+		</script>
+
+		<p>You are being redirected to <a href="./site/wp-includes/images/w-logo-blue-white-bg.png">./site/wp-includes/images/w-logo-blue-white-bg.png</a></p>
+	</body>
+</html>

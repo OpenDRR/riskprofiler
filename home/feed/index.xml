@@ -10,12 +10,12 @@
 	Comments on: Home Page	</title>
 	<atom:link href="./index.html" rel="self" type="application/rss+xml" />
 	<link>./../../index.html</link>
-	<description>Just another WordPress site</description>
+	<description></description>
 	<lastBuildDate>Wed, 27 Oct 2021 14:26:23 +0000</lastBuildDate>
 	<sy:updatePeriod>
 	hourly	</sy:updatePeriod>
 	<sy:updateFrequency>
 	1	</sy:updateFrequency>
-	<generator>https://wordpress.org/?v=5.8.1</generator>
+	<generator>https://wordpress.org/?v=5.9.3</generator>
 </channel>
 </rss>

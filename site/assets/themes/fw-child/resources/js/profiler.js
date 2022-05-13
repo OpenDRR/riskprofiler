@@ -14,6 +14,7 @@
 				title: null,
 				url: null
 			},
+			lang: 'en',
       debug: false
     };
 
@@ -41,6 +42,12 @@
       if (plugin_settings.debug == true) {
         console.log('profiler', 'initializing')
       }
+
+			// lang
+
+			if ($('body').hasClass('lang-fr')) {
+				plugin_settings.lang = 'fr'
+			}
 
 			// store the page title for history API stuff
 
@@ -118,15 +125,31 @@
 				settings.before()
 			}
 
+			var ajax_url
+
+			if (settings.url.charAt(0) == '/' || settings.url.charAt(0) == '.' || settings.url.indexOf('http') !== -1) {
+				ajax_url = settings.url
+			} else {
+				ajax_url = '../site/assets/themes/fw-child/template/' + settings.url
+			}
+
+			console.log('get ' + ajax_url)
+
 			$('.app-sidebar-content').fadeOut(125, function() {
 
 				$.ajax({
-					url: '../site/assets/themes/fw-child/template/' + settings.url,
+					url: ajax_url,
 					method: settings.method,
 					data: settings.data,
 					success: function(data) {
 
-						$('.app-sidebar-content').html(data).fadeIn(500).scrollTop(0)
+						var new_html = $(data)
+
+						if (new_html.filter('.ajax-content').length) {
+							new_html = new_html.filter('.ajax-content')
+						}
+
+						$('.app-sidebar-content').html(new_html).fadeIn(500).scrollTop(0)
 
 						if (typeof settings.success == 'function') {
 	            settings.success(data)
@@ -169,107 +192,45 @@
 			$.ajax({
 				url: '../site/assets/themes/fw-child/template/' + settings.dir + '/control-bar.php',
 				success: function(bar_data) {
+
 					$('.app-controls-content').html(bar_data)
 
-					// filter
+					if (typeof settings.success == 'function') {
+						settings.success()
+					}
 
-					$.ajax({
-						url: '../site/assets/themes/fw-child/template/' + settings.dir + '/control-filter.php',
-						success: function(filter_data) {
-							$('.app-sidebar-filter').html(filter_data)
+					// sort
 
-							// sort
-
-							$.ajax({
-								url: '../site/assets/themes/fw-child/template/' + settings.dir + '/control-sort.php',
-								success: function(sort_data) {
-									$('.app-sidebar-sort').html(sort_data)
-
-									if (typeof settings.success == 'function') {
-				            settings.success()
-				          }
-
-				          if (typeof settings.complete == 'function') {
-				            settings.complete()
-				          }
-								},
-								complete: function() {
-				          $('body').removeClass('spinner-on')
-									$('#spinner-progress').text('')
-								}
-							})
-
-						}
-					})
+					// $.ajax({
+					// 	url: '../site/assets/themes/fw-child/template/' + settings.dir + '/control-sort.php',
+					// 	data: {
+					// 		lang: plugin_settings.lang
+					// 	},
+					// 	success: function(sort_data) {
+					// 		$('.app-sidebar-sort').html(sort_data)
+					//
+					// 		if (typeof settings.success == 'function') {
+					// 			settings.success()
+					// 		}
+					//
+					// 		if (typeof settings.complete == 'function') {
+					// 			settings.complete()
+					// 		}
+					// 	},
+					// 	complete: function() {
+					// 		$('body').removeClass('spinner-on')
+					// 		$('#spinner-progress').text('')
+					// 	}
+					// })
 
 				},
 				complete: function() {
 
-					$('body').on('input', '#control-search-input', function() {
+					if (typeof settings.complete == 'function') {
+						settings.complete()
+					}
 
-						var search_val = $(this).val().toUpperCase(),
-								results
 
-						if (search_val != '') {
-
-							$('.sidebar-item-title').each(function() {
-
-								console.log($(this).text().toUpperCase(), search_val, $(this).text().toUpperCase().indexOf(search_val))
-
-								if ($(this).text().toUpperCase().indexOf(search_val) === -1) {
-
-									$(this).closest('.sidebar-item').hide()
-
-								} else {
-
-									$(this).closest('.sidebar-item').show()
-
-								}
-
-							})
-
-							// results = $('.sidebar-item-header:contains("' + search_val + '")')
-							//
-							// console.log(results)
-
-						} else {
-
-							$('body').find('.sidebar-item').show()
-
-						}
-
-					})
-
-					$('body').on('click', '.sort-item', function(e) {
-
-						// sort by what
-
-						var sort_key = $(this).attr('data-sort-key')
-
-						// sort order
-
-						var sort_order = $(this).attr('data-sort-order')
-
-						if ($(this).hasClass('selected')) {
-
-							// already selected, reverse order
-
-							sort_order = (sort_order == 'asc') ? 'desc' : 'asc'
-
-						} else {
-
-							// not selected
-
-							$('body').find('.sort-item').removeClass('selected').attr('data-sort-order', 'asc')
-							$(this).addClass('selected')
-
-						}
-
-						$(this).attr('data-sort-order', sort_order)
-
-						plugin_instance.sort_items(sort_key, sort_order)
-
-					})
 
         }
 			})
@@ -305,7 +266,7 @@
 
 			$('body').find('.sidebar-items').html(result)
 
-			console.log('sort', sort_key, sort_order)
+			// console.log('sort', sort_key, sort_order)
 
 		},
 
@@ -365,14 +326,28 @@
 
 				if (hash) {
 
+					// scroll to
+					// the element's position
+					// plus
+					// the container's current scroll position
+					// minus item padding (12px)
+
+					var new_scroll = $('body').find(hash).position().top + $('.app-sidebar-content').scrollTop() - 12
+
+					// adjust if sort menu is open
+
+					if ($('body').find('#control-toggle-sort').hasClass('open')) {
+						new_scroll -= $('#app-control-sort').outerHeight()
+					}
+
 					$('.app-sidebar-content').animate({
-						scrollTop: $('body').find(hash).position().top + $('.app-sidebar-content').scrollTop() - 12
+						scrollTop: new_scroll
 					}, 500)
 				}
 
 			}, 1000)
 
-			console.log('history', new_url, new_title)
+			// console.log('history', new_url, new_title)
 
 		}
 

@@ -1,0 +1,197 @@
+<div class="sidebar-detail scenario">
+
+	<div class="container-fluid py-5">
+		<div class="row justify-content-center mb-5">
+			<div class="col-10">
+				<h4 class="text-white mb-0">Val des Bois</h4>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col-10">
+
+				<div class="card mx-n3">
+					<div class="card-header text-primary border-bottom">Scénario</div>
+
+					<div class="card-body">
+						<div class="row row-cols-2 data-cols">
+
+							<div class="mb-3">
+								<h6>Magnitude</h6>
+
+								<p class="d-flex align-items-center">
+									<span class="rp-icon icon-chart text-primary mr-1"></span>
+									<span>7.5</span>
+								</p>
+							</div>
+
+							<div class="mb-3">
+								<h6>Décès</h6>
+								<p>150</p>
+							</div>
+
+							<div class="mb-3">
+								<h6>Dommage</h6>
+								<p>34,640 édifices</p>
+							</div>
+
+							<div class="mb-3">
+								<h6>Dépense</h6>
+								<p>$75,372,662,449</p>
+							</div>
+						</div>
+
+						<div class="data-cols">
+							<h6 class="mb-1">Description</h6>
+							<p>Scénario de planification pour Ottawa utilisant la géométrie de l'hypocentre et du plan de faille du tremblement de terre de 2010 à Val-de-bois, QC, d'après Ma & Motazedian, 2012 et Atkinson & Assatourians, 2010. Ce scénario utilise un événement de plus grande magnitude que ceux qui ont été observés à ce jour pour cet endroit, dans les limites du modèle national d'aléa sismique. La magnitude maximale de 7,95 est obtenue de CanSHM6 pour la région de la GATINEAU.</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="row justify-content-center my-5">
+			<div class="col-10">
+				<h6 class="text-white mb-0">Indicators</h6>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col-10 accordion" id="scenario-detail-indicators">
+
+				<div class="card mx-n3">
+					<div id="detail-shake-head" class="card-header open border-bottom d-flex align-items-center justify-content-between indicator-item" data-toggle="collapse" data-target="#detail-shake-collapse" aria-expanded="true" aria-controls="detail-shake-collapse" data-indicator='{        "key": "sH_PGA",        "label": "Peak Ground Acceleration, in units of g",        "retrofit": false,        "aggregation": {         "1km": { "rounding": 0, "decimals": 6 },         "5km": { "rounding": 0, "decimals": 6 },         "10km": { "rounding": 0, "decimals": 6 },         "25km": { "rounding": 0, "decimals": 6 },         "50km": { "rounding": 0, "decimals": 6 }        },        "legend": {         "prepend": "",         "append": "%g",         "values": [ 0, 0.17, 1.4, 3.9, 9.2, 18, 24, 65, 124 ]        }       }'>
+						Shake Map						<i class="fas fa-caret-down"></i>
+					</div>
+
+					<div id="detail-shake-collapse" class="collapse show border-bottom" data-parent="#scenario-detail-indicators" aria-labelledby="detail-shake-head">
+					</div>
+				</div>
+
+				
+				<div class="card mx-n3">
+					<div id="detail-death-head" class="card-header border-bottom d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#detail-death-collapse" aria-expanded="false" aria-controls="detail-death-collapse">
+						Décès						<i class="fas fa-caret-down"></i>
+					</div>
+
+					<div id="detail-death-collapse" class="collapse" data-parent="#scenario-detail-indicators" aria-labelledby="detail-death-head">
+						<div class="card-body p-0">
+							<ul class="list-unstyled">
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sCt_CasDayL1",          "label": "Daytime first aid injuries",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 0          },           "s": {            "rounding": 0,            "decimals": 0          }          },          "legend": {"prepend":"","":null,"append":"injuries","values":[0,2080.0490127777775,4160.098025555555,6240.147038333333,8320.196051111112,10400.24506388889,12480.294076666667,14560.343089444446,16640.392102222224]}        }'>
+									<span class="d-block px-3 py-1">Daytime first aid injuries</span>
+									<div id="daytime-first-aid-injuries-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sCt_CasDayL2",          "label": "Daytime noncritical hospital injuries",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 0          },           "s": {            "rounding": 0,            "decimals": 0          }          },          "legend": {"prepend":"","":null,"append":"injuries","values":[0,654.6652296666671,1309.3304593333341,1963.9956890000003,2618.660918666667,3273.3261483333335,3927.991378,4582.656607666667,5237.321837333333]}        }'>
+									<span class="d-block px-3 py-1">Daytime noncritical hospital injuries</span>
+									<div id="daytime-noncritical-hospital-injuries-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sCt_CasDayL3",          "label": "Daytime critical hospital injuries",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 0          },           "s": {            "rounding": 0,            "decimals": 0          }          },          "legend": {"prepend":"","":null,"append":"injuries","values":[0,102.26735499999995,204.5347099999999,306.80206499999997,409.06942,511.336775,613.6041299999999,715.871485,818.1388400000001]}        }'>
+									<span class="d-block px-3 py-1">Daytime critical hospital injuries</span>
+									<div id="daytime-noncritical-hospital-injuries-copy-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sCt_CasDayL4",          "label": "Daytime fatalities and entrapments",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 0          },           "s": {            "rounding": 0,            "decimals": 0          }          },          "legend": {"prepend":"","":null,"append":"injuries","values":[0,203.20232888888881,406.40465777777763,609.6069866666667,812.8093155555555,1016.0116444444444,1219.2139733333333,1422.4163022222222,1625.6186311111112]}        }'>
+									<span class="d-block px-3 py-1">Daytime fatalities and entrapments</span>
+									<div id="daytime-fatalities-and-entrapments-charts" class="indicator-charts"></div>
+								</li>
+
+															</ul>
+						</div>
+					</div>
+				</div>
+
+				
+				<div class="card mx-n3">
+					<div id="detail-damage-head" class="card-header border-bottom d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#detail-damage-collapse" aria-expanded="false" aria-controls="detail-damage-collapse">
+						Dommage						<i class="fas fa-caret-down"></i>
+					</div>
+
+					<div id="detail-damage-collapse" class="collapse" data-parent="#scenario-detail-indicators" aria-labelledby="detail-damage-head">
+						<div class="card-body p-0">
+							<ul class="list-unstyled">
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sDt_None",          "label": "Number of buildings with no damage",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 2          },           "s": {            "rounding": 0,            "decimals": 2          }          },          "legend": {"prepend":"","":null,"append":"buildings","values":[5.820766091346741e-11,45043.617964777804,90087.23592955555,135130.85389433336,180174.47185911113,225218.0898238889,270261.7077886667,315305.32575344446,360348.9437182222]}        }'>
+									<span class="d-block px-3 py-1">Number of buildings with no damage</span>
+									<div id="number-of-buildings-with-no-damage-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sDt_Slight",          "label": "Number of buildings in the &#8216;slight&#8217; damage state",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 2          },           "s": {            "rounding": 0,            "decimals": 2          }          },          "legend": {"prepend":"","":null,"append":"buildings","values":[0,5517.176306555557,11034.352613111114,16551.52891966667,22068.70522622222,27585.881532777777,33103.057839333334,38620.234145888884,44137.41045244444]}        }'>
+									<span class="d-block px-3 py-1">Number of buildings in the &#8216;slight&#8217; damage state</span>
+									<div id="number-of-buildings-in-the-slight-damage-state-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sDt_Moderate",          "label": "Number of buildings in the &#8216;moderate&#8217; damage state",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 2          },           "s": {            "rounding": 0,            "decimals": 2          }          },          "legend": {"prepend":"","":null,"append":"buildings","values":[0,1403.984397555556,2807.968795111112,4211.953192666668,5615.937590222222,7019.921987777778,8423.906385333334,9827.890782888888,11231.875180444444]}        }'>
+									<span class="d-block px-3 py-1">Number of buildings in the &#8216;moderate&#8217; damage state</span>
+									<div id="number-of-buildings-in-the-moderate-damage-state-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sDt_Extensive",          "label": "Number of buildings in the &#8216;extensive&#8217; damage state",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 2          },           "s": {            "rounding": 0,            "decimals": 2          }          },          "legend": {"prepend":"","":null,"append":"buildings","values":[0,603.3973222222221,1206.7946444444442,1810.1919666666663,2413.589288888889,3016.986611111111,3620.383933333333,4223.781255555556,4827.178577777778]}        }'>
+									<span class="d-block px-3 py-1">Number of buildings in the &#8216;extensive&#8217; damage state</span>
+									<div id="number-of-buildings-in-the-extensive-damage-state-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sDt_Complete",          "label": "Number of buildings in the &#8216;complete&#8217; damage state",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 2          },           "s": {            "rounding": 0,            "decimals": 2          }          },          "legend": {"prepend":"","":null,"append":"buildings","values":[0,1270.599554444445,2541.19910888889,3811.798663333334,5082.398217777778,6352.997772222223,7623.597326666668,8894.196881111111,10164.796435555556]}        }'>
+									<span class="d-block px-3 py-1">Number of buildings in the &#8216;complete&#8217; damage state</span>
+									<div id="number-of-buildings-in-the-complete-damage-state-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sDt_Collapse",          "label": "Number of buildings that are likely to collapse",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": 0,            "decimals": 2          },           "s": {            "rounding": 0,            "decimals": 2          }          },          "legend": {"prepend":"","":null,"append":"buildings","values":[0,115.22339022222218,230.44678044444436,345.67017066666665,460.89356088888894,576.1169511111111,691.3403413333333,806.5637315555556,921.7871217777779]}        }'>
+									<span class="d-block px-3 py-1">Number of buildings that are likely to collapse</span>
+									<div id="number-of-buildings-that-are-likely-to-collapse-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sCt_DebrisTotal",          "label": "Total volume of disaster debris in tonnes",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": -6,            "decimals": 2          },           "s": {            "rounding": 0,            "decimals": 0          }          },          "legend": {"prepend":"","":null,"append":"tonnes","values":[0,1013703.1937302221,2027406.3874604441,3041109.581190666,4054812.774920889,5068515.968651111,6082219.162381333,7095922.356111556,8109625.549841778]}        }'>
+									<span class="d-block px-3 py-1">Total volume of disaster debris in tonnes</span>
+									<div id="total-volume-of-disaster-debris-in-tonnes-charts" class="indicator-charts"></div>
+								</li>
+
+															</ul>
+						</div>
+					</div>
+				</div>
+
+				
+				<div class="card mx-n3">
+					<div id="detail-dollars-head" class="card-header border-bottom d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#detail-dollars-collapse" aria-expanded="false" aria-controls="detail-dollars-collapse">
+						Dépense						<i class="fas fa-caret-down"></i>
+					</div>
+
+					<div id="detail-dollars-collapse" class="collapse" data-parent="#scenario-detail-indicators" aria-labelledby="detail-dollars-head">
+						<div class="card-body p-0">
+							<ul class="list-unstyled">
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sLt_Asset",          "label": "Financial loss to assets",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": -9,            "decimals": 2          },           "s": {            "rounding": -6,            "decimals": 2          }          },          "legend": {"prepend":"$","":null,"append":"","values":[0,2507285138.043888,5014570276.087776,7521855414.131666,10029140552.175556,12536425690.219444,15043710828.263332,17550995966.30722,20058281104.351112]}        }'>
+									<span class="d-block px-3 py-1">Financial loss to assets</span>
+									<div id="financial-loss-to-assets-charts" class="indicator-charts"></div>
+								</li>
+
+								
+								<li class="indicator-item border-bottom" data-indicator='{          "key": "sLt_Bldg",          "label": "Financial loss to buildings",          "retrofit": true,          "aggregation": {           "csd": {            "rounding": -9,            "decimals": 2          },           "s": {            "rounding": -6,            "decimals": 2          }          },          "legend": {"prepend":"$","":null,"append":"","values":[0,2202771547.543888,4405543095.087776,6608314642.631666,8811086190.175556,11013857737.719444,13216629285.263332,15419400832.807222,17622172380.351112]}        }'>
+									<span class="d-block px-3 py-1">Financial loss to buildings</span>
+									<div id="financial-loss-to-buildings-charts" class="indicator-charts"></div>
+								</li>
+
+															</ul>
+						</div>
+					</div>
+				</div>
+
+				
+			</div>
+		</div>
+
+	</div>
+</div>
