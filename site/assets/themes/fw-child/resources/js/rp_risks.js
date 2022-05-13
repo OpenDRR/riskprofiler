@@ -1,4 +1,4 @@
-const geoapi_url = 'https://geo-api.riskprofiler.ca';
+const geoapi_url = 'https://geo-api.stage.riskprofiler.ca';
 
 // risk profiler
 // v1.0
@@ -66,7 +66,7 @@ const geoapi_url = 'https://geo-api.riskprofiler.ca';
       var plugin_elements = plugin_settings.elements;
 
 			$.ajax({
-				url: 'https://api.riskprofiler.ca/opendrr_dsra_sim9p0_cascadiainterfacebestfault_shakemap',
+				url: 'https://api.stage.riskprofiler.ca/opendrr_dsra_sim9p0_cascadiainterfacebestfault_shakemap',
 				success: function(data) {
 					console.log(data)
 				}

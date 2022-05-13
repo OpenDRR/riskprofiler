@@ -1,15 +1,6 @@
-const geoapi_url = 'https://geo-api.riskprofiler.ca'
-const elastic_url = 'https://riskprofiler.ca'
-
-// var feature_index = "opendrr_dsra_sim9p0_cascadiainterfacebestfault_indicators_s",
-var charts_to_process = [],
-		feature_index_prop = "sH_PGA",
-		base_url = elastic_url + '/',
-		featureLimit = 10000,
-		markers = [],
-		scroll_id = null;
-
-		var test = false;
+const geoapi_url = 'https://geo-api.stage.riskprofiler.ca'
+const pbf_url = 'https://riskprofiler.ca'
+const api_url = 'https://api.riskprofiler.ca';
 
 // scenario profiler
 // v1.0
@@ -24,33 +15,24 @@ var charts_to_process = [],
 
     var defaults = {
 			api: {
+				version: '1.4.0',
 				base_URL: geoapi_url + '/collections/opendrr_dsra_',
 				retrofit: 'b0', // or r1
-				aggregation: 'csd', // or s
-				agg_prop: 'csduid', // or Sauid,
-				featureProperties: '', // Limit fetched properties for performance
-				limit: 10,
 				lang: 'en_US',
-				bbox: null,
-				geojson_URL: null,
-				data: [],
-				features: []
+				bbox: null
 			},
       aggregation: {
         'current': {},
         'previous': null,
         'settings': {
           'shake': [
-            { min: 14, max: 15, agg: '1km', prop: 'sH_PGA_max', bbox: true, limit: 500 },
-            { min: 11, max: 13, agg: '5km', prop: 'sH_PGA_max', bbox: true, limit: 500 },
-            { min: 8, max: 10, agg: '10km', prop: 'sH_PGA_max', bbox: true, limit: 100 },
-            { min: 4, max: 7, agg: '25km', prop: 'sH_PGA_max', bbox: false, limit: 100 },
-            { min: 1, max: 3, agg: '50km', prop: 'sH_PGA_max', bbox: false, limit: 100
-            }
+            { min: 10, max: 15, agg: '1km', prop: 'sH_PGA_max', bbox: true },
+            { min: 6, max: 9, agg: '5km', prop: 'sH_PGA_max', bbox: true },
+            { min: 1, max: 5, agg: '5km', prop: 'sH_PGA_max', bbox: false }
           ],
           'default': [
-            { min: 11, max: 15, agg: 's', prop: 'Sauid', bbox: true, limit: 500 },
-            { min: 1, max: 10, agg: 'csd', prop: 'csduid', bbox: false, limit: 100 }
+            { min: 11, max: 15, agg: 's', prop: 'Sauid', bbox: true },
+            { min: 1, max: 10, agg: 'csd', prop: 'csduid', bbox: false }
           ]
         }
       },
@@ -143,10 +125,8 @@ var charts_to_process = [],
 					}
 				],
 			},
-			current_view: 'init',
 			scenario: {},
 			indicator: {},
-			prev_indicator: null,
 			legend: {
 				max: 0,
         grades: [],
@@ -167,12 +147,8 @@ var charts_to_process = [],
 				marker_hover: '#b6b6bf',
 				marker_select: '#2b2c42',
 			},
-			logging: {
-				feature_count: 0,
-				update_count: 0
-			},
+			current_view: 'init',
 			lang_prepend: '',
-			dbl: false,
       debug: false
     };
 
@@ -288,7 +264,7 @@ var charts_to_process = [],
 
 			plugin_settings.map.legend.onAdd = function () {
 
-				// console.log(plugin_settings.legend)
+				console.log(plugin_settings.indicator.key, plugin_settings.api.retrofit, plugin_settings.legend.grades)
 
 				var div = L.DomUtil.create('div', 'info legend'),
 						legend = plugin_settings.indicator.legend
@@ -467,10 +443,10 @@ var charts_to_process = [],
 
 			// GET SCENARIO LIST
 
-			console.log('..' + plugin_settings.lang_prepend + '/scenario/index.html')
+			console.log((plugin_settings.lang_prepend ? '../..' : '..') + plugin_settings.lang_prepend + '/scenario/index.html')
 
 			$(document).profiler('get_sidebar', {
-				url: '..' + plugin_settings.lang_prepend + '/scenario/index.html',
+				url: (plugin_settings.lang_prepend ? '../..' : '..') + plugin_settings.lang_prepend + '/scenario/index.html',
 				success: function(data) {
 
 					// GEOJSON
@@ -548,8 +524,6 @@ var charts_to_process = [],
 
 						},
 						pointToLayer: function (feature, latlng) {
-
-							// var marker = L.marker(latlng, { title: 'test' });
 
 							var marker = L.circleMarker(latlng, {
 								pane: 'markers',
@@ -719,7 +693,9 @@ var charts_to_process = [],
 
           plugin_settings.aggregation.previous = plugin_settings.aggregation.current.agg
 
-					plugin_instance.prep_for_api()
+					plugin_instance.prep_for_api({
+						event: 'zoomend'
+					})
 
 					plugin_settings.map.last_zoom = plugin_settings.map.current_zoom
 
@@ -778,9 +754,9 @@ var charts_to_process = [],
 
   				// switch retrofit off
 
-  				if ($('#retrofit-toggle .togglebox').attr('data-state') == 'on') {
-  					$('#retrofit-toggle .togglebox').trigger('click')
-  				}
+  				// if ($('#retrofit-toggle .togglebox').attr('data-state') == 'on') {
+  				// 	$('#retrofit-toggle .togglebox').trigger('click')
+  				// }
 
   				// set classes
 
@@ -803,18 +779,14 @@ var charts_to_process = [],
 				plugin_instance.do_breadcrumb('init')
 
 				$(document).profiler('get_sidebar', {
-					url: '..' + plugin_settings.lang_prepend + '/scenario/index.html',
+					url: (plugin_settings.lang_prepend ? '../..' : '..') + plugin_settings.lang_prepend + '/scenario/index.html',
 					before: function() {
 
 						plugin_settings.current_view = 'init'
 
-						plugin_settings.api.features = []
-
             plugin_settings.aggregation.current = {}
             plugin_settings.aggregation.previous = null
 
-						// plugin_settings.api.aggregation = 'csd'
-						// plugin_settings.api.agg_prop = 'csduid'
 						plugin_settings.api.bbox = null
 
 						// empty the data and shakemaps layer
@@ -858,8 +830,6 @@ var charts_to_process = [],
 
 						// empty the current scenario object
 						plugin_settings.scenario = {}
-
-						plugin_settings.prev_indicator = null
 
 						// reset the history state
 						$(document).profiler('do_history')
@@ -920,7 +890,6 @@ var charts_to_process = [],
 
 					if (plugin_settings.current_view == 'detail') {
 						plugin_instance.get_layer()
-						// plugin_instance.fetch_geoapi(null, false) // don't do legend
 					}
 
 				}
@@ -965,15 +934,7 @@ var charts_to_process = [],
 			var plugin_instance = this
 			var plugin_settings = plugin_instance.options
 
-			if (typeof plugin_settings.indicator.key !== 'undefined') {
-				plugin_settings.prev_indicator = plugin_settings.indicator.key
-			}
-
 			plugin_settings.indicator = indicator
-
-			if (indicator.key == 'sH_PGA') {
-				plugin_settings.api.limit = 1000
-			}
 
 			// reset the previous agg
 			plugin_settings.aggregation.previous = null
@@ -1097,8 +1058,6 @@ var charts_to_process = [],
 			$('body').find('.sort-item').removeClass('selected').attr('data-sort-order-', 'asc').first().addClass('selected')
 
 			// set param values for initial view
-
-			plugin_settings.api.limit = 100
 
 			var detail_html
 
@@ -1229,7 +1188,8 @@ var charts_to_process = [],
       var plugin_settings = plugin_instance.options
 
       var settings = $.extend(true, {
-				scenario: null
+				scenario: null,
+				legend: true
 			}, fn_options)
 
 			if (plugin_settings.scenario == null) {
@@ -1243,31 +1203,11 @@ var charts_to_process = [],
 				// close the popup
 				plugin_settings.map.object.closePopup()
 
-				// use the selected scenario to populate the API url
-				//plugin_instance.update_api_url()
-
 				// spinner
 				$('body').addClass('spinner-on')
 				$('#spinner-progress').text('Retrieving data')
 
-				// reset the legend's max value so it can be regenerated
-				// while looping through the new data
-				plugin_settings.legend.max = 0
-
-				// empty the API data array
-				// plugin_settings.api.data = []
-
-				// LAYER TYPE:
-				// if shakemap, run the elasticsearch function,
-				// if anything else, run the geoAPI function
-
-				// plugin_settings.map.panes.data.style.display = ''
-
-				// if (plugin_settings.map.object.hasLayer(plugin_settings.map.layers.tiles)) {
-				// 	plugin_settings.map.object.removeLayer(plugin_settings.map.layers.tiles)
-				// }
-
-				// console.log(plugin_settings.map.layers.tiles)
+				// LAYER TYPE
 
 				if (plugin_settings.indicator.key == 'sH_PGA') {
 
@@ -1297,53 +1237,14 @@ var charts_to_process = [],
 
 		},
 
-		update_api_url: function() {
+		prep_for_api: function(fn_options) {
 
       var plugin_instance = this
       var plugin_settings = plugin_instance.options
 
-			url = plugin_settings.api.base_URL
-					+ plugin_settings.scenario.key.toLowerCase()
-          + '_'
-
-      if (plugin_settings.indicator.key == 'sH_PGA') {
-        // url += 'shakemap_hexbin_' + plugin_settings.api.aggregation
-        url += 'shakemap_hexbin_' + plugin_settings.aggregation.current.agg
-      } else {
-        // url += 'indicators_' + plugin_settings.api.aggregation
-        url += 'indicators_' + plugin_settings.aggregation.current.agg
-      }
-
-      url += '/items?'
-					+ 'lang=' + plugin_settings.api.lang
-					+ '&f=json'
-					+ '&limit=' + plugin_settings.api.limit
-
-      if (plugin_settings.indicator.key !== 'sH_PGA') {
-				// url += '&properties=' + plugin_settings.api.agg_prop + ','
-				url += '&properties=' + plugin_settings.aggregation.current.prop + ','
-					 	+ plugin_settings.indicator.key
-  					+ ((plugin_settings.indicator.retrofit !== false) ? '_' + plugin_settings.api.retrofit : '')
-      }
-
-      if (plugin_settings.api.bbox !== null) {
-        url += '&bbox=' + plugin_settings.api.bbox
-      }
-
-			// }
-
-			plugin_settings.api.geojson_URL = url
-
-			console.log('update_api_url', url)
-
-			return url
-
-		},
-
-		prep_for_api: function(url = null) {
-
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
+      var settings = $.extend(true, {
+				event: null
+			}, fn_options)
 
 			// console.log('prep', plugin_settings.indicator.key)
 
@@ -1357,15 +1258,6 @@ var charts_to_process = [],
 
       if (plugin_settings.indicator.key == 'sH_PGA') {
         agg_key = 'shake'
-
-				// temp until other shakemap aggs are available
-
-				plugin_settings.aggregation.settings.shake[0].agg = '1km'
-				plugin_settings.aggregation.settings.shake[1].agg = '1km'
-				plugin_settings.aggregation.settings.shake[2].agg = '1km'
-				plugin_settings.aggregation.settings.shake[3].agg = '1km'
-				plugin_settings.aggregation.settings.shake[4].agg = '1km'
-
       }
 
       plugin_settings.aggregation.settings[agg_key].forEach(function (i) {
@@ -1383,13 +1275,6 @@ var charts_to_process = [],
 
             // agg settings doesn't match the plugin's current aggregation
 
-            // plugin_settings.api.aggregation = i.agg
-            // plugin_settings.api.agg_prop = i.prop
-
-            //
-            // // run the geoapi call
-            // fetch = true
-
             plugin_settings.aggregation.current = i
 
           }
@@ -1403,26 +1288,8 @@ var charts_to_process = [],
       // 2. previous aggregation is empty - initial load of scenario
       // 3. current aggregation uses bbox
 
-			// if (
-      //   plugin_settings.aggregation.previous !== null &&
-      //   plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
-      // ) {
-			// 	console.log('fetch - changed agg')
-			// }
-			//
-			// if (
-			// 	plugin_settings.aggregation.previous == null
-      // ) {
-			// 	console.log('fetch - first load')
-			// }
-			//
-			// if (
-      //   plugin_settings.aggregation.current.bbox == true
-      // ) {
-			// 	console.log('fetch - bbox')
-			// }
-
       if (
+				settings.event == null ||
         (
           plugin_settings.aggregation.previous !== null &&
           plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
@@ -1433,14 +1300,8 @@ var charts_to_process = [],
 
         // RESET MAP FEATURES
 
-        // features
-        plugin_settings.api.features = []
-
         // reset legend max
         plugin_settings.legend.max = 0
-
-        // empty the API data array
-        // plugin_settings.api.data = []
 
         // UPDATE PARAMS
 
@@ -1466,11 +1327,7 @@ var charts_to_process = [],
 				//
         // }
 
-        // limit
-
-        plugin_settings.api.limit = plugin_settings.aggregation.current.limit
-
-        // run the geoapi call
+        // fetch new data
         fetch = true
 
       }
@@ -1533,8 +1390,7 @@ var charts_to_process = [],
 					indicator_key = plugin_settings.indicator.key,
 					aggregation = plugin_settings.aggregation.current,
 					feature_ID_key,
-					pane = 'data',
-					layer_key
+					pane = 'data'
 
 			plugin_settings.map.panes.data.style.display = ''
 
@@ -1542,31 +1398,24 @@ var charts_to_process = [],
 
 				// SHAKEMAP
 
-				// swap panes
-				// plugin_settings.map.panes.data.style.display = 'none'
-				// plugin_settings.map.panes.shakemap.style.display = ''
-
 				pbf_key += '_shakemap_hexbin_' + aggregation.agg
+
 				feature_ID_key = 'gridid_1'
+
+				if (aggregation.agg == '5km') {
+					feature_ID_key = 'gridid_5'
+				}
+
 				indicator_key += '_max'
-				// pane = 'shakemap'
-				layer_key = 'shake_grid'
 
 			} else {
 
 				// INDICATOR
 
-				// swap panes
-				// plugin_settings.map.panes.data.style.display = ''
-				// plugin_settings.map.panes.shakemap.style.display = 'none'
-
 				pbf_key += '_indicators_' + aggregation.agg
 				feature_ID_key = aggregation.prop
 
 				indicator_key += ((plugin_settings.indicator.retrofit !== false) ? '_' + plugin_settings.api.retrofit : '')
-
-				// pane = 'data'
-				layer_key = 'tiles'
 
 			}
 
@@ -1584,7 +1433,7 @@ var charts_to_process = [],
 			console.log('add')
 
 			// set tile URL
-			proto_URL = elastic_url + '/' + pbf_key + '/EPSG_4326/{z}/{x}/{y}.pbf'
+			proto_URL = pbf_url + '/' + pbf_key + '/EPSG_4326/{z}/{x}/{y}.pbf'
 
 			// load the tiles
       plugin_settings.map.layers.tiles = L.vectorGrid.protobuf(
@@ -1751,7 +1600,6 @@ var charts_to_process = [],
         stroke = 0
       }
 
-			// var rounded_color = feature.properties[prop_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.api.aggregation]['rounding'])
 			var rounded_color = feature.properties[prop_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
 
 			return {
@@ -1924,7 +1772,7 @@ var charts_to_process = [],
 					retryLimit : 3,
 					crossDomain: true,
 					headers: { "content-type": "application/json" },
-					url: 'https://api.riskprofiler.ca/opendrr_dsra_' + plugin_settings.scenario.key.toLowerCase() + '_indicators_b/_search',
+					url: api_url + '/opendrr_dsra_' + plugin_settings.scenario.key.toLowerCase() + '_indicators_b_v' + plugin_settings.api.version + '/_search',
 					data: JSON.stringify(request_data),
 					success: function(data) {
 
@@ -2013,7 +1861,7 @@ var charts_to_process = [],
 			function doit(url = null) {
 
 				if (url == null) {
-					url = 'https://geo-api.riskprofiler.ca/collections/opendrr_dsra_' + scenarios[0].toLowerCase() + '_indicators_csd/items?lang=en_US&f=json&limit=2000'
+					url = 'https://geo-api.stage.riskprofiler.ca/collections/opendrr_dsra_' + scenarios[0].toLowerCase() + '_indicators_csd/items?lang=en_US&f=json&limit=2000'
 				}
 
 				console.log(url)
