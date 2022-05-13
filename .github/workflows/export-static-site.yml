@@ -1,0 +1,65 @@
+name: Export static site for RiskProfiler.ca
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+
+concurrency: export-static-site
+
+jobs:
+  export-static-site:
+    runs-on: ubuntu-20.04
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    env:
+      DOCKER_BUILDKIT: 1
+      TZ: America/Vancouver
+
+    steps:
+      - name: Checkout OpenDRR/riskprofiler-cms
+        uses: actions/checkout@v3
+        with:
+          repository: OpenDRR/riskprofiler-cms
+          submodules: recursive
+
+      - name: Run "docker compose up" to export static site for RiskProfiler
+        run: |
+          export DOCKER_WP_UID_GID="$(id -u):$(id -g)"
+          docker compose up --abort-on-container-exit --exit-code-from wpcli
+
+      - name: Deploy to gh-pages branch as GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html_static/riskprofiler
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: riskprofiler-ca-static-site
+          path: html_static/riskprofiler
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: simply-static-debug-log
+          path: wp-app/site/assets/plugins/simply-static/debug.txt
+
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: Create tarball and ZIP file of static site
+        run: |
+          rp_ver="${GITHUB_REF/refs\/tags\//}"
+          cd html_static
+          GZIP=-9v tar cvzf riskprofiler.ca-static-site-${rp_ver}.tar.gz riskprofiler
+          zip -9rv riskprofiler.ca-static-site-${rp_ver}.zip riskprofiler
+
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: Upload tarball and ZIP file as release assets
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'html_static/*.tar.gz;html_static/*.zip'
+          tags: true
+          draft: false
