@@ -185,6 +185,12 @@ fixup_static_site() {
 	sed -i "s#\(plugin_settings\.lang_prepend + '/scenario\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
 		site/assets/themes/fw-child/resources/js/rp_scenarios.js
 
+	# Temporary fix for incorrect charts first found in v0.4.0.20220511 build,
+	# see https://github.com/OpenDRR/riskprofiler/issues/36
+	sed -i "s#https://api\.riskprofiler\.ca#https://api.stage.riskprofiler.ca#; \
+		s/'_indicators_b_v' + plugin_settings.api.version/'_indicators_b'/" \
+		site/assets/themes/fw-child/resources/js/rp_scenarios.js
+
 	popd
 	set +x
 }
