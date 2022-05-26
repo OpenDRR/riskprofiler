@@ -191,6 +191,10 @@ fixup_static_site() {
 		s/'_indicators_b_v' + plugin_settings.api.version/'_indicators_b'/" \
 		site/assets/themes/fw-child/resources/js/rp_scenarios.js
 
+	# Temporary workaround as we transition from "hexbin" with "hexgrid"
+	sed -i "s/pbf_key += '_shakemap_hexbin_' + aggregation.agg/\/\/ Temporary workaround as we transition from \"hexbin\" to \"hexgrid\"\n\t\t\t\tif (aggregation.agg == '5km') {\n\t\t\t\t\t&\n\t\t\t\t} else {\n\t\t\t\t\tpbf_key += '_shakemap_hexgrid_' + aggregation.agg\n\t\t\t\t}/" \
+		site/assets/themes/fw-child/resources/js/rp_scenarios.js
+
 	popd
 	set +x
 }
