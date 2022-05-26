@@ -290,7 +290,7 @@
 
 			center = settings.map.unproject(new L.point(center.x - (settings.offset / 2), center.y))
 
-			console.log('center', settings.coords, center)
+			// console.log('center', settings.coords, center)
 
       settings.map.setView([center.lat, center.lng], settings.zoom)
 
@@ -306,9 +306,11 @@
 
 			if (hash) {
 
-				new_title = $('body').find(hash).find('.sidebar-item-title').text() + ' — ' + new_title
-
 				new_url = new_url + hash
+
+				if ($('body').find(hash).length) {
+					new_title = $('body').find(hash).find('.sidebar-item-title').text() + ' — ' + new_title
+				}
 
 			}
 
@@ -320,32 +322,35 @@
 
 			history.replaceState({}, new_title, new_url)
 
-			// scroll to sidebar item
+			if ($('body').attr('id') == 'page-scenarios') {
+				// scroll to sidebar item
 
-			setTimeout(function() {
+				setTimeout(function() {
 
-				if (hash) {
+					if (hash) {
 
-					// scroll to
-					// the element's position
-					// plus
-					// the container's current scroll position
-					// minus item padding (12px)
+						// scroll to
+						// the element's position
+						// plus
+						// the container's current scroll position
+						// minus item padding (12px)
 
-					var new_scroll = $('body').find(hash).position().top + $('.app-sidebar-content').scrollTop() - 12
+						var new_scroll = $('body').find(hash).position().top + $('.app-sidebar-content').scrollTop() - 12
 
-					// adjust if sort menu is open
+						// adjust if sort menu is open
 
-					if ($('body').find('#control-toggle-sort').hasClass('open')) {
-						new_scroll -= $('#app-control-sort').outerHeight()
+						if ($('body').find('#control-toggle-sort').hasClass('open')) {
+							new_scroll -= $('#app-control-sort').outerHeight()
+						}
+
+						$('.app-sidebar-content').animate({
+							scrollTop: new_scroll
+						}, 500)
 					}
 
-					$('.app-sidebar-content').animate({
-						scrollTop: new_scroll
-					}, 500)
-				}
-
-			}, 1000)
+				}, 1000)
+				
+			}
 
 			// console.log('history', new_url, new_title)
 

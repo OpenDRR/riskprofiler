@@ -61,10 +61,44 @@
 
       // hide content that is linked to with an 'inline' attribute
 
-      $('body').find('.overlay-toggle[href^="#"]').each(function() {
-        var target_div = $(this).attr('href')
-        $(target_div).hide()
-      })
+			$('body').find('.overlay-toggle').each(function() {
+
+				var target_div,
+						found_div = false
+
+				if (
+					typeof $(this).attr('href') != 'undefined' &&
+					$(this).attr('href').charAt(0) == '#'
+				) {
+
+					target_div = $(this).attr('href')
+					found_div = true
+
+				} else if ($(this).find('[href^="#"]').length) {
+
+					// move the class from this to the link
+
+					target_href = $(this).find('[href^="#"]')[0]
+					target_div = $(target_href).attr('href')
+
+					$(this).removeClass('overlay-toggle')
+					$(target_href).addClass('overlay-toggle')
+
+					found_div = true
+
+				}
+
+				if (found_div == true && $(target_div).length) {
+					$(target_div).hide()
+				}
+
+			})
+
+      // $('body').find('.overlay-toggle[href^="#"]').each(function() {
+			// 	console.log('toggle', $(this))
+      //   var target_div = $(this).attr('href')
+      //   $(target_div).hide()
+      // })
 
       // convert classes to data attributes
 

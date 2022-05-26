@@ -1,6 +1,6 @@
 const geoapi_url = 'https://geo-api.stage.riskprofiler.ca'
 const pbf_url = 'https://riskprofiler.ca'
-const api_url = 'https://api.riskprofiler.ca';
+const api_url = 'https://api.stage.riskprofiler.ca';
 
 // scenario profiler
 // v1.0
@@ -72,31 +72,496 @@ const api_url = 'https://api.riskprofiler.ca';
 						name: rp.building_type + ' (G)',
 						field: 'E_BldgTypeG',
 						size: 100,
-						object: null
+						object: null,
+						tooltips: false,
+						columns: [
+							{
+								code: 'Wood',
+								name: 'Wood',
+								value: [0]
+							},
+							{
+								code: 'Concrete',
+								name: 'Concrete',
+								value: [0]
+							},
+							{
+								code: 'Steel',
+								name: 'Steel',
+								value: [0]
+							},
+							{
+								code: 'URMasonry',
+								name: 'Unreinforced Masonry',
+								value: [0]
+							},
+							{
+								code: 'RMasonry',
+								name: 'Reinforced Masonry',
+								value: [0]
+							},
+							{
+								code: 'Precast',
+								name: 'Precast',
+								value: [0]
+							},
+							{
+								code: 'Manufactured',
+								name: 'Manufactured',
+								value: [0]
+							}
+						]
 					},
 					{
 						name: rp.building_type + ' (S)',
 						field: 'E_BldgTypeS',
 						size: 100,
-						object: null
+						object: null,
+						tooltips: true,
+						columns: [
+							{
+								code: 'W1',
+								name: 'Wood, Single Family',
+								value: [0]
+							},
+							{
+								code: 'W2',
+								name: 'Wood, Multi Family',
+								value: [0]
+							},
+							{
+								code: 'W3',
+								name: 'Wood, Commercial and Industrial',
+								value: [0]
+							},
+							{
+								code: 'W4',
+								name: 'Wood, Single Family with Cripple Wall or Subfloor',
+								value: [0]
+							},
+							{
+								code: 'S1L',
+								name: 'Steel Moment Frame (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S1M',
+								name: 'Steel Moment Frame (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S1H',
+								name: 'Steel Moment Frame (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S2L',
+								name: 'Steel Braced (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S2M',
+								name: 'Steel Braced (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S2H',
+								name: 'Steel Braced (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S3',
+								name: 'Steel Light Frame',
+								value: [0]
+							},
+							{
+								code: 'S4L',
+								name: 'Steel Frame with Cast-in-Place Concrete Shear Walls (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S4M',
+								name: 'Steel Frame with Cast-in-Place Concrete Shear Walls (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S4H',
+								name: 'Steel Frame with Cast-in-Place Concrete Shear Walls (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S5L',
+								name: 'Steel Frame with Unreinforced Masonry Infill Walls (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S5M',
+								name: 'Steel Frame with Unreinforced Masonry Infill Walls (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'S5H',
+								name: 'Steel Frame with Unreinforced Masonry Infill Walls (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C1L',
+								name: 'Concrete Moment (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C1M',
+								name: 'Concrete Moment (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C1H',
+								name: 'Concrete Moment (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C2L',
+								name: 'Concrete Shear Walls (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C2M',
+								name: 'Concrete Shear Walls (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C2H',
+								name: 'Concrete Shear Walls (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C3L',
+								name: 'Concrete Frame with Unreinforced Masonry Infill Walls (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C3M',
+								name: 'Concrete Frame with Unreinforced Masonry Infill Walls (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'C3H',
+								name: 'Concrete Frame with Unreinforced Masonry Infill Walls (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'PC1',
+								name: 'Precast Concrete Tilt-up Walls',
+								value: [0]
+							},
+							{
+								code: 'PC2L',
+								name: 'Precast Concrete Frames with Concrete Shear Walls (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'PC2M',
+								name: 'Precast Concrete Frames with Concrete Shear Walls (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'PC2H',
+								name: 'Precast Concrete Frames with Concrete Shear Walls (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'RM1L',
+								name: 'Reinforced Masonry Bearing Walls with Wood or Metal Deck Diaphragms (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'RM1M',
+								name: 'Reinforced Masonry Bearing Walls with Wood or Metal Deck Diaphragms (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'RM2L',
+								name: 'Reinforced Masonry Bearing Walls with Precast Concrete Diaphragms (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'RM2M',
+								name: 'Reinforced Masonry Bearing Walls with Precast Concrete Diaphragms (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'RM2H',
+								name: 'Reinforced Masonry Bearing Walls with Precast Concrete Diaphragms (High-Rise)',
+								value: [0]
+							},
+							{
+								code: 'URML',
+								name: 'Unreinforced Masonry Bearing Walls (Low-Rise)',
+								value: [0]
+							},
+							{
+								code: 'URMM',
+								name: 'Unreinforced Masonry Bearing Walls (Mid-Rise)',
+								value: [0]
+							},
+							{
+								code: 'MH',
+								name: 'Mobile Homes',
+								value: [0]
+							}
+						],
 					},
 					{
 						name: rp.design_level,
 						field: 'E_BldgDesLev',
 						size: 6,
-						object: null
+						object: null,
+						tooltips: false,
+						columns: [
+							{
+								code: 'LC',
+								name: 'Low Code',
+								value: [0]
+							},
+							{
+								code: 'MC',
+								name: 'Moderate Code',
+								value: [0]
+							},
+							{
+								code: 'HC',
+								name: 'High Code',
+								value: [0]
+							},
+							{
+								code: 'PC',
+								name: 'Pre-Code',
+								value: [0]
+							}
+						]
 					},
 					{
 						name: rp.occupancy_class + ' (G)',
 						field: 'E_BldgOccG',
 						size: 29,
-						object: null
+						object: null,
+						tooltips: false,
+						columns: [
+							{
+								code: 'RES',
+								name: 'Residential',
+								value: [0]
+							},
+							{
+								code: 'COM',
+								name: 'Commercial',
+								value: [0]
+							},
+							{
+								code: 'IND',
+								name: 'Industrial',
+								value: [0]
+							},
+							{
+								code: 'REL',
+								name: 'Religion/Non-Profit',
+								value: [0]
+							},
+							{
+								code: 'EDU',
+								name: 'Education',
+								value: [0]
+							},
+							{
+								code: 'GOV',
+								name: 'Government',
+								value: [0]
+							},
+							{
+								code: 'AGR',
+								name: 'Agriculture',
+								value: [0]
+							}
+						]
 					},
 					{
 						name: rp.occupancy_class + ' (S1)',
 						field: 'E_BldgOccS1',
 						size: 29,
-						object: null
+						object: null,
+						tooltips: true,
+						columns: [
+							{
+								code: 'RES1',
+								name: 'Single Family Dwelling',
+								value: [0]
+							},
+							{
+								code: 'RES2',
+								name: 'Mobile Home',
+								value: [0]
+							},
+							{
+								code: 'RES3',
+								name: 'Multi Family Dwelling',
+								value: [0]
+							},
+							{
+								code: 'RES3A',
+								name: 'Duplex',
+								value: [0]
+							},
+							{
+								code: 'RES3B',
+								name: '3–4 Units',
+								value: [0]
+							},
+							{
+								code: 'RES3C',
+								name: '5–9 Units',
+								value: [0]
+							},
+							{
+								code: 'RES3D',
+								name: '10–19 Units',
+								value: [0]
+							},
+							{
+								code: 'RES3E',
+								name: '20–49 Units',
+								value: [0]
+							},
+							{
+								code: 'RES3F',
+								name: '50+ Units',
+								value: [0]
+							},
+							{
+								code: 'RES4',
+								name: 'Temporary Lodging',
+								value: [0]
+							},
+							{
+								code: 'RES5',
+								name: 'Institutional Dormitory',
+								value: [0]
+							},
+							{
+								code: 'RES6',
+								name: 'Nursing Home',
+								value: [0]
+							},
+							{
+								code: 'COM1',
+								name: 'Retail Trade',
+								value: [0]
+							},
+							{
+								code: 'COM2',
+								name: 'Wholesale Trade',
+								value: [0]
+							},
+							{
+								code: 'COM3',
+								name: 'Personal and Repair Services',
+								value: [0]
+							},
+							{
+								code: 'COM4',
+								name: 'Professional/Technical Services',
+								value: [0]
+							},
+							{
+								code: 'COM5',
+								name: 'Banks',
+								value: [0]
+							},
+							{
+								code: 'COM6',
+								name: 'Hospital',
+								value: [0]
+							},
+							{
+								code: 'COM7',
+								name: 'Medical Office/Clinic',
+								value: [0]
+							},
+							{
+								code: 'COM8',
+								name: 'Entertainment and Recreation',
+								value: [0]
+							},
+							{
+								code: 'COM9',
+								name: 'Theaters',
+								value: [0]
+							},
+							{
+								code: 'COM10',
+								name: 'Parking',
+								value: [0]
+							},
+							{
+								code: 'IND1',
+								name: 'Heavy Industrial',
+								value: [0]
+							},
+							{
+								code: 'IND2',
+								name: 'Light Industrial',
+								value: [0]
+							},
+							{
+								code: 'IND3',
+								name: 'Food/Drugs/Chemicals',
+								value: [0]
+							},
+							{
+								code: 'IND4',
+								name: 'Metals/Minerals Processing',
+								value: [0]
+							},
+							{
+								code: 'IND5',
+								name: 'High Technology',
+								value: [0]
+							},
+							{
+								code: 'IND6',
+								name: 'Construction',
+								value: [0]
+							},
+							{
+								code: 'REL1',
+								name: 'Church/Non-Profit',
+								value: [0]
+							},
+							{
+								code: 'EDU1',
+								name: 'Grade Schools',
+								value: [0]
+							},
+							{
+								code: 'EDU2',
+								name: 'Colleges/Universities',
+								value: [0]
+							},
+							{
+								code: 'GOV1',
+								name: 'General Services',
+								value: [0]
+							},
+							{
+								code: 'GOV2',
+								name: 'Emergency Response',
+								value: [0]
+							},
+							{
+								code: 'AGR1',
+								name: 'Agriculture',
+								value: [0]
+							}
+						]
 					}
 				]
 			},
@@ -143,7 +608,7 @@ const api_url = 'https://api.riskprofiler.ca';
 				]
 			},
 			colors: {
-				marker: '#9595a0',
+				marker: '#8b0707',
 				marker_hover: '#b6b6bf',
 				marker_select: '#2b2c42',
 			},
@@ -201,7 +666,7 @@ const api_url = 'https://api.riskprofiler.ca';
 	    plugin_settings.map.object = L.map('map', {
 				zoomControl: false,
 				maxZoom: 15,
-				crs: L.CRS.EPSG4326,
+				crs: L.CRS.EPSG900913,
 			}).setView(plugin_settings.map.defaults.coords, plugin_settings.map.defaults.zoom)
 
 			// plugin_settings.map.object.on('fullscreenchange', function () {
@@ -220,15 +685,15 @@ const api_url = 'https://api.riskprofiler.ca';
 			plugin_settings.map.panes.basemap.style.zIndex = 399
 			plugin_settings.map.panes.basemap.style.pointerEvents = 'none'
 
-			// markers - for scenario markers and clusters
-			plugin_settings.map.panes.markers = plugin_settings.map.object.createPane('markers')
-			plugin_settings.map.panes.markers.style.zIndex = 600
-			plugin_settings.map.panes.markers.style.pointerEvents = 'all'
-
 			// bbox - for scenario bounding box
 			plugin_settings.map.panes.bbox = plugin_settings.map.object.createPane('bbox')
-			plugin_settings.map.panes.bbox.style.zIndex = 550
-			plugin_settings.map.panes.bbox.style.pointerEvents = 'all'
+			plugin_settings.map.panes.bbox.style.zIndex = 540
+			plugin_settings.map.panes.bbox.style.pointerEvents = 'none'
+
+			// markers - for scenario markers and clusters
+			plugin_settings.map.panes.markers = plugin_settings.map.object.createPane('markers')
+			plugin_settings.map.panes.markers.style.zIndex = 550
+			plugin_settings.map.panes.markers.style.pointerEvents = 'all'
 
 			// data - for geojson layers
 			plugin_settings.map.panes.data = plugin_settings.map.object.createPane('data')
@@ -264,7 +729,7 @@ const api_url = 'https://api.riskprofiler.ca';
 
 			plugin_settings.map.legend.onAdd = function () {
 
-				console.log(plugin_settings.indicator.key, plugin_settings.api.retrofit, plugin_settings.legend.grades)
+				// console.log(plugin_settings.indicator.key, plugin_settings.api.retrofit, plugin_settings.legend.grades)
 
 				var div = L.DomUtil.create('div', 'info legend'),
 						legend = plugin_settings.indicator.legend
@@ -332,16 +797,17 @@ const api_url = 'https://api.riskprofiler.ca';
 
 			// BASEMAP
 
-			// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			// 		pane: 'basemap',
-			//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-			// }).addTo(plugin_settings.map.object)
-
-			L.tileLayer( 'https://osm-{s}.gs.mil/tiles/default_pc/{z}/{x}/{y}.png', {
-		      subdomains: '1234',
-		      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					pane: 'basemap',
+			    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 		      detectRetina: true
 			}).addTo(plugin_settings.map.object)
+
+			// L.tileLayer( 'https://osm-{s}.gs.mil/tiles/default_pc/{z}/{x}/{y}.png', {
+	    //   subdomains: '1234',
+	    //   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+	    //   detectRetina: true
+			// }).addTo(plugin_settings.map.object)
 
 			// CLUSTERS
 
@@ -381,6 +847,8 @@ const api_url = 'https://api.riskprofiler.ca';
 					plugin_settings.map.object.hasLayer(plugin_settings.map.layers.tiles)
 				) {
 
+					var feature_deselected = false
+
 					// if there's a selected feature
 
 					if (plugin_settings.map.selected_feature != null) {
@@ -391,6 +859,10 @@ const api_url = 'https://api.riskprofiler.ca';
 
 						plugin_settings.map.selected_feature = null
 
+						$('.app-main').removeClass('feature-selected')
+
+						feature_deselected = true
+
 	        }
 
 					setTimeout(function() {
@@ -399,12 +871,14 @@ const api_url = 'https://api.riskprofiler.ca';
 						// update the charts
 
 						if (
-							plugin_settings.map.selected_feature == null &&
+							feature_deselected == true &&
 							plugin_settings.charts.enabled == true &&
 							plugin_settings.indicator.key !== 'sH_PGA'
 						) {
 							console.log('reset charts')
-							plugin_instance.get_charts()
+							plugin_instance.get_charts({
+								reset: true
+							})
 						}
 
 					}, 500)
@@ -527,7 +1001,7 @@ const api_url = 'https://api.riskprofiler.ca';
 
 							var marker = L.circleMarker(latlng, {
 								pane: 'markers',
-								radius: 5,
+								radius: 6,
 								fillColor: plugin_settings.colors.marker,
 								weight: 0,
 								opacity: 1,
@@ -568,6 +1042,8 @@ const api_url = 'https://api.riskprofiler.ca';
 			// INITIALIZE CHARTS
 			//
 
+			// set options
+
 			Highcharts.setOptions({
 		    lang: {
 		      thousandsSep: ','
@@ -577,8 +1053,25 @@ const api_url = 'https://api.riskprofiler.ca';
 				}
 		  })
 
+			// each chart element
+
 			plugin_settings.charts.elements.forEach(function(request, i) {
-				// console.log(request.field, $('#chart-' + request.field))
+
+				this_chart_ID = request.field
+
+				// series array to populate with [0]s
+				this_series = []
+
+				request.columns.forEach(function(column) {
+
+					this_series.push({
+						name: column.code,
+						custom: {
+							full_name: column.name
+						},
+						data: column.value
+					})
+				})
 
 				request.object = Highcharts.chart('chart-' + request.field, {
 					tooltip: {
@@ -586,7 +1079,13 @@ const api_url = 'https://api.riskprofiler.ca';
 						headerFormat: '',
 						formatter: function() {
 
-							return '<strong>' + this.series.name + ':</strong> '
+							var series_name = this.series.name
+
+							if (this.series.name != this.series.userOptions.custom.full_name) {
+								series_name = this.series.userOptions.custom.full_name + ' (' + this.series.name + ')'
+							}
+
+							return '<strong>' + series_name + ':</strong> '
 								+ plugin_settings.indicator.legend.prepend
 								+ this.y.toLocaleString(undefined, {
 									maximumFractionDigits: plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['decimals']
@@ -605,7 +1104,7 @@ const api_url = 'https://api.riskprofiler.ca';
 					},
 					title: {
 						enabled: false,
-						text: null, //'By ' + request.name,
+						text: null,
 						align: 'left',
 						x: 0
 					},
@@ -629,7 +1128,7 @@ const api_url = 'https://api.riskprofiler.ca';
 							borderWidth: 0
 						}
 					},
-					series: [],
+					series: this_series,
 					legend: {
 						enabled: false,
 						width: '100%',
@@ -667,8 +1166,69 @@ const api_url = 'https://api.riskprofiler.ca';
 				}, function (chart) {
 
 
+
 		    })
 
+				$.each(request.object.series, function (j, data) {
+
+					var this_name = '',
+							this_code = data.name
+
+					var item_markup = '<div class="legend-item">'
+						+'<div class="symbol highcharts-bg-' + data.colorIndex + '"></div>'
+						+ '<div class="column-name">'
+
+					// console.log(request.columns, data)
+
+					// see if this columns name & code are different
+
+					request.columns.every(column => {
+
+						if (column.code == this_code) {
+							this_name = column.name
+							return false
+						}
+
+						return true
+					})
+
+					if (request.tooltips == true) {
+
+						item_markup += '<span data-toggle="tooltip" title="' + this_name + '">' + this_code + '</span>'
+
+					} else {
+
+						item_markup += (this_name != '') ? this_name : this_code
+
+					}
+
+					item_markup += '</div></div>'
+
+					var new_legend_item = $(item_markup).appendTo('#legend-' + request.field)
+
+				})
+
+				$('#legend-' + request.field + ' .legend-item').click(function(){
+
+					var inx = $(this).index(),
+							point = request.object.series[inx]
+
+					if (point.visible) {
+						$(this).addClass('opacity-50')
+						point.setVisible(false)
+					} else {
+						$(this).removeClass('opacity-50')
+						point.setVisible(true)
+					}
+
+				})
+
+			})
+
+			// console.log($('.legend-item [data-toggle="tooltip"]'))
+
+			$('[data-toggle="tooltip"]').tooltip({
+				template: '<div class="tooltip chart-tip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
 			})
 
 			// tabs
@@ -752,6 +1312,9 @@ const api_url = 'https://api.riskprofiler.ca';
 
   				plugin_settings.map.object.closePopup()
 
+					// reset chart data
+					$('.chart-container').attr('data-series', '')
+
   				// switch retrofit off
 
   				// if ($('#retrofit-toggle .togglebox').attr('data-state') == 'on') {
@@ -824,6 +1387,9 @@ const api_url = 'https://api.riskprofiler.ca';
 
 						// disable chart toggle
 						$('#chart-togglebox').togglebox('disable')
+
+						// reset chart data
+						$('.chart-container').attr('data-series', '')
 
 						// reset the last_zoom flag
 						plugin_settings.map.last_zoom = -1
@@ -988,7 +1554,7 @@ const api_url = 'https://api.riskprofiler.ca';
 
 				plugin_settings.scenario = settings.scenario
 
-				console.log(plugin_settings.scenario)
+				// console.log(plugin_settings.scenario)
 
 				// select the marker
 
@@ -997,13 +1563,8 @@ const api_url = 'https://api.riskprofiler.ca';
 					fillColor: plugin_settings.colors.marker_select
 				})
 
-				// center the map on the marker
-
-				// $('body').profiler('center_map', {
-				// 	map: plugin_settings.map.object,
-				// 	coords: settings.marker._latlng,
-				// 	offset: plugin_settings.map.offset
-				// })
+				// update the epicentre and display it
+				plugin_instance.set_epicenter()
 
 				// select the sidebar item
 
@@ -1150,8 +1711,8 @@ const api_url = 'https://api.riskprofiler.ca';
 				plugin_settings.map.panes.bbox.style.display = ''
 
 				var bounds = [
-					[settings.scenario.bounds.sw_lat, settings.scenario.bounds.sw_lng],
-					[settings.scenario.bounds.ne_lat, settings.scenario.bounds.ne_lng]
+					[settings.scenario.bounds.ne_lat, settings.scenario.bounds.ne_lng],
+					[settings.scenario.bounds.sw_lat, settings.scenario.bounds.sw_lng]
 				]
 
 				// remove existing
@@ -1398,7 +1959,12 @@ const api_url = 'https://api.riskprofiler.ca';
 
 				// SHAKEMAP
 
-				pbf_key += '_shakemap_hexbin_' + aggregation.agg
+				// Temporary workaround as we transition from "hexbin" to "hexgrid"
+				if (aggregation.agg == '5km') {
+					pbf_key += '_shakemap_hexbin_' + aggregation.agg
+				} else {
+					pbf_key += '_shakemap_hexgrid_' + aggregation.agg
+				}
 
 				feature_ID_key = 'gridid_1'
 
@@ -1430,10 +1996,8 @@ const api_url = 'https://api.riskprofiler.ca';
 	      vectorTileLayerStyles: plugin_instance.set_shake_styles(pbf_key, indicator_key)
 	    }
 
-			console.log('add')
-
 			// set tile URL
-			proto_URL = pbf_url + '/' + pbf_key + '/EPSG_4326/{z}/{x}/{y}.pbf'
+			proto_URL = pbf_url + '/' + pbf_key + '/EPSG_900913/{z}/{x}/{y}.pbf'
 
 			// load the tiles
       plugin_settings.map.layers.tiles = L.vectorGrid.protobuf(
@@ -1453,6 +2017,32 @@ const api_url = 'https://api.riskprofiler.ca';
 
 				$('.app-breadcrumb').find('#breadcrumb-scenario-indicator').text(plugin_settings.indicator.label)
 
+			}).on('mouseover', function(e) {
+
+				if (!$('.app-main').hasClass('feature-selected')) {
+
+					// set the popup content
+	        plugin_settings.map.popup.setContent(function() {
+
+						return '<p>'
+							+ plugin_settings.indicator.legend.prepend
+							+ e.layer.properties[indicator_key].toLocaleString(undefined, { maximumFractionDigits: plugin_settings.indicator.aggregation[aggregation.agg]['decimals'] })
+							+ ' '
+							+ plugin_settings.indicator.legend.append
+							+ '</p>'
+
+					})
+	        .setLatLng(e.latlng)
+	        .openOn(map)
+
+				}
+
+			}).on('mouseout', function(e) {
+
+				if (!$('.app-main').hasClass('feature-selected')) {
+					map.closePopup()
+				}
+
 			}).on('click', function (e) {
 
 				L.DomEvent.stop(e)
@@ -1461,6 +2051,8 @@ const api_url = 'https://api.riskprofiler.ca';
         if (plugin_settings.map.selected_feature != null) {
           plugin_settings.map.layers.tiles.resetFeatureStyle(plugin_settings.map.selected_feature)
         }
+
+				$('.app-main').addClass('feature-selected')
 
         // set the selected feature id
         plugin_settings.map.selected_feature = e.layer.properties[feature_ID_key]
@@ -1664,181 +2256,213 @@ const api_url = 'https://api.riskprofiler.ca';
 			var plugin_instance = this
 			var plugin_settings = plugin_instance.options
 
+			var settings = $.extend(true, {
+				reset: false
+			}, fn_options)
+
+			// each chart
+
 			plugin_settings.charts.elements.forEach(function(request, i) {
 
-				// console.log('updating chart ' + request.field)
+				if (
+					settings.reset == true &&
+					$('#chart-' + request.field).attr('data-series') !== ''
+				) {
 
-				var request_data = {
-					"aggs": {
-						"0": {
-							"terms": {
-								"field": 'properties.' + request.field + '.keyword',
-								"order": {
-									"1": "desc"
-								},
-								"size": request.size
-							},
-							"aggs": {
-								"1": {
-									"sum": {
-										"field": "properties." + plugin_settings.indicator.key.replace('t_', '_') + '_' + plugin_settings.api.retrofit
-									}
-								}
-							}
-						}
-					},
-					"size": 0,
-					"fields": [],
-					"script_fields": {},
-					"stored_fields": [
-						"*"
-					],
-					"runtime_mappings": {},
-					"_source": {
-						"excludes": []
-					},
-					"query": {
-						"bool": {
-							"must": [],
-							"filter": [],
-							"should": [],
-							"must_not": []
-						}
-					}
-				}
+					// if we're resetting, use the series attribute
+					// instead of running the ajax call again
 
-				if (plugin_settings.map.selected_feature != null) {
+					// console.log('RESET', request.object.series)
 
-					var match_phrase = {}
+					var series = JSON.parse($('#chart-' + request.field).attr('data-series'))
 
-					match_phrase['properties.' + plugin_settings.aggregation.current.prop + '.keyword'] = plugin_settings.map.selected_feature
+					if (request.object.series.length) {
 
-					request_data['query'] = {
-				    "bool": {
-				      "must": [],
-				      "filter": [
-				        {
-				          "bool": {
-				            "should": [
-				              {
-				                "match_phrase": match_phrase
-				              }
-				            ],
-				            "minimum_should_match": 1
-				          }
-				        }
-				      ],
-				      "should": [],
-				      "must_not": []
-				    }
-				  }
+						request.object.series.forEach(function(existing_col, i) {
 
-				}
+							var this_name = existing_col.name,
+									this_data = [0]
 
-				if (plugin_settings.api.bbox != null) {
-
-					console.log('add bbox to chart request')
-
-					var b = plugin_settings.map.object.getBounds(),
-							b1 = {
-								"tllat": b.getNorthWest().lat > 90 ? 90 : b.getNorthWest().lat,
-								"tllon": b.getNorthWest().lng < -180 ? -180 : b.getNorthWest().lng,
-								"brlat": b.getSouthEast().lat < -90 ? -90 : b.getSouthEast().lat,
-								"brlon": b.getSouthEast().lng > 180 ? 180 : b.getSouthEast().lng
+							if (series[this_name]) {
+								this_data = series[this_name]
 							}
 
-					request_data.aggs['my_applicable_filters'] = {
-						"filter": {
-							"bool": {
-								"must": [
-									{
-										"geo_bounding_box": {
-											"coordinates": {
-												"top_left": b1.tllat + ',' + b1.tllon,
-												"bottom_right": b1.brlat + ',' + b1.brlon
-											}
-										}
-									}
-								]
-							}
-						}
-					}
-
-				}
-
-				$.ajax({
-					method: 'POST',
-					tryCount : 0,
-					retryLimit : 3,
-					crossDomain: true,
-					headers: { "content-type": "application/json" },
-					url: api_url + '/opendrr_dsra_' + plugin_settings.scenario.key.toLowerCase() + '_indicators_b_v' + plugin_settings.api.version + '/_search',
-					data: JSON.stringify(request_data),
-					success: function(data) {
-
-						// console.log('add ' + request.field + ' to #chart-' + request.field)
-
-						var series = []
-
-						data.aggregations[0].buckets.forEach(function(item) {
-
-							series.push({
-								name: item.key,
-								data: [ item[1]['value'] ]
-							})
+							existing_col.setData(this_data)
 
 						})
 
-						if (request.field == 'E_BldgTypeG') {
-							// console.log('request', request_data)
-							// console.log('data', series)
+					}
+
+				} else {
+
+					// create new request
+
+					var request_data = {
+						"aggs": {
+							"0": {
+								"terms": {
+									"field": 'properties.' + request.field + '.keyword',
+									"order": {
+										"1": "desc"
+									},
+									"size": request.size
+								},
+								"aggs": {
+									"1": {
+										"sum": {
+											"field": "properties." + plugin_settings.indicator.key.replace('t_', '_') + '_' + plugin_settings.api.retrofit
+										}
+									}
+								}
+							}
+						},
+						"size": 0,
+						"fields": [],
+						"script_fields": {},
+						"stored_fields": [
+							"*"
+						],
+						"runtime_mappings": {},
+						"_source": {
+							"excludes": []
+						},
+						"query": {
+							"bool": {
+								"must": [],
+								"filter": [],
+								"should": [],
+								"must_not": []
+							}
+						}
+					}
+
+					if (plugin_settings.map.selected_feature != null) {
+
+						var match_phrase = {}
+
+						match_phrase['properties.' + plugin_settings.aggregation.current.prop + '.keyword'] = plugin_settings.map.selected_feature
+
+						request_data['query'] = {
+					    "bool": {
+					      "must": [],
+					      "filter": [
+					        {
+					          "bool": {
+					            "should": [
+					              {
+					                "match_phrase": match_phrase
+					              }
+					            ],
+					            "minimum_should_match": 1
+					          }
+					        }
+					      ],
+					      "should": [],
+					      "must_not": []
+					    }
+					  }
+
+					}
+
+					if (plugin_settings.api.bbox != null) {
+
+						console.log('add bbox to chart request')
+
+						var b = plugin_settings.map.object.getBounds(),
+								b1 = {
+									"tllat": b.getNorthWest().lat > 90 ? 90 : b.getNorthWest().lat,
+									"tllon": b.getNorthWest().lng < -180 ? -180 : b.getNorthWest().lng,
+									"brlat": b.getSouthEast().lat < -90 ? -90 : b.getSouthEast().lat,
+									"brlon": b.getSouthEast().lng > 180 ? 180 : b.getSouthEast().lng
+								}
+
+						request_data.aggs['my_applicable_filters'] = {
+							"filter": {
+								"bool": {
+									"must": [
+										{
+											"geo_bounding_box": {
+												"coordinates": {
+													"top_left": b1.tllat + ',' + b1.tllon,
+													"bottom_right": b1.brlat + ',' + b1.brlon
+												}
+											}
+										}
+									]
+								}
+							}
 						}
 
-						if (request.object.series.length) {
+					}
 
-							series.forEach(function(col, i) {
-								request.object.series[i].setData(col['data'])
+					$.ajax({
+						method: 'POST',
+						tryCount : 0,
+						retryLimit : 3,
+						crossDomain: true,
+						headers: { "content-type": "application/json" },
+						url: api_url + '/opendrr_dsra_' + plugin_settings.scenario.key.toLowerCase() + '_indicators_b' + '/_search',
+						data: JSON.stringify(request_data),
+						success: function(data) {
+
+							// if (request.field == 'E_BldgDesLev') {
+							// 	console.log(data)
+							// }
+
+							request.columns.forEach(function(column) {
+								column.value = [0]
 							})
 
-						} else {
+							// map the data to its column in the charts object
 
-							series.forEach(function(col) {
-								request.object.addSeries(col, false)
+							data.aggregations[0].buckets.forEach(function(item) {
+
+								request.columns.forEach(function(column) {
+
+									// find the column that matches this item key
+
+									if (column.code == item.key) {
+										column.value = [ item[1]['value'] ]
+									}
+
+								})
+
 							})
 
-							request.object.redraw()
+							if (request.object.series.length) {
 
-						}
+								// update the existing series
 
-						// console.log(request.object.series)
+								request.object.series.forEach(function(existing_col, i) {
 
-						$('#legend-' + request.field).empty()
+									var this_name = existing_col.name
 
-		        $.each(request.object.series, function (j, data) {
+									request.columns.every(column => {
 
-	            $('#legend-' + request.field).append('<div class="legend-item"><div class="symbol highcharts-bg-' + data.colorIndex + '"></div><div class="column-name">' + data.name + '</div></div>');
+										if (column.code == existing_col.name) {
 
-		        });
+											// console.log(column.code, column.value)
 
-		        $('#legend-' + request.field + ' .legend-item').click(function(){
+											existing_col.setData(column.value)
 
-	            var inx = $(this).index(),
-	                point = request.object.series[inx]
+											return false
 
-	            if (point.visible) {
-								$(this).addClass('opacity-50')
-								point.setVisible(false)
-	            } else {
-								$(this).removeClass('opacity-50')
-								point.setVisible(true)
+										}
+
+										return true
+
+									})
+
+								})
+
 							}
 
-		        });
-					}
-				})
+						}
+					})
 
+				} // if reset
 
-			})
+			}) // each chart element
 
 		},
 
