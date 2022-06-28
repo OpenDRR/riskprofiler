@@ -1,0 +1,17 @@
+name: Check for dead links
+
+on: 
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  broken-link-checker:
+    name: Check for broken links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check links
+        uses: ruzickap/action-my-broken-link-checker@v2
+        with:
+          url: https://beta.riskprofiler.ca
