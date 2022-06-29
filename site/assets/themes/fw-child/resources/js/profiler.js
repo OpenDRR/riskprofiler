@@ -119,7 +119,7 @@
       var settings = $.extend(true, defaults, fn_options)
 
 			$('body').addClass('spinner-on')
-			$('#spinner-progress').text('Initializing')
+			// $('#spinner-progress').text('Initializing')
 
 			if (typeof settings.before == 'function') {
 				settings.before()
@@ -133,7 +133,7 @@
 				ajax_url = '../site/assets/themes/fw-child/template/' + settings.url
 			}
 
-			console.log('get ' + ajax_url)
+			// console.log('get ' + ajax_url)
 
 			$('.app-sidebar-content').fadeOut(125, function() {
 
@@ -237,26 +237,33 @@
 
     },
 
-		sort_items: function(sort_key, sort_order) {
+		sort_items: function(fn_options) {
 
       var plugin_instance = this
       var plugin_settings = plugin_instance.options
 
-			var result = $('body').find('.sidebar-item').sort(function (a, b) {
+			var settings = $.extend(true, {
+				key: null,
+				order: null
+			}, fn_options)
 
-				var item = $(a).attr('data-' + sort_key)
-				var compare = $(b).attr('data-' + sort_key)
+			console.log($('body').find('.sidebar-item:visible'))
 
-				// console.log($(a).attr('data-' + sort_key), $(b).attr('data-' + sort_key))
+			var result = $('body').find('.sidebar-item[data-' + settings.key + ']:visible').sort(function (a, b) {
 
-				if (!isNaN($(a).attr('data-' + sort_key))) {
+				var item = $(a).attr('data-' + settings.key)
+				var compare = $(b).attr('data-' + settings.key)
+
+				console.log($(a).attr('data-' + settings.key), $(b).attr('data-' + settings.key))
+
+				if (!isNaN($(a).attr('data-' + settings.key))) {
 
 				  item = parseFloat(item)
 				  compare = parseFloat(compare)
 
 				}
 
-				if (sort_order == 'asc') {
+				if (settings.order == 'asc') {
 					return (item < compare) ? -1 : (item > compare) ? 1 : 0
 				} else {
 					return (item > compare) ? -1 : (item < compare) ? 1 : 0
@@ -266,7 +273,7 @@
 
 			$('body').find('.sidebar-items').html(result)
 
-			// console.log('sort', sort_key, sort_order)
+			console.log('sort', settings.key, settings.order)
 
 		},
 
@@ -290,9 +297,108 @@
 
 			center = settings.map.unproject(new L.point(center.x - (settings.offset / 2), center.y))
 
-			// console.log('center', settings.coords, center)
+			console.log('center', settings.coords, center)
 
       settings.map.setView([center.lat, center.lng], settings.zoom)
+
+		},
+
+		get_tiles: function(fn_options) {
+
+			var plugin_instance = this
+			var plugin_settings = plugin_instance.options
+
+			var defaults = {
+				url: {
+					collection: 'psra_indicators',
+					aggregation: 'csd',
+					version: '1.4.0',
+					projection: 'EPSG_900913'
+				},
+				map: null,
+				indicator: null,
+				aggregation: null,
+				options: {
+		      rendererFactory: L.canvas.tile,
+					pane: 'data',
+		      interactive: true
+				},
+				functions: {
+					add: null,
+					mouseover: null,
+					mouseout: null,
+					click: null,
+					complete: null
+				}
+			}
+
+			if (fn_options.options) {
+				defaults.options = $.extend(true, defaults.options, fn_options.options)
+			}
+
+			var settings = $.extend(true, defaults, fn_options)
+
+			// console.log('get_tiles', settings)
+
+			if (settings.map.hasLayer(settings.tiles)) {
+				settings.map.removeLayer(settings.tiles)
+			}
+
+			if (settings.aggregation !== null) {
+
+				settings.url.aggregation = settings.aggregation.current.agg
+
+			}
+
+			proto_URL = pbf_url + '/' + settings.url.collection + '_' + settings.url.aggregation /*+ '_v' + settings.url.version */ + '/' + settings.url.projection + '/{z}/{x}/{y}.pbf'
+
+			// console.log('pbf url', proto_URL)
+
+			// load the tiles
+      var tiles = L.vectorGrid.protobuf(
+				proto_URL,
+				settings.options
+			)
+
+			// events
+
+			if (typeof settings.functions.mouseover == 'function') {
+				tiles.on('mouseover', function(e) {
+					settings.functions.mouseover(e)
+				})
+			}
+
+			if (typeof settings.functions.mouseout == 'function') {
+				tiles.on('mouseout', function(e) {
+					settings.functions.mouseout(e)
+				})
+			}
+
+			tiles.on('click', function(e) {
+
+				L.DomEvent.stop(e)
+
+				if (typeof settings.functions.click == 'function') {
+					settings.functions.click(e)
+				}
+			})
+
+			tiles.on('add', function(e) {
+
+				if (typeof settings.functions.add == 'function') {
+					settings.functions.add(e)
+				}
+
+				return tiles
+			})
+
+			tiles.addTo(settings.map)
+
+			if (typeof settings.functions.complete == 'function') {
+				settings.functions.complete()
+			}
+
+			$('body').removeClass('spinner-on')
 
 		},
 
@@ -349,7 +455,7 @@
 					}
 
 				}, 1000)
-				
+
 			}
 
 			// console.log('history', new_url, new_title)

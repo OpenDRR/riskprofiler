@@ -1,11 +1,15 @@
-const geoapi_url = 'https://geo-api.stage.riskprofiler.ca'
+const geoapi_url = 'https://geo-api.riskprofiler.ca'
 const pbf_url = 'https://riskprofiler.ca'
-const api_url = 'https://api.stage.riskprofiler.ca';
+const api_url = 'https://api.stage.riskprofiler.ca'
+
+var z = 0
+
+var csd_temp, s_temp
 
 // scenario profiler
 // v1.0
 
-(function ($) {
+;(function ($) {
 
   // custom select class
 
@@ -36,9 +40,6 @@ const api_url = 'https://api.stage.riskprofiler.ca';
           ]
         }
       },
-			elastic: {
-				merc: null
-			},
 			map: {
 				object: null,
 				legend: null,
@@ -629,8 +630,8 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
     init: function () {
 
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
+      var plugin = this
+      var plugin_settings = plugin.options
 
       //
       // INITIALIZE
@@ -643,8 +644,6 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 			if ($('body').hasClass('lang-fr')) {
 				plugin_settings.lang_prepend = '/fr'
 			}
-
-			//plugin_instance._get_max_vals()
 
 			//
 			// SETUP UX STUFF
@@ -667,6 +666,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 				zoomControl: false,
 				maxZoom: 15,
 				crs: L.CRS.EPSG900913,
+				dragging: !L.Browser.mobile
 			}).setView(plugin_settings.map.defaults.coords, plugin_settings.map.defaults.zoom)
 
 			// plugin_settings.map.object.on('fullscreenchange', function () {
@@ -729,11 +729,11 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 			plugin_settings.map.legend.onAdd = function () {
 
-				// console.log(plugin_settings.indicator.key, plugin_settings.api.retrofit, plugin_settings.legend.grades)
+				// console.log(plugin_settings.indicator, plugin_settings.legend)
 
 				var div = L.DomUtil.create('div', 'info legend'),
-						legend = plugin_settings.indicator.legend
-						grades = legend.values,
+						legend = plugin_settings.indicator.legend,
+						grades = [].concat(plugin_settings.legend.grades).reverse(),
 						prepend = legend.prepend,
 						append = legend.append,
 						aggregation = plugin_settings.indicator.aggregation,
@@ -763,7 +763,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
             + plugin_settings.legend.colors[i - 1] + ';"'
 						+ ' title="'
 						+ prepend
-						+ plugin_instance._round(grades[i - 1], aggregation[current_agg]['rounding']).toLocaleString(undefined, {
+						+ plugin._round(grades[i - 1], aggregation[current_agg]['rounding']).toLocaleString(undefined, {
 								maximumFractionDigits: aggregation[current_agg]['decimals']
 							})
 
@@ -771,7 +771,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 						row_markup += ' – '
 							+ prepend
-							+ plugin_instance._round(grades[i], aggregation[current_agg]['rounding']).toLocaleString(undefined, { maximumFractionDigits: aggregation[current_agg]['decimals'] })
+							+ plugin._round(grades[i], aggregation[current_agg]['rounding']).toLocaleString(undefined, { maximumFractionDigits: aggregation[current_agg]['decimals'] })
 							+ ' '
 							+ append
 
@@ -876,7 +876,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 							plugin_settings.indicator.key !== 'sH_PGA'
 						) {
 							console.log('reset charts')
-							plugin_instance.get_charts({
+							plugin.get_charts({
 								reset: true
 							})
 						}
@@ -916,8 +916,6 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 			//
 
 			// GET SCENARIO LIST
-
-			console.log((plugin_settings.lang_prepend ? '../..' : '..') + plugin_settings.lang_prepend + '/scenario/index.html')
 
 			$(document).profiler('get_sidebar', {
 				url: (plugin_settings.lang_prepend ? '../..' : '..') + plugin_settings.lang_prepend + '/scenario/index.html',
@@ -988,7 +986,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 									})
 									.on('click', function(e) {
 
-										plugin_instance.item_select({
+										plugin.item_select({
 											scenario: feature.properties,
 											marker: this
 										})
@@ -1253,7 +1251,11 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
           plugin_settings.aggregation.previous = plugin_settings.aggregation.current.agg
 
-					plugin_instance.prep_for_api({
+					// plugin.prep_for_api({
+					// 	event: 'zoomend'
+					// })
+
+					plugin.get_layer({
 						event: 'zoomend'
 					})
 
@@ -1270,7 +1272,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 			// click the 'explore' button in a sidebar item
 
 			$('body').on('click', '.sidebar-item .sidebar-button', function(e) {
-				plugin_instance.item_detail({
+				plugin.item_detail({
 					scenario: plugin_settings.scenario
 				})
 			})
@@ -1285,7 +1287,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 					if (this_scenario.id == layer.feature.properties.id) {
 
-						plugin_instance.item_select({
+						plugin.item_select({
 							scenario: this_scenario,
 							marker: layer
 						})
@@ -1328,8 +1330,8 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
   				// update layer
 
-  				plugin_instance.set_indicator(this_indicator)
-  				plugin_instance.get_layer()
+  				plugin.set_indicator(this_indicator)
+  				plugin.get_layer()
 
   			}
 			})
@@ -1339,7 +1341,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 			$('body').on('click', '.app-head-back', function(e) {
 
-				plugin_instance.do_breadcrumb('init')
+				plugin.do_breadcrumb('init')
 
 				$(document).profiler('get_sidebar', {
 					url: (plugin_settings.lang_prepend ? '../..' : '..') + plugin_settings.lang_prepend + '/scenario/index.html',
@@ -1397,6 +1399,9 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 						// empty the current scenario object
 						plugin_settings.scenario = {}
 
+						// empty the indicator object
+						plugin_settings.indicator = {}
+
 						// reset the history state
 						$(document).profiler('do_history')
 
@@ -1431,7 +1436,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 						$('.app-main').addClass('charts-on')
 
-						plugin_instance.get_charts()
+						plugin.get_charts()
 
 					}
 
@@ -1455,7 +1460,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 					plugin_settings.map.object.closePopup()
 
 					if (plugin_settings.current_view == 'detail') {
-						plugin_instance.get_layer()
+						plugin.get_layer()
 					}
 
 				}
@@ -1486,9 +1491,9 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		set_scenario: function(fn_options) {
 
-			var plugin_instance = this
+			var plugin = this
 			//var plugin_item = this.item
-			var plugin_settings = plugin_instance.options
+			var plugin_settings = plugin.options
 			//var plugin_elements = plugin_settings.elements
 
 			var settings = $.extend(true, {}, fn_options)
@@ -1497,8 +1502,8 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		set_indicator: function(indicator) {
 
-			var plugin_instance = this
-			var plugin_settings = plugin_instance.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			plugin_settings.indicator = indicator
 
@@ -1513,13 +1518,18 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 				$('#retrofit-togglebox').togglebox('disable')
 			}
 
+			plugin_settings.indicator.max = {
+				csd: 0,
+				s: 0
+			}
+
 		},
 
     item_select: function(fn_options) {
 
-      var plugin_instance = this
+      var plugin = this
       //var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
+      var plugin_settings = plugin.options
       //var plugin_elements = plugin_settings.elements
 
       // options
@@ -1537,7 +1547,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
       var settings = $.extend(true, defaults, fn_options)
 
-			console.log('select', settings)
+			// console.log('select', settings)
 
 			$(document).profiler('do_history', '#' + settings.scenario.key)
 
@@ -1564,7 +1574,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 				})
 
 				// update the epicentre and display it
-				plugin_instance.set_epicenter()
+				plugin.set_epicenter()
 
 				// select the sidebar item
 
@@ -1574,11 +1584,11 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 				// get the bounding layer
 
-				plugin_instance.get_bounds({
+				plugin.get_bounds({
 					scenario: settings.scenario
 				})
 
-				plugin_instance.do_breadcrumb('select')
+				plugin.do_breadcrumb('select')
 
 				plugin_settings.current_view = 'select'
 
@@ -1588,9 +1598,9 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
     item_detail: function(fn_options) {
 
-      var plugin_instance = this
+      var plugin = this
       //var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
+      var plugin_settings = plugin.options
       //var plugin_elements = plugin_settings.elements
 
       // options
@@ -1607,7 +1617,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
       var settings = $.extend(true, defaults, fn_options)
 
-			console.log('detail', plugin_settings.scenario.key)
+			// console.log('detail', plugin_settings.scenario.key)
 
 			// close the controls
 
@@ -1624,11 +1634,11 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 			// load the detail sidebar template
 
-			console.log(plugin_settings.scenario.url)
-
 			$(document).profiler('get_sidebar', {
 				url: plugin_settings.scenario.url,
 				before: function() {
+
+					$('#spinner-progress').text('Loading scenario')
 
 					// $('body').attr('data-sidebar-width', 'half')
 					$('.app-main').attr('data-mode', 'scenario-detail')
@@ -1647,19 +1657,19 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 					// find the first indicator item in the template and set it as the current indicator
 
-					plugin_instance.set_indicator(JSON.parse($('.app-sidebar-content').find('.indicator-item').first().attr('data-indicator')))
+					plugin.set_indicator(JSON.parse($('.app-sidebar-content').find('.indicator-item').first().attr('data-indicator')))
 
 					// update the epicentre and display it
-					plugin_instance.set_epicenter()
+					plugin.set_epicenter()
 
 					// hide the markers pane
 					plugin_settings.map.panes.markers.style.display = 'none'
 
-					plugin_instance.do_breadcrumb('detail')
+					plugin.do_breadcrumb('detail')
 
 					// get ready to call the API
 
-					plugin_instance.get_layer()
+					plugin.get_layer()
 
 				},
 				complete: function() {
@@ -1693,14 +1703,14 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		get_bounds: function(fn_options) {
 
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
+      var plugin = this
+      var plugin_settings = plugin.options
 
       var settings = $.extend(true, {
 				scenario: null
 			}, fn_options)
 
-			console.log('bounds', settings.scenario.key)
+			// console.log('bounds', settings.scenario.key)
 
 			if (settings.scenario != null) {
 
@@ -1710,29 +1720,39 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 				plugin_settings.map.panes.bbox.style.display = ''
 
-				var bounds = [
-					[settings.scenario.bounds.ne_lat, settings.scenario.bounds.ne_lng],
-					[settings.scenario.bounds.sw_lat, settings.scenario.bounds.sw_lng]
-				]
-
 				// remove existing
 
 				if (plugin_settings.map.layers.bbox) {
 					plugin_settings.map.object.removeLayer(plugin_settings.map.layers.bbox)
 				}
 
-				// create an orange rectangle
+				$.ajax({
+					url: 'https://geo-api.riskprofiler.ca/collections/opendrr_shakemap_scenario_extents/items/' + settings.scenario.key,
+					data: {
+						f: 'json'
+					},
+					dataType: 'json',
+					success: function(bounds) {
 
-				plugin_settings.map.layers.bbox = L.rectangle(bounds, {
-					color: "#f05a23",
-					weight: 1,
-					pane: 'bbox'
-				}).addTo(plugin_settings.map.object)
+						plugin_settings.map.layers.bbox = L.geoJSON(bounds, {
+							style: {
+								fillColor: '#d90429',
+								fillOpacity: 0.2,
+								weight: 0
+							},
+							pane: 'bbox'
+						})
 
-				// zoom the map to the rectangle bounds
+						plugin_settings.map.object
+							.addLayer(plugin_settings.map.layers.bbox)
+							.fitBounds(
+								plugin_settings.map.layers.bbox.getBounds(),
+								{
+									paddingTopLeft: [$(window).outerWidth() / 4, 0]
+								}
+							)
 
-				plugin_settings.map.object.fitBounds(bounds, {
-					paddingTopLeft: [$(window).outerWidth() / 4, 0]
+					}
 				})
 
 				// spinner
@@ -1743,40 +1763,50 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		},
 
-    get_layer: function(fn_options) {
+		get_layer: function(fn_options) {
 
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
+      var plugin = this
+      var plugin_settings = plugin.options
 
       var settings = $.extend(true, {
-				scenario: null,
-				legend: true
+				event: null
 			}, fn_options)
 
-			if (plugin_settings.scenario == null) {
+			// console.log('prep', plugin_settings.indicator.key)
+
+      var fetch = false
+
+			if (plugin_settings.scenario == {}) {
 
 				console.log('error: no scenario set')
 
+			} else if (plugin_settings.indicator == {}) {
+
+				console.log('error: no indicator set')
+
 			} else {
 
-				console.log('get layer', plugin_settings.scenario.key, plugin_settings.indicator.key)
+				// console.log('get layer', plugin_settings.scenario.key, plugin_settings.indicator.key)
 
 				// close the popup
 				plugin_settings.map.object.closePopup()
 
-				// spinner
-				$('body').addClass('spinner-on')
-				$('#spinner-progress').text('Retrieving data')
+				// prep_for_api fn moved here
 
-				// LAYER TYPE
+				// go through the aggregation settings
+				// to find the right keys
+	      // for the current indicator and zoom level
 
-				if (plugin_settings.indicator.key == 'sH_PGA') {
+	      var agg_key = 'default'
+
+	      if (plugin_settings.indicator.key == 'sH_PGA') {
+
+					agg_key = 'shake'
 
 					$('.app-main').removeClass('indicator-selected')
-
 					$('#chart-togglebox').togglebox('disable')
 
-				} else {
+	      } else {
 
 					$('.app-main').addClass('indicator-selected')
 					$('#chart-togglebox').togglebox('enable')
@@ -1787,133 +1817,93 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 						plugin_settings.charts.enabled == true &&
 						plugin_settings.indicator.key !== 'sH_PGA'
 					) {
-						plugin_instance.get_charts()
+						plugin.get_charts()
 					}
 
 				}
 
-				plugin_instance.prep_for_api()
+	      plugin_settings.aggregation.settings[agg_key].forEach(function (i) {
+
+	        // console.log('checking ' + plugin_settings.map.current_zoom + ' vs ' + i.min + ', ' + i.max )
+
+	        if (
+	          plugin_settings.map.current_zoom >= i.min &&
+	          plugin_settings.map.current_zoom <= i.max
+	        ) {
+
+	          // found the agg settings that match the zoom level
+
+	          if (plugin_settings.aggregation.current.agg != i.agg) {
+
+	            // agg settings doesn't match the plugin's current aggregation
+
+	            plugin_settings.aggregation.current = i
+
+	          }
+
+	        }
+
+	      })
+
+	      // conditions for fetching new data
+	      // 1. zoom action changed the aggregation setting
+	      // 2. previous aggregation is empty - initial load of scenario
+	      // 3. current aggregation uses bbox
+
+				// if (settings.event == 'zoomend') {
+				// 	console.log('prev agg', plugin_settings.aggregation.previous)
+				// 	console.log('new agg', plugin_settings.aggregation.current.agg)
+				// }
+
+	      if (
+					settings.event == null ||
+	        (
+	          plugin_settings.aggregation.previous !== null &&
+	          plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
+	        ) ||
+	        plugin_settings.aggregation.previous == null /*||
+	        plugin_settings.aggregation.current.bbox == true*/
+	      ) {
+
+					console.log('fetch')
+
+	        // RESET MAP FEATURES
+
+	        // reset legend max
+	        plugin_settings.legend.max = 0
+
+	        // UPDATE PARAMS
+
+	        // fetch new data
+	        fetch = true
+
+	      }
+
+	      if (fetch == true) {
+
+					// spinner
+					$('body').addClass('spinner-on')
+
+					// console.log('get max vals now')
+					plugin.get_max_vals()
+
+	      }
 
 			}
 
-		},
 
-		prep_for_api: function(fn_options) {
-
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
-
-      var settings = $.extend(true, {
-				event: null
-			}, fn_options)
-
-			// console.log('prep', plugin_settings.indicator.key)
-
-      var fetch = false
-
-      // go through the aggregation settings
-			// to find the right keys
-      // for the current indicator and zoom level
-
-      var agg_key = 'default'
-
-      if (plugin_settings.indicator.key == 'sH_PGA') {
-        agg_key = 'shake'
-      }
-
-      plugin_settings.aggregation.settings[agg_key].forEach(function (i) {
-
-        // console.log('checking ' + plugin_settings.map.current_zoom + ' vs ' + i.min + ', ' + i.max )
-
-        if (
-          plugin_settings.map.current_zoom >= i.min &&
-          plugin_settings.map.current_zoom <= i.max
-        ) {
-
-          // found the agg settings that match the zoom level
-
-          if (plugin_settings.aggregation.current.agg != i.agg) {
-
-            // agg settings doesn't match the plugin's current aggregation
-
-            plugin_settings.aggregation.current = i
-
-          }
-
-        }
-
-      })
-
-      // conditions for fetching new data
-      // 1. zoom action changed the aggregation setting
-      // 2. previous aggregation is empty - initial load of scenario
-      // 3. current aggregation uses bbox
-
-      if (
-				settings.event == null ||
-        (
-          plugin_settings.aggregation.previous !== null &&
-          plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
-        ) ||
-        plugin_settings.aggregation.previous == null /*||
-        plugin_settings.aggregation.current.bbox == true*/
-      ) {
-
-        // RESET MAP FEATURES
-
-        // reset legend max
-        plugin_settings.legend.max = 0
-
-        // UPDATE PARAMS
-
-        // bbox
-
-        // if (plugin_settings.aggregation.current.bbox == true) {
-				//
-        //   var bounds = plugin_settings.map.object.getBounds()
-				//
-        //   plugin_settings.api.bbox = L.latLngBounds(L.latLng(
-				// 		bounds.getSouthWest().lat,
-				// 		bounds.getSouthWest().lng
-				// 	), L.latLng(
-				// 		bounds.getNorthEast().lat,
-				// 		bounds.getNorthEast().lng
-				// 	))
-				//
-				// 	console.log('bbox', plugin_settings.api.bbox)
-				//
-        // } else {
-				//
-        //   plugin_settings.api.bbox = null
-				//
-        // }
-
-        // fetch new data
-        fetch = true
-
-      }
-
-      if (fetch == true) {
-
-        // get the tiles
-				plugin_instance.get_tiles()
-
-      }
 
 		},
 
-		get_tiles: function() {
+		get_max_vals: function() {
 
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
+      var plugin = this
+      var plugin_settings = plugin.options
 			var map = plugin_settings.map.object
 
-			// close popups
-			plugin_settings.map.object.closePopup()
+			$('#spinner-progress').text('Retrieving scenario data')
 
-			if (map.hasLayer(plugin_settings.map.layers.tiles)) {
-				map.removeLayer(plugin_settings.map.layers.tiles)
-			}
+			console.log('get max vals', plugin_settings.indicator.max)
 
 			// set bounds by the scenario meta
       var bounds = L.latLngBounds(L.latLng(
@@ -1924,36 +1914,135 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 				plugin_settings.scenario.bounds.ne_lng
 			))
 
-			// if (plugin_settings.api.bbox != null) {
-			//
-			// 	// if the bbox has been updated
-			//
-			// 	console.log('bbox')
-			//
-			// 	bounds = plugin_settings.api.bbox
-			//
-			// } else {
-			//
-			// 	// use the bounds set by the scenario meta
-			//
-			// 	bounds = L.latLngBounds(L.latLng(
-			// 		plugin_settings.scenario.bounds.sw_lat,
-			// 		plugin_settings.scenario.bounds.sw_lng
-			// 	), L.latLng(
-			// 		plugin_settings.scenario.bounds.ne_lat,
-			// 		plugin_settings.scenario.bounds.ne_lng
-			// 	))
-			//
-			// }
-
 			var pbf_key = 'dsra_'
-				+ plugin_settings.scenario.key.toLowerCase(),
-					indicator_key = plugin_settings.indicator.key,
+				+ plugin_settings.scenario.key.toLowerCase() + '_indicators_',
+					indicator_key = plugin_settings.indicator.key + '_b0',
 					aggregation = plugin_settings.aggregation.current,
-					feature_ID_key,
-					pane = 'data'
+					feature_ID_key = aggregation.prop
+
+
+			if (plugin_settings.indicator.key !== 'sH_PGA') {
+
+				// if max values for this indicator have not been generated
+
+				if (
+					plugin_settings.indicator.max.csd == 0 &&
+					plugin_settings.indicator.max.s == 0
+				) {
+
+					console.log('maxes are 0, get new ones')
+
+					// get the csd max
+
+					csd_temp = L.vectorGrid.protobuf(
+						pbf_url + '/' + pbf_key + 'csd/EPSG_900913/{z}/{x}/{y}.pbf',
+						{
+							rendererFactory: L.canvas.tile,
+							interactive: false,
+				      getFeatureId: function(feature) {
+
+								if (feature.properties[indicator_key] > plugin_settings.indicator.max.csd) {
+									plugin_settings.indicator.max.csd = feature.properties[indicator_key]
+								}
+
+				        return feature.properties[feature_ID_key]
+				      },
+							bounds: bounds
+						}
+					).on('load', function() {
+
+						// get the s max
+
+						s_temp = L.vectorGrid.protobuf(
+							pbf_url + '/' + pbf_key + 's/EPSG_900913/{z}/{x}/{y}.pbf',
+							{
+								rendererFactory: L.canvas.tile,
+								interactive: false,
+					      getFeatureId: function(feature) {
+
+									if (feature.properties[indicator_key] > plugin_settings.indicator.max.s) {
+										plugin_settings.indicator.max.s = feature.properties[indicator_key]
+									}
+
+					        return feature.properties[feature_ID_key]
+					      },
+								bounds: bounds
+							}
+						).on('load', function() {
+
+							console.log('calculated max values', plugin_settings.indicator.max)
+
+							$('#spinner-progress').text('Loading visualization')
+
+							plugin.get_tiles()
+
+						}).addTo(map)
+
+					}).addTo(map)
+
+				} else {
+
+					// console.log('max exists', csd_max, s_max)
+
+					// already have max vals
+					plugin.get_tiles()
+
+				}
+
+			} else {
+
+				console.log('shake, get tiles now')
+				plugin.get_tiles()
+
+			}
+		},
+
+		get_tiles: function(fn_options) {
+
+			console.log('get tiles')
+
+      var plugin = this
+      var plugin_settings = plugin.options
+			var map = plugin_settings.map.object
+
+      var settings = $.extend(true, {}, fn_options)
+
+			// close popups
+
+			plugin_settings.map.object.closePopup()
+
+			// remove existing layers
+
+			if (map.hasLayer(csd_temp)) map.removeLayer(csd_temp)
+			if (map.hasLayer(s_temp)) map.removeLayer(s_temp)
+			if (map.hasLayer(plugin_settings.map.layers.tiles)) map.removeLayer(plugin_settings.map.layers.tiles)
+
+			// show the data pane
 
 			plugin_settings.map.panes.data.style.display = ''
+
+			// set bounds by the scenario meta
+
+      var bounds = L.latLngBounds(L.latLng(
+				plugin_settings.scenario.bounds.sw_lat,
+				plugin_settings.scenario.bounds.sw_lng
+			), L.latLng(
+				plugin_settings.scenario.bounds.ne_lat,
+				plugin_settings.scenario.bounds.ne_lng
+			))
+
+			// set tile vars
+
+			var pbf_key = 'dsra_'
+				+ plugin_settings.scenario.key.toLowerCase()
+
+			var	indicator_key = plugin_settings.indicator.key,
+					aggregation = plugin_settings.aggregation.current,
+					feature_ID_key
+
+			// get the max val for this aggregation
+
+			var max_val = plugin_settings.indicator.max[aggregation.agg]
 
 			if (plugin_settings.indicator.key == 'sH_PGA') {
 
@@ -1985,33 +2074,73 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 			}
 
-			var shakeTileOptions = {
-	      rendererFactory: L.canvas.tile,
-				pane: pane,
-	      interactive: true,
-	      getFeatureId: function(feature) {
-	        return feature.properties[feature_ID_key]
-	      },
-	      bounds: bounds,
-	      vectorTileLayerStyles: plugin_instance.set_shake_styles(pbf_key, indicator_key)
-	    }
-
-			// set tile URL
-			proto_URL = pbf_url + '/' + pbf_key + '/EPSG_900913/{z}/{x}/{y}.pbf'
+			z = 0
 
 			// load the tiles
+
       plugin_settings.map.layers.tiles = L.vectorGrid.protobuf(
-				proto_URL,
-				shakeTileOptions
-			).on('add', function(e) {
+				pbf_url + '/' + pbf_key + '/EPSG_900913/{z}/{x}/{y}.pbf',
+				{
+		      rendererFactory: L.canvas.tile,
+					pane: 'data',
+		      interactive: true,
+		      getFeatureId: function(feature) {
+		        return feature.properties[feature_ID_key]
+		      },
+		      bounds: bounds,
+		      vectorTileLayerStyles: plugin.set_shake_styles(pbf_key, indicator_key)
+		    }
+			).on('load', function(e) {
 
-				// update the legend
+			}).on('add', function(e) {
 
-				plugin_settings.legend.grades = plugin_settings.indicator.legend.values
+				// console.log('get_tiles on add')
 
-				plugin_settings.map.legend.addTo(plugin_settings.map.object)
+				// if retrofit is OFF and
 
-				$('body').find('.legend-item').tooltip()
+				if (
+					plugin_settings.api.retrofit == 'b0'
+				) {
+
+					// don't round here, use the full values
+					// for setting legend grades
+					// and choro colours
+
+					// var rounding = plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding']
+
+					if (plugin_settings.indicator.key == 'sH_PGA') {
+
+						plugin_settings.legend.grades = [].concat(plugin_settings.indicator.legend.values).reverse()
+
+					} else {
+
+						// console.log('max val', max_val)
+
+						var legend_steps = 9,
+								legend_step = 0
+
+						plugin_settings.legend.grades = []
+
+						// console.log('legend max', max_val)
+
+						legend_step = max_val / legend_steps
+
+						// console.log('step', legend_step)
+
+						for (i = 1; i <= legend_steps; i += 1) {
+							// console.log(i, max_val - (legend_step * i))
+							plugin_settings.legend.grades.push(max_val - (legend_step * i))
+						}
+
+					}
+
+					console.log('new legend', plugin_settings.legend)
+
+					plugin_settings.map.legend.addTo(plugin_settings.map.object)
+
+					$('body').find('.legend-item').tooltip()
+
+				}
 
 				// update breadcrumb
 
@@ -2086,7 +2215,7 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 					plugin_settings.charts.enabled == true &&
 					plugin_settings.indicator.key !== 'sH_PGA'
 				) {
-					plugin_instance.get_charts()
+					plugin.get_charts()
 				}
 
       }).addTo(map)
@@ -2098,29 +2227,36 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		set_shake_styles: function(pbf_key, indicator_key) {
 
-			var plugin_instance = this
-			var plugin_settings = plugin_instance.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			var layer_style = {},
 					fillColor,
 					weight = 0
 
-			// console.log(pbf_key, indicator_key)
-
 			layer_style[pbf_key] = function(properties) {
 
 				if (indicator_key == 'sH_PGA_max') {
 
-					fillColor = plugin_instance._choro_color( properties[indicator_key] * 100)
+					fillColor = plugin._choro_color( properties[indicator_key] * 100)
 
 				} else {
 
-					var rounded_color = properties[indicator_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
+					var rounded_val = properties[indicator_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
 
-					// console.log('val: ' + properties[indicator_key], 'rounding: ' +  plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'], 'rounded: ' + rounded_color)
+					// if (z < 10) {
+					// 	console.log('val: ' + properties[indicator_key], 'rounding: ' +  plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'], 'rounded: ' + rounded_val)
+					//
+					// 	z += 1
+					// }
 
-					fillColor = plugin_instance._choro_color(rounded_color)
+					fillColor = plugin._choro_color(rounded_val)
 					weight = 0.4
+
+					// if (plugin_settings.aggregation.current.agg == 's') {
+					// 	console.log(rounded_val, fillColor)
+					// }
+
 				}
 
 				return {
@@ -2138,9 +2274,9 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		set_epicenter: function() {
 
-      var plugin_instance = this
+      var plugin = this
       //var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
+      var plugin_settings = plugin.options
       //var plugin_elements = plugin_settings.elements
 
 			// console.log(plugin_settings.scenario.coords)
@@ -2155,12 +2291,13 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		_choro_color: function(d) {
 
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
+      var plugin = this
+      var plugin_settings = plugin.options
 
-			var grades = [].concat(plugin_settings.indicator.legend.values).reverse()
+			// var grades = [].concat(plugin_settings.indicator.legend.values).reverse()
 
-			var rounding = plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding']
+			var grades = plugin_settings.legend.grades,
+					rounding = plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding']
 
 			return d >= grades[0] * Math.pow(10, rounding) ? '#800026' :
 				d >= grades[1] * Math.pow(10, rounding) ? '#bd0026' :
@@ -2174,49 +2311,11 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 		},
 
-		_choro_style: function(feature) {
-
-      var plugin_instance = this
-      //var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
-      //var plugin_elements = plugin_settings.elements
-
-			// console.log(feature)
-
-      var stroke = 0.4
-
-			var prop_key = plugin_settings.indicator.key + ((plugin_settings.indicator.retrofit !== false) ? '_' + plugin_settings.api.retrofit : '')
-
-      if (plugin_settings.indicator.key == 'sH_PGA') {
-        prop_key = 'sH_PGA_max'
-        stroke = 0
-      }
-
-			var rounded_color = feature.properties[prop_key] * Math.pow(10, plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
-
-			return {
-					fillColor: plugin_instance._choro_color(rounded_color),
-					weight: stroke,
-					fillOpacity: 0.7,
-					color: '#4b4d4d',
-					opacity: 1
-			};
-		},
-
-		_choro_selected_style: function(feature) {
-			return {
-				fillColor: '#9595a0',
-				color: '#2b2c42',
-				weight: 0.8,
-				fillOpacity: 0.5
-			};
-		},
-
 		do_breadcrumb: function(fn_options) {
 
-			var plugin_instance = this
+			var plugin = this
 			//var plugin_item = this.item
-			var plugin_settings = plugin_instance.options
+			var plugin_settings = plugin.options
 			//var plugin_elements = plugin_settings.elements
 
 			var settings = $.extend(true, {}, fn_options)
@@ -2253,8 +2352,8 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 
 			// console.log('get charts')
 
-			var plugin_instance = this
-			var plugin_settings = plugin_instance.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			var settings = $.extend(true, {
 				reset: false
@@ -2470,148 +2569,148 @@ const api_url = 'https://api.stage.riskprofiler.ca';
 			return num * Math.pow(10, power)
 		},
 
-		_get_max_vals: function() {
-
-			var scenarios = [
-				'SIM9p0_CascadiaInterfaceBestFault',
-				'ACM7p0_GeorgiaStraitFault',
-				'ACM7p3_LeechRiverFullFault',
-				'IDM7p1_Sidney',
-				'SCM7p5_valdesbois'
-			]
-
-			var all_vals = {}
-
-			function doit(url = null) {
-
-				if (url == null) {
-					url = 'https://geo-api.stage.riskprofiler.ca/collections/opendrr_dsra_' + scenarios[0].toLowerCase() + '_indicators_csd/items?lang=en_US&f=json&limit=2000'
-				}
-
-				console.log(url)
-
-				var nxt_lnk
-
-				$.ajax({
-					url: url,
-					success: function(data) {
-
-						var max = 0
-
-						data.features.forEach(function(feature) {
-
-							// console.log(feature)
-
-							for (var key in feature.properties) {
-
-								if (typeof feature.properties[key] == 'number') {
-
-									var key_clean = key.slice(0, -3)
-
-									if (typeof all_vals[key_clean] == 'undefined') {
-										all_vals[key_clean] = {}
-									}
-
-									if (
-										typeof all_vals[key_clean][scenarios[0]] == 'undefined' ||
-										feature.properties[key] > all_vals[key_clean][scenarios[0]]
-									) {
-
-										all_vals[key_clean][scenarios[0]] = feature.properties[key]
-
-									}
-
-								}
-
-
-							}
-
-
-						})
-
-						for (var l in data.links) {
-							lnk = data.links[l]
-
-							if (lnk.rel == 'next') {
-								nxt_lnk = lnk.href
-								break
-							}
-						}
-
-						if (nxt_lnk) {
-
-							console.log('next')
-
-							// recursive
-							doit(nxt_lnk)
-
-						} else {
-
-							console.log('done')
-
-							scenarios.shift()
-
-							if (scenarios.length) {
-
-								doit()
-
-							} else {
-
-								process()
-
-							}
-
-						}
-
-					}
-				})
-
-				console.log('---')
-
-			}
-
-			function process() {
-				console.log(all_vals)
-
-				// console.log(JSON.stringify(all_vals))
-
-				/*
-
-				'indicator' => array (
-					array (
-						'scenario' => y
-						'value' => x
-					),
-					array (
-						'scenario' => y
-						'value' => x
-					),
-				)
-
-
-				*/
-
-				var div = $('<textarea>').appendTo('body').css('height', '200px')
-
-				for (var indicator in all_vals) {
-
-					div.append("'" + indicator + "' => array (")
-
-					for (var scenario in all_vals[indicator]) {
-						div.append("\n\tarray (")
-						div.append("\n\t\t'scenario' => '" + scenario + "',")
-						div.append("\n\t\t'value' => " + all_vals[indicator][scenario])
-						div.append("\n\t),")
-					}
-
-					div.append("\n),\n\n")
-
-				}
-			}
-
-			doit()
-
-		}
+		// _get_max_vals: function() {
+		//
+		// 	var scenarios = [
+		// 		'SIM9p0_CascadiaInterfaceBestFault',
+		// 		'ACM7p0_GeorgiaStraitFault',
+		// 		'ACM7p3_LeechRiverFullFault',
+		// 		'IDM7p1_Sidney',
+		// 		'SCM7p5_valdesbois'
+		// 	]
+		//
+		// 	var all_vals = {}
+		//
+		// 	function doit(url = null) {
+		//
+		// 		if (url == null) {
+		// 			url = 'https://geo-api.stage.riskprofiler.ca/collections/opendrr_dsra_' + scenarios[0].toLowerCase() + '_indicators_csd/items?lang=en_US&f=json&limit=2000'
+		// 		}
+		//
+		// 		console.log(url)
+		//
+		// 		var nxt_lnk
+		//
+		// 		$.ajax({
+		// 			url: url,
+		// 			success: function(data) {
+		//
+		// 				var max = 0
+		//
+		// 				data.features.forEach(function(feature) {
+		//
+		// 					// console.log(feature)
+		//
+		// 					for (var key in feature.properties) {
+		//
+		// 						if (typeof feature.properties[key] == 'number') {
+		//
+		// 							var key_clean = key.slice(0, -3)
+		//
+		// 							if (typeof all_vals[key_clean] == 'undefined') {
+		// 								all_vals[key_clean] = {}
+		// 							}
+		//
+		// 							if (
+		// 								typeof all_vals[key_clean][scenarios[0]] == 'undefined' ||
+		// 								feature.properties[key] > all_vals[key_clean][scenarios[0]]
+		// 							) {
+		//
+		// 								all_vals[key_clean][scenarios[0]] = feature.properties[key]
+		//
+		// 							}
+		//
+		// 						}
+		//
+		//
+		// 					}
+		//
+		//
+		// 				})
+		//
+		// 				for (var l in data.links) {
+		// 					lnk = data.links[l]
+		//
+		// 					if (lnk.rel == 'next') {
+		// 						nxt_lnk = lnk.href
+		// 						break
+		// 					}
+		// 				}
+		//
+		// 				if (nxt_lnk) {
+		//
+		// 					console.log('next')
+		//
+		// 					// recursive
+		// 					doit(nxt_lnk)
+		//
+		// 				} else {
+		//
+		// 					console.log('done')
+		//
+		// 					scenarios.shift()
+		//
+		// 					if (scenarios.length) {
+		//
+		// 						doit()
+		//
+		// 					} else {
+		//
+		// 						process()
+		//
+		// 					}
+		//
+		// 				}
+		//
+		// 			}
+		// 		})
+		//
+		// 		console.log('---')
+		//
+		// 	}
+		//
+		// 	function process() {
+		// 		console.log(all_vals)
+		//
+		// 		// console.log(JSON.stringify(all_vals))
+		//
+		// 		/*
+		//
+		// 		'indicator' => array (
+		// 			array (
+		// 				'scenario' => y
+		// 				'value' => x
+		// 			),
+		// 			array (
+		// 				'scenario' => y
+		// 				'value' => x
+		// 			),
+		// 		)
+		//
+		//
+		// 		*/
+		//
+		// 		var div = $('<textarea>').appendTo('body').css('height', '200px')
+		//
+		// 		for (var indicator in all_vals) {
+		//
+		// 			div.append("'" + indicator + "' => array (")
+		//
+		// 			for (var scenario in all_vals[indicator]) {
+		// 				div.append("\n\tarray (")
+		// 				div.append("\n\t\t'scenario' => '" + scenario + "',")
+		// 				div.append("\n\t\t'value' => " + all_vals[indicator][scenario])
+		// 				div.append("\n\t),")
+		// 			}
+		//
+		// 			div.append("\n),\n\n")
+		//
+		// 		}
+		// 	}
+		//
+		// 	doit()
+		//
+		// }
 
   }
 

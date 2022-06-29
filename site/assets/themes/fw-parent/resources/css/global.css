@@ -21534,7 +21534,7 @@ body.supermenu-open.supermenu-disabled .supermenu-wrap {
 .overlay-close {
   display: block;
   position: absolute;
-  top: 2rem;
+  top: 150px;
   right: 2rem;
   color: #d90429;
   font-size: 2rem;

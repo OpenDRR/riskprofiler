@@ -17,7 +17,7 @@
       position: 'top',
       bg: '0,0,0,0.6',
       opacity: 0.6,
-      debug: true,
+      debug: false,
       elements: {
       },
 			youtube: {
@@ -328,7 +328,9 @@
 
         // open the overlay
 
-        console.log('show', settings.content)
+				if (plugin_settings.debug == true) {
+	        console.log('show', settings.content)
+				}
 
         new_container = $('<div class="overlay" data-content="' + settings.content + '" data-position="' + settings.position + '">').appendTo(plugin_elements.wrap);
 

@@ -7,11 +7,11 @@
 	>
 <channel>
 	<title>
-	Comments on: Accueil	</title>
+	Comments on: Home Page	</title>
 	<atom:link href="./index.html" rel="self" type="application/rss+xml" />
 	<link>./../../index.html</link>
-	<description></description>
-	<lastBuildDate>Wed, 20 Oct 2021 13:23:53 +0000</lastBuildDate>
+	<description>A platform to support disaster resilience</description>
+	<lastBuildDate>Thu, 23 Jun 2022 17:59:51 +0000</lastBuildDate>
 	<sy:updatePeriod>
 	hourly	</sy:updatePeriod>
 	<sy:updateFrequency>

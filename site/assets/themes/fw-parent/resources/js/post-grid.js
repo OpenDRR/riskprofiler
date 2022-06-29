@@ -140,8 +140,6 @@
 				plugin_elements.post_count = plugin_item.find('.post-count-num')
 			}
 
-			console.log(plugin_elements)
-
       //
       // INIT
       //
@@ -381,7 +379,9 @@
       plugin_item.acf_query('eval_filters', {
         complete: function() {
 
-          console.log('eval done, get page now')
+					if (plugin_settings.debug == true) {
+          	console.log('eval done, get page now')
+					}
 
           plugin_settings.append = false
 
@@ -390,14 +390,18 @@
           plugin_elements.item_container.addClass('loading')
           $('body').addClass('spinner-on')
 
-					console.log(plugin_settings.query_args)
+					if (plugin_settings.debug == true) {
+						console.log(plugin_settings.query_args)
+					}
 
           plugin_item.acf_query('get_page', {
             url: window.location.href,
             args: plugin_settings.query_args,
             success: function(success_data) {
 
-							console.log(plugin_item.find('.post-count-num'), success_data.post_count.num)
+							if (plugin_settings.debug == true) {
+								console.log(plugin_item.find('.post-count-num'), success_data.post_count.num)
+							}
 
 							plugin_item.find('.post-count-num').text(success_data.post_count.num)
 							plugin_item.find('.post-count-total').text(success_data.post_count.total)
@@ -443,7 +447,9 @@
         append: false
       }, fn_options);
 
-      console.log('success data', settings.success_data)
+			if (plugin_settings.debug == true) {
+      	console.log('success data', settings.success_data)
+			}
 
       if (settings.success_data != null) {
 

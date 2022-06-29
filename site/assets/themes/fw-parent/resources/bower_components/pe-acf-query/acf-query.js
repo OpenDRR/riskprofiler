@@ -22,7 +22,7 @@
       filters: {},
       active_filters: [],
       elements: {},
-      debug: true
+      debug: false
     };
 
     this.options = $.extend(true, defaults, options);
