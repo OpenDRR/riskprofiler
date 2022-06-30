@@ -73,7 +73,9 @@ configure_simply_static() {
 
 	# Add additional URLs
 	additional_urls=(
+		http://riskprofiler.demo/community/
 		http://riskprofiler.demo/favicon.ico
+		http://riskprofiler.demo/fr/community/
 		http://riskprofiler.demo/fr/scenario/
 		http://riskprofiler.demo/scenario/
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/control-bar.php
@@ -85,6 +87,11 @@ configure_simply_static() {
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-sort.php
 		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/items.php
 	)
+
+
+	################################################################################################################
+	# Deal with rewrite_rules (check with "wp option get rewrite_rules")
+
 	# Read and display names of scenarios from WordPress posts
 	# Example: scenarios=([0]="georgia-strait" [1]="val-des-bois" [2]="cascadia-interface-best-fault" [3]="sidney" [4]="leech-river-full-fault")
 	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
@@ -95,6 +102,18 @@ configure_simply_static() {
 	done
 	IFS=$'\n' eval 'echo "${additional_urls[*]}"' | wp option patch update simply-static 'additional_urls'
 
+	# This one is apparently not needed?  http://riskprofiler.demo/community/ and http://riskprofiler.demo/fr/community/ alone suffice?
+	# # Read and display names of communities from WordPress posts
+	# # Example: communities=([0]="halifax" [1]="montreal" [2]="ottawa" [3]="winnipeg" [4]="calgary" [5]="vancouver")
+	# mapfile -t communities < <(wp post list --post_type=community --field=post_name)
+	# declare -p communities
+	# for i in "${communities[@]}"; do
+	# 	additional_urls+=( "http://riskprofiler.demo/fr/community/${i}/" )
+	# 	additional_urls+=( "http://riskprofiler.demo/community/${i}/" )
+	# done
+	# IFS=$'\n' eval 'echo "${additional_urls[*]}"' | wp option patch update simply-static 'additional_urls'
+	# ################################################################################################################
+
 	# Add additional files
 	wp option patch update simply-static 'additional_files' <<-EOF
 		/var/www/html/site/assets/themes/fw-child/resources/css/child.css.map
@@ -104,6 +123,7 @@ configure_simply_static() {
 		/var/www/html/site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/modules/exporting.js.map
 		/var/www/html/site/assets/themes/fw-child/resources/vendor/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js.map
 		/var/www/html/site/assets/themes/fw-parent/resources/css/global.css.map
+		/var/www/html/site/assets/themes/fw-parent/resources/json/highcharts.json
 		/var/www/html/site/assets/themes/fw-parent/resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js.map
 		/var/www/html/site/assets/uploads/2021/10/lf20_mmrbfbcv.json
 		/var/www/html/site/assets/uploads/2021/10/lf20_vx8bv90p.json
@@ -179,11 +199,13 @@ fixup_static_site() {
 	# Change "./fr/" to "../../fr/"
 	sed -E -i 's#("url":")(\.\\/fr\\/)#\1\..\\/.\2#' fr/scenario/index.html
 
-	# Point to index.html for AWS S3
+	# Point to index.html for Amazon S3, an make the links work when site is hosted in a subdirectory
 	sed -E -i 's#"url":".[^"]*#&index.html#' \
 		scenario/index.html site/assets/themes/fw-child/template/scenarios/items.php
 	sed -i "s#\(plugin_settings\.lang_prepend + '/scenario\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
 		site/assets/themes/fw-child/resources/js/rp_scenarios.js
+	sed -i "s#\(plugin_settings\.lang_prepend + '/community\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
+		site/assets/themes/fw-child/resources/js/rp_risks.js
 
 	# Temporary fix for incorrect charts first found in v0.4.0.20220511 build,
 	# see https://github.com/OpenDRR/riskprofiler/issues/36
