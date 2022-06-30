@@ -207,16 +207,6 @@ fixup_static_site() {
 	sed -i "s#\(plugin_settings\.lang_prepend + '/community\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
 		site/assets/themes/fw-child/resources/js/rp_risks.js
 
-	# Temporary fix for incorrect charts first found in v0.4.0.20220511 build,
-	# see https://github.com/OpenDRR/riskprofiler/issues/36
-	sed -i "s#https://api\.riskprofiler\.ca#https://api.stage.riskprofiler.ca#; \
-		s/'_indicators_b_v' + plugin_settings.api.version/'_indicators_b'/" \
-		site/assets/themes/fw-child/resources/js/rp_scenarios.js
-
-	# Temporary workaround as we transition from "hexbin" with "hexgrid"
-	sed -i "s/pbf_key += '_shakemap_hexbin_' + aggregation.agg/\/\/ Temporary workaround as we transition from \"hexbin\" to \"hexgrid\"\n\t\t\t\tif (aggregation.agg == '5km') {\n\t\t\t\t\t&\n\t\t\t\t} else {\n\t\t\t\t\tpbf_key += '_shakemap_hexgrid_' + aggregation.agg\n\t\t\t\t}/" \
-		site/assets/themes/fw-child/resources/js/rp_scenarios.js
-
 	popd
 	set +x
 }
