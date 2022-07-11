@@ -1,3 +1,4 @@
 [submodule "wp-app"]
 	path = wp-app
 	url = https://github.com/OpenDRR/h7-riskprofiler.git
+	branch = user-engagement-session-20220713
