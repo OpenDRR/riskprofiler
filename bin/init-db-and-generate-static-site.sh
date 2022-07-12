@@ -141,6 +141,36 @@ configure_simply_static() {
 	wp option get simply-static
 }
 
+get_git_describe() {
+	wp option add options_git_describe "$OPTIONS_GIT_DESCRIBE"
+	# TODO: The following does not work with French pages
+	# wp option add options_fr_git_describe "$OPTIONS_GIT_DESCRIBE"
+}
+
+patch_version_php() {
+	# Append build number to the site version
+	sed -i -f - site/assets/themes/fw-child/template/version.php <<'EOF'
+/^?>/i\
+	if ($git_describe = get_field ( 'git_describe', 'option' )) {\
+		list($version, $api_version, $release_date, $commits_since, $commit_hash) = explode("-", $git_describe);\
+\
+		if ($commits_since == 0) {\
+			$git_describe = implode('-', [$version, $api_version, $release_date]);\
+		}\
+\
+		$build_number = sprintf("%04d", $release_date - 20220000);\
+		if ($commits_since > 0) {\
+			$build_number = implode('-', [$build_number, $commits_since, $commit_hash]);\
+		}\
+\
+		echo '(<a href="https://github.com/OpenDRR/riskprofiler-cms/tree/' . $git_describe . '" class="text-gray-400">' . $build_number . '</a>)';\
+\
+		echo '<span class="mx-1">•</span>';\
+	}\
+
+EOF
+}
+
 simply_static_site_export() {
 	set -x
 	wp cron event schedule 'simply_static_site_export_cron'
@@ -253,6 +283,8 @@ main() {
 	#update_wp_core_and_simply_static
 
 	configure_simply_static
+	get_git_describe
+	patch_version_php
 	simply_static_site_export
 	fixup_static_site
 

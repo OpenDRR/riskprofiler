@@ -42,7 +42,8 @@ services:
       WP_ADMIN_USER:          # read from .env
       WP_ADMIN_EMAIL:         # read from .env
       WP_ADMIN_PASSWORD:      # read from .env
-      KEEP_WPCLI_RUNNING:     # read from .env
+      KEEP_WPCLI_RUNNING:     # read from .env or from environment
+      OPTIONS_GIT_DESCRIBE:   # read from .env or from environment
     depends_on:
       - db
       - wordpress
