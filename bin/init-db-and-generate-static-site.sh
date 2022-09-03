@@ -145,6 +145,13 @@ get_git_describe() {
 	wp option add options_git_describe "$OPTIONS_GIT_DESCRIBE"
 }
 
+get_api_version() {
+	# profile.js, rp_scenarios.js and rp_risks.js all have the API version defined
+	API_VERSION=$(grep -r version: site/assets/themes/fw-child/resources/js/ | sed -E 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/' | sort -u)
+	wp option update options_api_version "$API_VERSION"
+	wp option update options_fr_api_version "$API_VERSION"
+}
+
 patch_version_php() {
 	# Append build number to the site version
 	sed -i -f - site/assets/themes/fw-child/template/version.php <<'EOF'
@@ -292,6 +299,7 @@ main() {
 
 	configure_simply_static
 	get_git_describe
+	get_api_version
 	patch_version_php
 	workaround_incomplete_hexbin_to_hexgrid_transition
 	simply_static_site_export
