@@ -143,15 +143,13 @@ configure_simply_static() {
 
 get_git_describe() {
 	wp option add options_git_describe "$OPTIONS_GIT_DESCRIBE"
-	# TODO: The following does not work with French pages
-	# wp option add options_fr_git_describe "$OPTIONS_GIT_DESCRIBE"
 }
 
 patch_version_php() {
 	# Append build number to the site version
 	sed -i -f - site/assets/themes/fw-child/template/version.php <<'EOF'
 /^?>/i\
-	if ($git_describe = get_field ( 'git_describe', 'option' )) {\
+	if ($git_describe = get_option ( 'options_git_describe' )) {\
 		list($version, $api_version, $release_date, $commits_since, $commit_hash) = explode("-", $git_describe);\
 \
 		if ($commits_since == 0) {\
