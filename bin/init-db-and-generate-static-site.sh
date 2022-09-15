@@ -14,7 +14,7 @@ import_db() {
 
 	if ! wp core is-installed; then
 		echo "Importing WordPress database for RiskProfiler..."
-		wp db import /usr/src/db-backup/wp_habitatseven_riskprofiler.sql
+		wp db import /usr/src/db-backup/wp_h7_riskprofiler.sql
 	else
 		echo "WordPress database was previously installed, skipping import."
 	fi
