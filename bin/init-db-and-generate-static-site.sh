@@ -176,16 +176,6 @@ patch_version_php() {
 EOF
 }
 
-workaround_incomplete_hexbin_to_hexgrid_transition() {
-	# We currently have 5km "hexbin" and 1km "hexgrid" on riskprofiler.ca
-	sed -i -f - site/assets/themes/fw-child/resources/js/rp_scenarios.js <<'EOF'
-		s/shakemap_hexbin/shakemap_hexgrid/
-
-		/if (aggregation.agg == '5km') {/a\
-					tile_url.collection = tile_url.collection.slice(0, -4) + 'bin'
-EOF
-}
-
 simply_static_site_export() {
 	set -x
 	wp cron event schedule 'simply_static_site_export_cron'
@@ -301,7 +291,6 @@ main() {
 	get_git_describe
 	get_api_version
 	patch_version_php
-	workaround_incomplete_hexbin_to_hexgrid_transition
 	simply_static_site_export
 	fixup_static_site
 
