@@ -114,6 +114,7 @@ configure_simply_static() {
 
 	# Add additional files
 	wp option patch update simply-static 'additional_files' <<-EOF
+		/var/www/html/site/assets/plugins/pe-page-tour/page-tour.css.map
 		/var/www/html/site/assets/themes/fw-child/resources/css/child.css.map
 		/var/www/html/site/assets/themes/fw-child/resources/css/highcharts.css.map
 		/var/www/html/site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/highcharts.js.map
