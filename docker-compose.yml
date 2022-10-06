@@ -18,7 +18,7 @@ services:
     networks:
       default:
         aliases:
-          - riskprofiler.demo
+          - riskprofiler2.demo
     depends_on:
       - db
     links:
