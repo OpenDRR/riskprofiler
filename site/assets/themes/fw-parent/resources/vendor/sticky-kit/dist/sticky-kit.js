@@ -106,7 +106,7 @@
           });
         }
         if (restore) {
-          // return tick();
+          return tick();
         }
       };
       recalc();

@@ -1,7 +1,11 @@
+const geoapi_url = 'https://geo-api.riskprofiler.ca'
+const pbf_url = 'https://riskprofiler.ca'
+const api_url = 'https://api.riskprofiler.ca'
+
 // scenario profiler
 // v1.0
 
-(function ($) {
+;(function ($) {
 
   // custom select class
 
@@ -30,9 +34,9 @@
 
     init: function () {
 
-      var plugin_instance = this;
+      var plugin = this;
       var plugin_item = this.item;
-      var plugin_settings = plugin_instance.options;
+      var plugin_settings = plugin.options;
       var plugin_elements = plugin_settings.elements;
 
       //
@@ -91,13 +95,52 @@
 
 			})
 
+			// sort items
+
+			$('body').on('click', '.sort-item', function(e) {
+
+				var sort_order
+
+				// if not selected
+				// set sort to 'asc' and select
+
+				if (!$(this).hasClass('selected')) {
+
+					$(this).addClass('selected')
+
+					$(this).siblings().attr('data-sort-order', 'asc').removeClass('selected')
+
+					sort_order = 'asc'
+
+				} else {
+
+					// if selected,
+					// reverse the order
+
+					if ($(this).attr('data-sort-order') == 'asc') {
+						sort_order = 'desc'
+					} else {
+						sort_order = 'asc'
+					}
+
+				}
+
+				$(this).attr('data-sort-order', sort_order)
+
+				plugin.sort_items({
+					key: $(this).attr('data-sort-key'),
+					order: sort_order
+				})
+
+			})
+
     },
 
     get_sidebar: function(fn_options) {
 
-      var plugin_instance = this
+      var plugin = this
       var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
+      var plugin_settings = plugin.options
       var plugin_elements = plugin_settings.elements
 
       // options
@@ -169,9 +212,9 @@
 
     get_controls: function(fn_options) {
 
-      var plugin_instance = this
+      var plugin = this
       var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
+      var plugin_settings = plugin.options
       var plugin_elements = plugin_settings.elements
 
       // options
@@ -199,38 +242,12 @@
 						settings.success()
 					}
 
-					// sort
-
-					// $.ajax({
-					// 	url: '../site/assets/themes/fw-child/template/' + settings.dir + '/control-sort.php',
-					// 	data: {
-					// 		lang: plugin_settings.lang
-					// 	},
-					// 	success: function(sort_data) {
-					// 		$('.app-sidebar-sort').html(sort_data)
-					//
-					// 		if (typeof settings.success == 'function') {
-					// 			settings.success()
-					// 		}
-					//
-					// 		if (typeof settings.complete == 'function') {
-					// 			settings.complete()
-					// 		}
-					// 	},
-					// 	complete: function() {
-					// 		$('body').removeClass('spinner-on')
-					// 		$('#spinner-progress').text('')
-					// 	}
-					// })
-
 				},
 				complete: function() {
 
 					if (typeof settings.complete == 'function') {
 						settings.complete()
 					}
-
-
 
         }
 			})
@@ -239,17 +256,17 @@
 
 		sort_items: function(fn_options) {
 
-      var plugin_instance = this
-      var plugin_settings = plugin_instance.options
+      var plugin = this
+      var plugin_settings = plugin.options
 
 			var settings = $.extend(true, {
 				key: null,
 				order: null
 			}, fn_options)
 
-			console.log($('body').find('.sidebar-item:visible'))
+			console.log($('body').find('.sidebar-item'))
 
-			var result = $('body').find('.sidebar-item[data-' + settings.key + ']:visible').sort(function (a, b) {
+			var result = $('body').find('.sidebar-item[data-' + settings.key + ']').sort(function (a, b) {
 
 				var item = $(a).attr('data-' + settings.key)
 				var compare = $(b).attr('data-' + settings.key)
@@ -281,9 +298,9 @@
 
 			// centers the map on a point with an X offset of half of the width of the sidebar
 
-      var plugin_instance = this
+      var plugin = this
       var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
+      var plugin_settings = plugin.options
       var plugin_elements = plugin_settings.elements
 
 			var settings = $.extend(true, {
@@ -305,14 +322,14 @@
 
 		get_tiles: function(fn_options) {
 
-			var plugin_instance = this
-			var plugin_settings = plugin_instance.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			var defaults = {
 				url: {
 					collection: 'psra_indicators',
 					aggregation: 'csd',
-					version: '1.4.0',
+					version: '1.4.3',
 					projection: 'EPSG_900913'
 				},
 				map: null,
@@ -324,6 +341,7 @@
 		      interactive: true
 				},
 				functions: {
+					before: null,
 					add: null,
 					mouseover: null,
 					mouseout: null,
@@ -340,18 +358,19 @@
 
 			// console.log('get_tiles', settings)
 
+			// remove existing layer
+
 			if (settings.map.hasLayer(settings.tiles)) {
 				settings.map.removeLayer(settings.tiles)
 			}
 
 			if (settings.aggregation !== null) {
-
 				settings.url.aggregation = settings.aggregation.current.agg
-
 			}
 
-			proto_URL = pbf_url + '/' + settings.url.collection + '_' + settings.url.aggregation /*+ '_v' + settings.url.version */ + '/' + settings.url.projection + '/{z}/{x}/{y}.pbf'
+			proto_URL = pbf_url + '/' + settings.url.collection + '_' + settings.url.aggregation + '/' + settings.url.projection + '/{z}/{x}/{y}.pbf'
 
+			// console.log(settings.url)
 			// console.log('pbf url', proto_URL)
 
 			// load the tiles
@@ -404,8 +423,8 @@
 
 		do_history: function(hash) {
 
-			var plugin_instance = this
-			var plugin_settings = plugin_instance.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			var new_title = plugin_settings.history.title,
 					new_url = plugin_settings.history.url
@@ -459,6 +478,35 @@
 			}
 
 			// console.log('history', new_url, new_title)
+
+		},
+
+		round: function(fn_options) {
+
+			var settings = $.extend(true, {
+				num: 0,
+				power: 0
+			}, fn_options)
+
+			return settings.num * Math.pow(10, settings.power)
+		},
+
+		round_dollars: function(num) {
+
+			var plugin = this,
+					rounded_num
+
+			if (num > 1000000000) {
+				rounded_num = plugin._round(num, -9).toFixed(2) + ' billion'
+			} else if (num > 100000) {
+				rounded_num = plugin._round(num, -6).toFixed(2) + ' million'
+			} else {
+				rounded_num = num.toLocaleString('en-CA', {
+					maximumFractionDigits: 0
+				})
+			}
+
+			return '$' + rounded_num
 
 		}
 

@@ -1,0 +1,130 @@
+.page-tour {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  min-width: 300px;
+  max-width: 400px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  z-index: 5000;
+}
+
+.page-tour-content {
+  padding: 0.75rem;
+}
+
+.page-tour-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background-color: #fff;
+}
+
+.page-tour-close-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.page-tour-dont-show input {
+  margin-right: 4px;
+}
+
+.page-tour-dots {
+  display: flex;
+  align-items: center;
+}
+
+.page-tour-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  margin: 0 3px;
+  background-color: #eee;
+  border-radius: 50%;
+  transition: 0.25s;
+}
+.page-tour-dot.current-step {
+  background-color: #c00;
+}
+
+.page-tour:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border: 10px solid transparent;
+}
+.page-tour[data-bubble="top left"]:after {
+  top: -10px;
+  left: -10px;
+  transform: rotate(-135deg);
+  border-bottom-color: rgba(255, 255, 255, 0.9);
+}
+.page-tour[data-bubble="top center"]:after {
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: rgba(255, 255, 255, 0.9);
+}
+.page-tour[data-bubble="top right"]:after {
+  top: -10px;
+  left: -10px;
+  transform: rotate(135deg);
+  border-bottom-color: rgba(255, 255, 255, 0.9);
+}
+.page-tour[data-bubble="bottom left"]:after {
+  bottom: -10px;
+  left: -10px;
+  transform: rotate(135deg);
+  border-top-color: #fff;
+}
+.page-tour[data-bubble="bottom center"]:after {
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: #fff;
+}
+.page-tour[data-bubble="bottom right"]:after {
+  bottom: -10px;
+  right: -10px;
+  transform: rotate(-135deg);
+  border-top-color: #fff;
+}
+.page-tour[data-bubble="left top"]:after {
+  top: -10px;
+  left: -10px;
+  transform: rotate(135deg);
+  border-right-color: rgba(255, 255, 255, 0.9);
+}
+.page-tour[data-bubble="left center"]:after {
+  top: 50%;
+  left: -20px;
+  transform: translateY(-50%);
+  border-right-color: rgba(255, 255, 255, 0.9);
+}
+.page-tour[data-bubble="left bottom"]:after {
+  bottom: -10px;
+  left: -10px;
+  transform: rotate(-135deg);
+  border-right-color: #fff;
+}
+.page-tour[data-bubble="right top"]:after {
+  top: -10px;
+  right: -10px;
+  transform: rotate(-135deg);
+  border-left-color: rgba(255, 255, 255, 0.9);
+}
+.page-tour[data-bubble="right center"]:after {
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  border-left-color: rgba(255, 255, 255, 0.9);
+}
+.page-tour[data-bubble="right bottom"]:after {
+  bottom: -10px;
+  right: -10px;
+  transform: rotate(135deg);
+  border-left-color: #fff;
+}
+
+/*# sourceMappingURL=page-tour.css.map */
