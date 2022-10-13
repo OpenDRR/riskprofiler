@@ -1,0 +1,69 @@
+name: Sync with H7
+
+on:
+  # "Scheduled workflows run on the latest commit on the default or base branch."
+  schedule:
+    - cron: '38 */6 * * *'
+
+  # "To trigger the workflow_dispatch event, your workflow must be in the default branch."
+  # To run this manually from the command-line:
+  #   gh workflow run sync.yml --repo OpenDRR/riskprofiler-cms --ref gh-workflows
+  workflow_dispatch:
+
+jobs:
+  sync-with-h7:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          # Use a personal access token to trigger export-static-site.yml workflow
+          # token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Update wp-app submodule (OpenDRR/h7-riskprofiler)
+        run: |
+          set -ux -o pipefail
+
+          git config checkout.defaultRemote origin
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          OLD_DATE=$(git --git-dir=wp-app/.git log -1 --format="%as")
+
+          echo '### `git submodule update --remote`:' >> "$GITHUB_STEP_SUMMARY"
+          # Not using "git submodule update --remote --recursive" to avoid
+          # getting ahead of what our upstream HabitatSeven intends.
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git submodule update --remote |& tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+          echo '### `git submodule summary`:' >> "$GITHUB_STEP_SUMMARY"
+          if [[ -z $(git submodule summary) ]]; then
+            echo "No change in wp-app (OpenDRR/h7-riskprofiler) submodule since last sync." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git submodule summary |& tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+          NEW_DATE=$(git --git-dir=wp-app/.git log -1 --format="%as")
+
+          echo '### `git commit wp-app`:' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git commit wp-app -m "Update to HabitatSeven’s $NEW_DATE code
+          
+          Changes since $OLD_DATE:
+          $(git submodule summary)" |& tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+          echo '### `git log -1`:' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git log -1 |& tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+          echo '### `git push`:' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git push |& tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

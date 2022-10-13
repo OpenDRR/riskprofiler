@@ -1,0 +1,89 @@
+version: '3.9'
+
+services:
+  wordpress:
+    image: wordpress:5.9.3      # https://hub.docker.com/_/wordpress/
+    ports:
+      - ${IP}:${WP_PORT}:80
+    user: "${DOCKER_WP_UID_GID-33:33}"
+    volumes:
+      - ./config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
+      - ./wp-app:/var/www/html  # Full WordPress project
+      - ./html_static:/var/www/html_static
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: "${DB_NAME}"
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: "${DB_ROOT_PASSWORD}"
+    networks:
+      default:
+        aliases:
+          - "${WORDPRESS_HOST}"
+    depends_on:
+      - db
+    links:
+      - db
+
+  wpcli:
+    image: wordpress:cli-2.6.0  # https://hub.docker.com/_/wordpress/
+    user: "${DOCKER_WP_UID_GID-33:33}"
+    volumes:
+      - ./config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
+      - ./wp-app:/var/www/html
+      - ./db-backup:/usr/src/db-backup
+      - ./bin/wait-for-it.sh:/usr/local/bin/wait-for-it
+      - ./bin/init-db-and-generate-static-site.sh:/usr/local/bin/init-db-and-generate-static-site
+      - ./html_static:/var/www/html_static
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: "${DB_NAME}"
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: "${DB_ROOT_PASSWORD}"
+      WP_ADMIN_USER:          # read from .env
+      WP_ADMIN_EMAIL:         # read from .env
+      WP_ADMIN_PASSWORD:      # read from .env
+      KEEP_WPCLI_RUNNING:     # read from .env or from environment
+      OPTIONS_GIT_DESCRIBE:   # read from .env or from environment
+    depends_on:
+      - db
+      - wordpress
+    command: /usr/local/bin/init-db-and-generate-static-site
+
+  pma:
+    image: phpmyadmin:5.1.3     # https://hub.docker.com/_/phpmyadmin/
+    environment:
+      # https://docs.phpmyadmin.net/en/latest/setup.html#docker-environment-variables
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+    ports:
+      - ${IP}:${PMA_PORT}:80
+    links:
+      - db:db
+    profiles:
+      - debug
+
+  db:
+    image: mysql:8.0.28         # https://hub.docker.com/_/mysql/
+    # image: mariadb:10.7.3     # https://hub.docker.com/_/mariadb/
+    ports:
+      - ${IP}:${DB_PORT}:3306
+    # Fix "mbind: Operation not permitted"
+    # See https://stackoverflow.com/questions/55559386/how-to-fix-mbind-operation-not-permitted-in-mysql-error-log
+    cap_add:
+      - SYS_NICE
+    command: [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+    ]
+    volumes:
+      - ./wp-data:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+
+volumes:
+  wordpress_data:
+  db_data:

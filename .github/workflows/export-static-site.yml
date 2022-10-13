@@ -13,22 +13,24 @@ concurrency: export-static-site
 
 jobs:
   export-static-site:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     env:
       DOCKER_BUILDKIT: 1
       TZ: America/Vancouver
 
     steps:
-      - name: Checkout OpenDRR/riskprofiler-cms
+      - name: Checkout
         uses: actions/checkout@v3
         with:
-          repository: OpenDRR/riskprofiler-cms
+          fetch-depth: 0
           submodules: recursive
 
       - name: Run "docker compose up" to export static site for RiskProfiler
         run: |
+          set -x
           export DOCKER_WP_UID_GID="$(id -u):$(id -g)"
+          export OPTIONS_GIT_DESCRIBE=$(git describe --long --tags)
           docker compose up --abort-on-container-exit --exit-code-from wpcli
 
       - name: Deploy to gh-pages branch as GitHub Pages
