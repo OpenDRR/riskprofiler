@@ -1,7 +1,19 @@
 var click_flag = false
 var bounds
 
-var z = 0
+var y = 0, z = 0
+
+var color_ramp = [
+	'#ffffcc',
+	'#ffeda0',
+	'#fed976',
+	'#feb24c',
+	'#fd8d3c',
+	'#fc4e2a',
+	'#e31a1c',
+	'#bd0026',
+	'#800026'
+]
 
 // risk profiler
 // v1.0
@@ -360,7 +372,7 @@ var z = 0
 					plugin_settings.search.clear.show()
 
 					$.ajax({
-						url: 'http://geogratis.gc.ca/services/geolocation/' + plugin_settings.lang + '/locate?q=*' + term + '*',
+						url: 'https://geogratis.gc.ca/services/geolocation/' + plugin_settings.lang + '/locate?q=*' + term + '*',
 						success: function(data) {
 
 							if (data.length) {
@@ -1075,11 +1087,17 @@ var z = 0
 
 								var aggregation = plugin_settings.indicator.aggregation[current_agg]
 								
+								var rounding = parseInt(aggregation['rounding'])
+								
 								var tooltip_val
 								
-								var this_val = plugin._format_figure(e.layer.properties[indicator_key])
+								var this_val = plugin._format_figure(e.layer.properties[indicator_key], rounding)
 								
-								if (plugin._format_figure(e.layer.properties[indicator_key]).charAt(0) == '<') {
+								if (e.layer.properties.csdname == 'Calgary') {
+									console.log(e.layer.properties[indicator_key], this_val)
+								}
+								
+								if (plugin._format_figure(e.layer.properties[indicator_key], rounding).charAt(0) == '<') {
 									
 									tooltip_val = rp.less_than
 										+ ' '
@@ -1187,15 +1205,34 @@ var z = 0
 					fillColor
 
 			var rounding = parseInt(plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
-
-			// console.log(pbf_key, indicator_key)
-
+			
 			layer_style[pbf_key] = function(properties) {
-
-				var rounded_color = properties[indicator_key] * Math.pow(10, rounding)
-
+				
+				var rounded_color = 0
+				
+				if (typeof properties[indicator_key] != 'undefined') {
+				
+					rounded_color = properties[indicator_key] * Math.pow(10, rounding)
+					
+					// if (rounded_color != 0 && z < 20) {
+					// 	
+					// 	console.log(properties[indicator_key], rounded_color, fillColor)
+					// 	z+=1
+					// }
+					
+				}
+	
 				fillColor = plugin._choro_color(rounded_color)
-
+					
+				if (properties.csdname == 'Calgary') {
+					console.log('hey i found calgary')
+				}
+				if (properties.csduid == 4806016) {
+					
+					console.log(indicator_key, properties[indicator_key], rounded_color, fillColor)
+					
+				}
+				
 				return {
 					fillColor: fillColor,
 					fillOpacity: 0.8,
@@ -1217,19 +1254,35 @@ var z = 0
 			var current_agg = plugin_settings.aggregation.current.agg,
 					agg_settings = plugin_settings.indicator.aggregation[current_agg]
 
-			var grades = [].concat(agg_settings.legend).reverse()
-
 			var rounding = parseInt(agg_settings['rounding'])
 
-			return d >= grades[0] ? '#800026' :
-				d >= grades[1] ? '#bd0026' :
-				d >= grades[2] ? '#e31a1c' :
-				d >= grades[3] ? '#fc4e2a' :
-				d >= grades[4] ? '#fd8d3c' :
-				d >= grades[5] ? '#feb24c' :
-				d >= grades[6] ? '#fed976' :
-				d >= grades[7] ? '#ffeda0' :
-				'#ffffcc'
+			var return_i = 0
+			
+			agg_settings.legend.forEach(function(grade, i) {
+				
+				if (d >= grade) {
+					return_i = i
+				}
+				
+			})
+			
+			// if (plugin_settings.community.csduid == 4806016) {
+			if (z < 100 && d == 0) {
+				console.log(d, return_i, color_ramp[return_i])
+				z += 1
+			}
+			
+			return color_ramp[return_i]
+
+			// return d >= grades[0] ? '#800026' :
+			// 	d >= grades[1] ? '#bd0026' :
+			// 	d >= grades[2] ? '#e31a1c' :
+			// 	d >= grades[3] ? '#fc4e2a' :
+			// 	d >= grades[4] ? '#fd8d3c' :
+			// 	d >= grades[5] ? '#feb24c' :
+			// 	d >= grades[6] ? '#fed976' :
+			// 	d >= grades[7] ? '#ffeda0' :
+			// 	'#ffffcc'
 
 		},
 
@@ -1237,32 +1290,35 @@ var z = 0
 
 			var plugin = this
 			var plugin_settings = plugin.options
+			
+			var current_agg = plugin_settings.aggregation.current.agg
+			
+			var aggregation = plugin_settings.indicator.aggregation[current_agg]
 
 			// console.log(properties)
 
-			var popup_name = properties.csdname
+			var popup_name = properties.csdname,
+					popup_name_label = 'Census Subdivision'
 
-			if (plugin_settings.aggregation.current.agg == 's') {
+			if (current_agg == 's') {
 				popup_name += ' (' + properties.fsauid + ')'
+				popup_name_label = 'Forward Sortation Area'
 			}
 
 			var popup_markup = '<div class="popup-detail p-2">'
 			
-			
-				popup_markup += '<h6>' + plugin_settings.indicator.title + '</h6>'
+				popup_markup += '<h6 class="mb-0">' + popup_name_label + '</h6>'
 
-				popup_markup += '<h5 class="risk-popup-city mb-1">' + popup_name + '</h5>'
+				popup_markup += '<h5 class="risk-popup-city mb-3">' + popup_name + '</h5>'
 				
-				var current_agg = plugin_settings.aggregation.current.agg
-				
-				var aggregation = plugin_settings.indicator.aggregation[current_agg]
+				popup_markup += '<h6 class="mb-0">' + plugin_settings.indicator.title + '</h6>'
 
-				var this_val = plugin._format_figure(properties[plugin_settings.indicator.key + '_' + plugin_settings.api.retrofit])
+				var this_val = plugin._format_figure(properties[plugin_settings.indicator.key + '_' + plugin_settings.api.retrofit], parseInt(aggregation['rounding']))
 				
 				if (this_val.charAt(0) == '<') {
 					this_val = rp.less_than + ' ' + this_val.substring(1)
 				}
-
+				
 				popup_markup += '<div class="risk-popup-rank text-primary">' 
 					+ plugin_settings.indicator.legend.prepend
 					+ this_val
@@ -1379,12 +1435,10 @@ var z = 0
 						if (typeof plugin_settings.community[this_key + '_' + plugin_settings.api.retrofit] != 'undefined') {
 							
 							this_val = plugin_settings.community[this_key + '_' + plugin_settings.api.retrofit]
-							console.log(1, this_val)
 							
 						} else if (typeof plugin_settings.community[this_key] != 'undefined') {
 							
 							this_val = plugin_settings.community[this_key]
-							console.log(2, this_val)
 							
 						} else {
 							
@@ -1394,78 +1448,139 @@ var z = 0
 							
 						}
 						
-						// use new formatting function
+						if (typeof this_val != 'undefined') {
 						
-						this_val = plugin._format_figure(this_val)
-
-						// if (typeof $(this).attr('data-decimals') != 'undefined') {
-						// 	
-						// 	this_val = this_val.toFixed(parseInt($(this).attr('data-decimals')))
-						// 	
-						// }
-
-						if (typeof $(this).attr('data-prepend') != 'undefined') {
-
-							this_val = $(this).attr('data-prepend') + this_val
-
-						}
-
-						if (typeof $(this).attr('data-append') != 'undefined') {
-
-							this_val += $(this).attr('data-append')
-
-						}
-
-						$(this).html(this_val)
-
-					})
-
-					// create score markers
-
-					setTimeout(function() {
-
-						detail_content.find('.score-chart').each(function() {
-
-							var score_chart = $(this),
-									score_key = $(this).find('[data-indicator]').attr('data-indicator')
-									score_label = $(this).find('.label'),
-									score_marker = $(this).find('.marker')
-
-							// treated score value
-							var score = parseFloat(plugin_settings.community[score_key + '_' + plugin_settings.api.retrofit])
-
-							// score as percentage of max
-							var score_percent = score / plugin_settings.sidebar.max[score_key]
-
-							if (score_percent > 1) {
-								score_percent = 1
-							}
-
-							var css_prop = 'left',
-									css_val = (score_percent * 100) + '%'
-
-							if (score_percent > 0.7) {
-								css_prop = 'right'
-								css_val = (100 - (score_percent * 100)) + '%'
-							}
-
-							score_label.css(css_prop, css_val)
-
-							// animate marker
-							score_marker.animate({
-								left: (score_percent * 100) + '%'
-							}, {
-								duration: 1000,
-								easing: 'swing',
-								complete: function() {
-									$('body').find('.score-chart .label').fadeIn(150)
+							// use new formatting function
+							
+							if (
+								this_key == 'eqri_abs_score' ||
+								this_key == 'eqri_norm_score'
+							) {
+								
+								// this_val = plugin._significant_figs(this_val)
+								
+								this_val = this_val.toFixed(1)
+								
+							} else if (
+								this_key == 'eAALt_Asset'
+							) {
+								
+								this_val = plugin._format_figure(this_val)
+								
+								// replace < with 'less than'
+								
+								if (this_val.charAt(0) == '<') {
+									this_val = rp.less_than + ' ' + this_val.substring(1)
 								}
-							})
-
-						})
-
+								
+							} else {
+								
+								rounding = parseInt(plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
+								
+								this_val = plugin._format_figure(this_val, rounding)
+								
+								// if (this_key == 'eAALm_Bldg') {
+								// 	this_val = (this_val * 100) + '%'
+								// }
+															
+							}
+							
+							if (typeof $(this).attr('data-prepend') != 'undefined') {
+	
+								this_val = $(this).attr('data-prepend') + this_val
+	
+							}
+	
+							if (typeof $(this).attr('data-append') != 'undefined') {
+	
+								this_val += $(this).attr('data-append')
+	
+							}
+							
+							if ($(this).hasClass('range')) {
+								
+								$(this).attr('data-val', this_val)
+								
+							} else if (
+								this_key == 'eqri_abs_rank' ||
+								this_key == 'eqri_norm_rank'
+							) {
+								
+								// abs
+								// Very Low Score
+								// Low Score
+								// Moderate Score
+								// High Score
+								// Very High Score
+								
+								// norm
+								// Very Low Score
+								// Relatively Low Score
+								// Relatively Moderate Score
+								// Relatively High Score
+								// Very High Score
+								
+								var well = 0
+								
+								switch (this_val) {
+									case 'Very Low Score' : 
+										well = 0
+										break;
+										
+									case 'Low Score' :
+									case 'Relatively Low Score' :
+										well = 1
+										break
+										
+									case 'Moderate Score' :
+									case 'Relatively Moderate Score' :
+										well = 2
+										break
+										
+									case 'High Score' :
+									case 'Relatively High Score' :
+										well = 3
+										break
+										
+									case 'Very High Score' :
+										well = 4
+										break
+										
+								}
+								
+								// set this label
+								$(this).html(this_val)
+								
+								// find the well
+								
+								console.log(this_key, this_val, well)
+								
+								var this_range = $('body').find('.range[data-indicator="' + this_key.replace('rank', 'score') + '"]')
+								
+								var this_range_val = this_range.attr('data-val')
+								
+								this_range.find('.well').eq(well).addClass('active').html(this_range_val)
+								
+							} else {
+								
+								$(this).html(this_val)
+								
+							}
+	
+						} // if != undefined
+						
+					}) // each [data-indicator]
+					
+					
+					setTimeout(function() {
+						
+						$('body').find('.score-chart-rank').animate({
+							opacity: 1
+						}, 600)
+						
 					}, 1000)
 
+					
 					// fetch the feature from geoapi, use its geometry to zoom to the vector tile feature
 
 					var feature_ID_key = (plugin_settings.aggregation.current.agg == 's') ? 'Sauid' : 'csduid'
@@ -1599,7 +1714,7 @@ var z = 0
 										headerFormat: '',
 										formatter: function() {
 
-											return '<strong>' + this.x + 'y RP:</strong> $' + plugin._round_dollars(this.y)
+											return '<strong>' + this.x + 'y RP:</strong> $' + plugin._format_figure(this.y)
 
 										}
 									},
@@ -1727,7 +1842,7 @@ var z = 0
 										plugin_settings.map.layers.fsa = new L.GeoJSON(source, {
 											style: {
 												fill: false,
-												color: '#8b0707',
+												color: '#000000',
 												weight: 2,
 												opacity: 0.6
 											},
@@ -1813,26 +1928,30 @@ var z = 0
 
 		},
 		
-		_format_figure: function(num) {
+		_format_figure: function(num, rounding = 0) {
 			
 			var plugin = this
 			var plugin_settings = plugin.options
 			
 			var rounded_num = num
 			
-			// console.log(plugin_settings.indicator)
-			
 			if (typeof num == 'undefined') {
 				num = 0
 			}
 			
-			if (plugin_settings.indicator.key == 'eCr_Fatality') {
+			if (rounding != 0) {
+				num = num * Math.pow(10, rounding)
+			}
+			
+			if (plugin_settings.indicator.key.includes('_Fatality')) {
 				
 				if (num == 0) {
 					rounded_num = 0
 				} else {
 					rounded_num = plugin._significant_figs(num)
 				}
+				
+				console.log('fatality', num, rounded_num)
 				
 			} else if (
 				plugin_settings.indicator.key.includes('eDtr') ||
@@ -1863,10 +1982,14 @@ var z = 0
 				
 				// standard formatting for injuries/damage
 				
-				if (num < 1) {
+				if (num == 0) {
 					rounded_num = 0
-				} else if (num < 10) {
-					rounded_num = '<10'
+				} else if (num <= 1) {
+					rounded_num = rp.one_or_less
+				} else if ( num <= 10) {
+					rounded_num = 10
+				} else if (num <= 100) {
+					rounded_num = plugin._round(num, -1).toFixed(0) * 10
 				} else {
 					rounded_num = plugin._significant_figs(num)
 				}
@@ -1894,6 +2017,10 @@ var z = 0
 				// 0.XX
 				
 				rounded_num = num.toPrecision(2)
+				
+			} else if (num < 100) {
+				
+				rounded_num = parseFloat(num.toFixed(2))
 				
 			} else if (num < 1000) {
 				

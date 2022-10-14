@@ -1860,6 +1860,16 @@ var grades, color_ramp
 				},
 				success: function(data) {
 
+					// format figures from template
+					
+					// $('body').find('.format-me').each(function() {
+					// 	var this_val = parseFloat($(this).text())
+					// 	
+					// 	console.log(this_val)
+					// 	
+					// 	$(this).text(plugin._format_figure(this_val))
+					// })
+	
 					// console.log('detail', 'success')
 
 					plugin_settings.current_view = 'detail'
@@ -2003,7 +2013,7 @@ var grades, color_ramp
 				feature_ID_key = 'gridid_1'
 			
 				if (aggregation.agg == '5km') {
-					tile_url.collection = tile_url.collection.slice(0, -4) + 'bin'
+					
 					feature_ID_key = 'gridid_5'
 				}
 				
@@ -2349,7 +2359,7 @@ var grades, color_ramp
 				feature_ID_key = 'gridid_1'
 
 				if (aggregation.agg == '5km') {
-					tile_url.collection = tile_url.collection.slice(0, -4) + 'bin'
+					
 					feature_ID_key = 'gridid_5'
 				}
 
@@ -2439,6 +2449,8 @@ var grades, color_ramp
 				functions: {
 					add: function(e) {
 
+						console.log(e)
+					
 						// set the tile var to the new layer that was created
 						plugin_settings.map.layers.tiles = e.target
 						
@@ -2979,15 +2991,27 @@ var grades, color_ramp
 				
 				// injuries/damage
 				
-				if (num < 1) {
+				if (num == 0) {
 					rounded_num = 0
-				} else if (num < 10) {
-					rounded_num = '<10'
+				} else if (num <= 1) {
+					rounded_num = rp.one_or_less
+				} else if ( num <= 10) {
+					rounded_num = '1 – 10'
+				} else if (num <= 100) {
+					
+					// console.log((Math.floor(plugin._round(num, -1)) * 10) + ' – ' + ((Math.floor(plugin._round(num, -1)) + 1) * 10))
+					
+					this_floor = Math.floor(plugin._round(num, -1))
+					
+					rounded_num = this_floor * 10 + ' – ' + ((this_floor + 1) * 10)
+					
+					// rounded_num = plugin._round(num, -1).toFixed(0) * 10
 				} else {
 					rounded_num = plugin._significant_figs(num)
 				}
 				
 			}
+			
 			
 			return rounded_num.toString()
 			

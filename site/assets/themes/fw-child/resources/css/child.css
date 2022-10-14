@@ -4887,7 +4887,7 @@ input[type=button].btn-block {
   float: left;
   padding-right: 0.5rem;
   color: #8d99ae;
-  content: ">";
+  content: "/";
 }
 .breadcrumb-item + .breadcrumb-item:hover::before {
   text-decoration: underline;
@@ -17055,11 +17055,11 @@ h3 {
   }
 }
 .font-size-smaller {
-  font-size: 1.25rem;
+  font-size: 0.875rem;
 }
 
 .font-size-larger {
-  font-size: 0.875rem;
+  font-size: 1.25rem;
 }
 
 .btn-white {
@@ -19917,6 +19917,26 @@ body.spinner-on #spinner-progress {
   opacity: 1;
 }
 
+.card.type-home-learnmore .card-body {
+  padding: 0;
+}
+.card.type-home-learnmore .card-title {
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  margin-bottom: 0;
+  background: #dde0e7;
+  min-height: 8rem;
+  transition: 0.25s;
+}
+.card.type-home-learnmore .card-text {
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+.card.type-home-learnmore:hover .card-title {
+  background-color: #ced2dc;
+}
+
 #main-header {
   position: absolute;
   left: 0;
@@ -20006,6 +20026,11 @@ body.nav-open #header-secondary {
 #header-primary a {
   position: relative;
 }
+#header-primary a span {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: normal;
+}
 #header-primary a:after {
   content: "";
   display: block;
@@ -20054,7 +20079,7 @@ body.nav-open #header-secondary {
 }
 
 #header-menu-secondary {
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.7rem;
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -20384,12 +20409,27 @@ body.nav-open #header-secondary {
 }
 .app-page .sidebar-detail .score-chart {
   position: relative;
-  padding-top: 1.5rem;
 }
-.app-page .sidebar-detail .range {
-  height: 0.5rem;
-  background: rgb(175, 200, 153);
-  background: linear-gradient(90deg, rgb(175, 200, 153) 0%, rgb(248, 195, 136) 55%, rgb(240, 90, 35) 70%, rgb(217, 4, 41) 85%, rgb(139, 7, 7) 100%);
+.app-page .sidebar-detail .range .well {
+  position: relative;
+  flex: 0 0 20%;
+  height: 1.6rem;
+  font-size: 0.75rem;
+  line-height: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  border: 0px solid #fff;
+  transition: 0.5s ease 1s;
+  z-index: 1;
+}
+.app-page .sidebar-detail .range .well.active {
+  transform: scale(120%);
+  box-shadow: 0 3px 0.5rem rgba(0, 0, 0, 0.2);
+  border-width: 2px;
+  z-index: 2;
+}
+.app-page .sidebar-detail .range .well.well-1, .app-page .sidebar-detail .range .well.well-4, .app-page .sidebar-detail .range .well.well-5 {
+  color: #fff;
 }
 .app-page .sidebar-detail .marker {
   position: absolute;
@@ -20404,6 +20444,9 @@ body.nav-open #header-secondary {
   top: 0;
   padding: 0 0.5rem;
   line-height: 1;
+}
+.app-page .sidebar-detail .score-chart-rank {
+  opacity: 0;
 }
 .app-page .app-charts {
   display: none;
@@ -20684,6 +20727,7 @@ body.page-tour-open #tour-btn {
 }
 
 .home #main-header {
+  position: fixed;
   background-color: rgba(255, 255, 255, 0.4);
 }
 .home #header-primary a:hover {
@@ -20710,9 +20754,13 @@ body.page-tour-open #tour-btn {
   }
 }
 .home #quick-links {
-  font-size: 1.25rem;
   font-family: "RPSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-weight: 500;
+}
+@media (min-width: 992px) {
+  .home #quick-links {
+    font-size: 1.25rem;
+  }
 }
 .home #quick-links li {
   margin-bottom: 0.5rem;
@@ -21002,6 +21050,32 @@ body.page-tour-open #tour-btn {
   color: #fff;
 }
 
+.accordion-trigger {
+  margin-top: 1rem;
+  padding: 1rem 1rem 1rem 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+  cursor: pointer;
+}
+.accordion-trigger:before {
+  content: "+";
+  color: #d90429;
+  display: inline-block;
+  width: 1rem;
+  margin-right: 1rem;
+  transition: 0.25s;
+}
+.accordion-trigger:hover:before {
+  margin-right: 1.25rem;
+}
+.accordion-trigger.open:before {
+  content: "–";
+  margin-right: 1.25rem;
+}
+
+.accordion-content {
+  padding: 1rem 1rem 1rem 2.75rem;
+}
+
 .swiper-pagination-bullet {
   transition: 0.25s;
 }
@@ -21011,9 +21085,18 @@ body.page-tour-open #tour-btn {
 }
 .page-tour .page-tour-content {
   font-size: 0.875rem;
+  padding-left: 0.625rem !important;
+  padding-right: 0.625rem !important;
 }
 .page-tour .page-tour-dontshow {
   font-size: 0.625rem;
+}
+.page-tour .page-tour-next {
+  display: flex;
+  align-items: center;
+}
+.page-tour .page-tour-next i {
+  margin-left: 0.25rem;
 }
 
 .leaflet-popup-content-wrapper {

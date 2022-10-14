@@ -261,25 +261,11 @@ var sticky_offset = 0,
 			$('.lazy').Lazy()
 		}
 
-    // SLICK CAROUSEL
-
-    // $('[data-slick]').each(function() {
-		//
-    //   $(this).on('beforeChange', function(event, slick, currentSlide, nextSlide) {
-    //     $(this).addClass('sliding');
-    //   });
-		//
-    //   $(this).on('afterChange', function(event, slick, currentSlide) {
-    //     $(this).removeClass('sliding');
-    //   });
-		//
-		//   if (!$(this).hasClass('slick-initialized')) {
-  	// 	  $(this).slick();
-  	// 	}
-		//
-    //   // $(this).slick('refresh');
-		//
-    // });
+		// AOS
+		
+		if ($('[data-aos]').length) {
+			AOS.init()
+		}
 
 	  // STICKY KIT
 

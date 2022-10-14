@@ -3,235 +3,238 @@
 
 ;(function ($) {
 
-  // custom select class
+	// custom select class
 
-  function smooth_scroll (item, options) {
-    this.item = $(item)
+	function smooth_scroll (item, options) {
+		this.item = $(item)
 
-    // options
+		// options
 
-    var defaults = {
-      viewport: $('html, body'),
-      auto_init: true,
-      classes: {
-        init: 'smooth-scroll',
-        link: 'smooth-scroll-link',
-        next: 'smooth-scroll-next'
-      },
-      animation: {
-        speed: 500,
-        ease: 'swing'
-      },
-      offset: 0,
-      next: 'section',
-      cancel: true,
-      complete: null,
-      debug: true
-    }
+		var defaults = {
+			viewport: $('html, body'),
+			auto_init: true,
+			classes: {
+				init: 'smooth-scroll',
+				link: 'smooth-scroll-link',
+				next: 'smooth-scroll-next'
+			},
+			animation: {
+				speed: 500,
+				ease: 'swing'
+			},
+			offset: 0,
+			next: 'section',
+			cancel: true,
+			complete: null,
+			debug: true
+		}
 
-    this.options = $.extend(true, defaults, options)
-    this.init()
-  }
+		this.options = $.extend(true, defaults, options)
+		this.init()
+	}
 
-  smooth_scroll.prototype = {
+	smooth_scroll.prototype = {
 
-    // init
+		// init
 
-    init: function () {
-      var plugin_instance = this
-      var plugin_item = plugin_instance.item
-      var plugin_settings = plugin_instance.options
-      var plugin_elements = plugin_settings.elements
+		init: function () {
+			var plugin_instance = this
+			var plugin_item = plugin_instance.item
+			var plugin_settings = plugin_instance.options
+			var plugin_elements = plugin_settings.elements
 
-      plugin_item.addClass('smooth-scroll-initialized')
+			plugin_item.addClass('smooth-scroll-initialized')
 
-      if (plugin_item.debug == true) {
-        plugin_item.addClass('smooth-scroll-debug')
-      }
+			if (plugin_item.debug == true) {
+				plugin_item.addClass('smooth-scroll-debug')
+			}
 
-      //
-      // AUTO-INIT: add .smooth-scroll to any #hash links on the page
-      //
+			//
+			// AUTO-INIT: add .smooth-scroll to any #hash links on the page
+			//
 
-      if (plugin_settings.auto_init == true) {
+			if (plugin_settings.auto_init == true) {
 
-        $('a[href^="#"]').each(function() {
+				$('a[href^="#"]').each(function() {
 
-					if ($(this).attr('role') != 'tab') {
+					if (
+						$(this).attr('role') != 'tab' &&
+						!$(this).hasClass('overlay-toggle')
+					) {
 
-		        $(this).addClass('smooth-scroll')
+						$(this).addClass('smooth-scroll')
 
 					}
 
-        })
+				})
 
-      }
+			}
 
-      //
-      // DO ANY .smooth-scroll ELEMENTS EXIST ON THE PAGE
-      //
+			//
+			// DO ANY .smooth-scroll ELEMENTS EXIST ON THE PAGE
+			//
 
-      if ($('.' + plugin_settings.classes.init).length) {
+			if ($('.' + plugin_settings.classes.init).length) {
 
-        plugin_instance.check_links()
+				plugin_instance.check_links()
 
-        //
-        // ACTIONS
-        //
+				//
+				// ACTIONS
+				//
 
-        // click .smooth-scroll-link
+				// click .smooth-scroll-link
 
-        $('body').on('click', '.' + plugin_settings.classes.link, function (e) {
-          e.preventDefault()
+				$('body').on('click', '.' + plugin_settings.classes.link, function (e) {
+					e.preventDefault()
 
-          var link_data = $(this).data()
+					var link_data = $(this).data()
 
-          // default settings
+					// default settings
 
-          var scroll_settings = {
-            target_id: $(this).attr('href')
-          }
+					var scroll_settings = {
+						target_id: $(this).attr('href')
+					}
 
-          // check data atts for adjustments
+					// check data atts for adjustments
 
-          for (var key in link_data) {
-            console.log(key, link_data[key])
+					for (var key in link_data) {
+						console.log(key, link_data[key])
 
-            // if it's a callback
+						// if it's a callback
 
-            if (key == 'complete') {
-              scroll_settings[key] = new Function(link_data[key])
-            } else {
-              scroll_settings[key] = link_data[key]
-            }
+						if (key == 'complete') {
+							scroll_settings[key] = new Function(link_data[key])
+						} else {
+							scroll_settings[key] = link_data[key]
+						}
 
-          }
+					}
 
-          if ($(this).hasClass(plugin_settings.classes.next)) {
-            scroll_settings.target_id = $(this).parents(plugin_settings.next).next(plugin_settings.next).attr('id')
-          }
+					if ($(this).hasClass(plugin_settings.classes.next)) {
+						scroll_settings.target_id = $(this).parents(plugin_settings.next).next(plugin_settings.next).attr('id')
+					}
 
-          plugin_instance.scroll_to(scroll_settings)
+					plugin_instance.scroll_to(scroll_settings)
 
-        })
+				})
 
-      } else {
+			} else {
 
-        if (plugin_settings.debug == true) {
-          console.log('no smooth scroll elements exist on the page')
-        }
+				if (plugin_settings.debug == true) {
+					console.log('no smooth scroll elements exist on the page')
+				}
 
-      }
+			}
 
-      if (plugin_settings.debug == true) {
-        console.log('smooth scroll', 'initialized')
-      }
-    },
+			if (plugin_settings.debug == true) {
+				console.log('smooth scroll', 'initialized')
+			}
+		},
 
-    scroll_to: function (fn_options) {
-      var plugin_instance = this
-      var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
-      var plugin_elements = plugin_settings.elements
+		scroll_to: function (fn_options) {
+			var plugin_instance = this
+			var plugin_item = this.item
+			var plugin_settings = plugin_instance.options
+			var plugin_elements = plugin_settings.elements
 
-      // options
+			// options
 
-      if (typeof fn_options == 'string') {
+			if (typeof fn_options == 'string') {
 
-        fn_options = {
-          target_id: fn_options
-        }
+				fn_options = {
+					target_id: fn_options
+				}
 
-      }
+			}
 
-      var defaults = $.extend(
-        true,
-        {
-          target_id: null,
-          viewport: $('html, body'),
-          speed: plugin_settings.animation.speed,
-          ease: plugin_settings.animation.ease,
-          offset: plugin_settings.offset,
-          cancel: plugin_settings.cancel,
-          complete: plugin_settings.complete
-        },
-        fn_options
-      )
+			var defaults = $.extend(
+				true,
+				{
+					target_id: null,
+					viewport: $('html, body'),
+					speed: plugin_settings.animation.speed,
+					ease: plugin_settings.animation.ease,
+					offset: plugin_settings.offset,
+					cancel: plugin_settings.cancel,
+					complete: plugin_settings.complete
+				},
+				fn_options
+			)
 
-      var settings = $.extend(true, defaults, fn_options)
+			var settings = $.extend(true, defaults, fn_options)
 
-      if (settings.target_id.charAt(0) != '#') {
-        settings.target_id = '#' + settings.target_id
-      }
+			if (settings.target_id.charAt(0) != '#') {
+				settings.target_id = '#' + settings.target_id
+			}
 
-      if ($(settings.target_id).length) {
+			if ($(settings.target_id).length) {
 
-        // the target element exists
+				// the target element exists
 
-        // viewport's position in the window
-        var viewport_position = settings.viewport.offset().top
+				// viewport's position in the window
+				var viewport_position = settings.viewport.offset().top
 
-        // viewport's scroll position
-        var viewport_scrolltop = settings.viewport.scrollTop()
+				// viewport's scroll position
+				var viewport_scrolltop = settings.viewport.scrollTop()
 
-        if (typeof settings.viewport == 'object') {
-          var viewport_object = settings.viewport[settings.viewport.length - 1]
-          viewport_scrolltop = $(viewport_object).scrollTop()
-        }
+				if (typeof settings.viewport == 'object') {
+					var viewport_object = settings.viewport[settings.viewport.length - 1]
+					viewport_scrolltop = $(viewport_object).scrollTop()
+				}
 
-        // element's position in the window
-        var element_position = $(settings.target_id).offset().top
+				// element's position in the window
+				var element_position = $(settings.target_id).offset().top
 
-        // current scroll position PLUS the element's position (offset by the viewport's position)
-        // var destination = (viewport_scrolltop + (element_position - viewport_position)) - settings.offset
-        var destination = element_position - settings.offset
+				// current scroll position PLUS the element's position (offset by the viewport's position)
+				// var destination = (viewport_scrolltop + (element_position - viewport_position)) - settings.offset
+				var destination = element_position - settings.offset
 
-        if (plugin_settings.debug == true) {
-          // console.log('id', settings.target_id)
-          // console.log('viewport’s position in the window', viewport_position)
-          // console.log('viewport’s current scroll position', viewport_scrolltop)
-          // console.log('target element’s position', element_position)
-          // console.log('final scroll position', destination)
+				if (plugin_settings.debug == true) {
+					// console.log('id', settings.target_id)
+					// console.log('viewport’s position in the window', viewport_position)
+					// console.log('viewport’s current scroll position', viewport_scrolltop)
+					// console.log('target element’s position', element_position)
+					// console.log('final scroll position', destination)
 
-          console.log('scroll ' + plugin_settings.viewport + ' to ' + destination + ' so that ' + settings.target_id + ' is in view')
-        }
+					console.log('scroll ' + plugin_settings.viewport + ' to ' + destination + ' so that ' + settings.target_id + ' is in view')
+				}
 
-        if (settings.cancel === true) {
-          settings.viewport.on('scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove', function () {
-            settings.viewport.stop()
-          })
-        }
+				if (settings.cancel === true) {
+					settings.viewport.on('scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove', function () {
+						settings.viewport.stop()
+					})
+				}
 
-        plugin_settings.viewport.animate({
-          scrollTop: destination
-        }, {
-          duration: settings.speed,
-          easing: settings.ease,
-          complete: function () {
-            settings.viewport.off('scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove')
-          }
-        }).promise().then(function () {
-          if (typeof (settings.complete) == 'function') {
-            settings.complete.call(this)
-          }
-        })
-      } else {
-        if (plugin_settings.debug == true) {
-          console.log("target element doesn't exist")
-        }
-      }
+				plugin_settings.viewport.animate({
+					scrollTop: destination
+				}, {
+					duration: settings.speed,
+					easing: settings.ease,
+					complete: function () {
+						settings.viewport.off('scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove')
+					}
+				}).promise().then(function () {
+					if (typeof (settings.complete) == 'function') {
+						settings.complete.call(this)
+					}
+				})
+			} else {
+				if (plugin_settings.debug == true) {
+					console.log("target element doesn't exist")
+				}
+			}
 
-      if (plugin_settings.debug == true) {
-        console.log('scroll to ' + settings.target_id)
-      }
-    },
+			if (plugin_settings.debug == true) {
+				console.log('scroll to ' + settings.target_id)
+			}
+		},
 
 		check_links: function(fn_options) {
 
-      var plugin_instance = this
-      var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
-      var plugin_elements = plugin_settings.elements
+			var plugin_instance = this
+			var plugin_item = this.item
+			var plugin_settings = plugin_instance.options
+			var plugin_elements = plugin_settings.elements
 
 			// find all .smooth-scroll elements
 
@@ -381,68 +384,68 @@
 
 		},
 
-    next: function (fn_options) {
-      var plugin_instance = this
-      var plugin_item = this.item
-      var plugin_settings = plugin_instance.options
-      var plugin_elements = plugin_settings.elements
+		next: function (fn_options) {
+			var plugin_instance = this
+			var plugin_item = this.item
+			var plugin_settings = plugin_instance.options
+			var plugin_elements = plugin_settings.elements
 
-      // options
+			// options
 
-      if (typeof fn_options == 'string') {
+			if (typeof fn_options == 'string') {
 
-        fn_options = {
-          next: fn_options
-        }
+				fn_options = {
+					next: fn_options
+				}
 
-      }
+			}
 
-      var defaults = $.extend(
-        true,
-        {
-          next: plugin_settings.next
-        },
-        fn_options
-      )
+			var defaults = $.extend(
+				true,
+				{
+					next: plugin_settings.next
+				},
+				fn_options
+			)
 
-      var settings = $.extend(true, defaults, fn_options)
+			var settings = $.extend(true, defaults, fn_options)
 
-      // does the link have a parent tag the same as the set 'next' element
+			// does the link have a parent tag the same as the set 'next' element
 
-      if (settings.clicked.parents(settings.next).length) {
+			if (settings.clicked.parents(settings.next).length) {
 
-        next_element = settings.clicked.parents(settings.next)
+				next_element = settings.clicked.parents(settings.next)
 
-      }
+			}
 
-      // plugin_instance.scroll_to({
-      //   target_id: settings.next
-      // })
+			// plugin_instance.scroll_to({
+			//   target_id: settings.next
+			// })
 
-    }
+		}
 
-  }
+	}
 
-  // jQuery plugin interface
+	// jQuery plugin interface
 
-  $.fn.smooth_scroll = function (opt) {
-    var args = Array.prototype.slice.call(arguments, 1)
+	$.fn.smooth_scroll = function (opt) {
+		var args = Array.prototype.slice.call(arguments, 1)
 
-    return this.each(function () {
-      var item = $(this)
-      var instance = item.data('smooth_scroll')
+		return this.each(function () {
+			var item = $(this)
+			var instance = item.data('smooth_scroll')
 
-      if (!instance) {
+			if (!instance) {
 
-        // create plugin instance if not created
-        item.data('smooth_scroll', new smooth_scroll(this, opt))
-      } else {
+				// create plugin instance if not created
+				item.data('smooth_scroll', new smooth_scroll(this, opt))
+			} else {
 
-        // otherwise check arguments for method call
-        if (typeof opt === 'string') {
-          instance[opt].apply(instance, args)
-        }
-      }
-    })
-  }
+				// otherwise check arguments for method call
+				if (typeof opt === 'string') {
+					instance[opt].apply(instance, args)
+				}
+			}
+		})
+	}
 }(jQuery))
