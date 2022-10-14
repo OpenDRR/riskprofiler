@@ -169,7 +169,7 @@ patch_version_php() {
 			$build_number = implode('-', [$build_number, $commits_since, $commit_hash]);\
 		}\
 \
-		echo '(<a href="https://github.com/OpenDRR/riskprofiler-cms/tree/' . $git_describe . '" class="text-gray-400">' . $build_number . '</a>)';\
+		echo '(<a href="https://github.com/OpenDRR/riskprofiler/tree/' . $git_describe . '" class="text-gray-400">' . $build_number . '</a>)';\
 \
 		echo '<span class="mx-1">•</span>';\
 	}\
@@ -266,7 +266,7 @@ finish() {
 	if [[ "${KEEP_WPCLI_RUNNING,,}" =~ ^(true|1|y|yes|on)$ ]]; then
 		echo
 		echo "Since KEEP_WPCLI_RUNNING is true, you may enter WP-CLI container using:"
-		echo "    docker exec -it riskprofiler-cms_wpcli_1 /bin/bash"
+		echo "    docker exec -it riskprofiler-wpcli-1 /bin/bash"
 		sleep infinity
 	fi
 }

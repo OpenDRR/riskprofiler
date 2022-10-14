@@ -7,7 +7,7 @@ on:
 
   # "To trigger the workflow_dispatch event, your workflow must be in the default branch."
   # To run this manually from the command-line:
-  #   gh workflow run sync.yml --repo OpenDRR/riskprofiler-cms --ref gh-workflows
+  #   gh workflow run sync.yml --repo OpenDRR/riskprofiler --ref gh-workflows
   workflow_dispatch:
 
 jobs:
