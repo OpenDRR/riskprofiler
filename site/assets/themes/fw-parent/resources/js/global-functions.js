@@ -147,9 +147,9 @@ var sticky_offset = 0,
 			smooth_scroll_offset += $('#wpadminbar').outerHeight()
 		}
 
-		$(document).smooth_scroll({
-			debug: false,
-			offset: smooth_scroll_offset,
+    $(document).smooth_scroll({
+      debug: false,
+      offset: smooth_scroll_offset,
 			next: '.fw-section'
     })
 
@@ -261,11 +261,25 @@ var sticky_offset = 0,
 			$('.lazy').Lazy()
 		}
 
-		// AOS
-		
-		if ($('[data-aos]').length) {
-			AOS.init()
-		}
+    // SLICK CAROUSEL
+
+    // $('[data-slick]').each(function() {
+		//
+    //   $(this).on('beforeChange', function(event, slick, currentSlide, nextSlide) {
+    //     $(this).addClass('sliding');
+    //   });
+		//
+    //   $(this).on('afterChange', function(event, slick, currentSlide) {
+    //     $(this).removeClass('sliding');
+    //   });
+		//
+		//   if (!$(this).hasClass('slick-initialized')) {
+  	// 	  $(this).slick();
+  	// 	}
+		//
+    //   // $(this).slick('refresh');
+		//
+    // });
 
 	  // STICKY KIT
 

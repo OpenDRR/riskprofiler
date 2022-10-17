@@ -1,32 +1,20 @@
 var click_flag = false
 var bounds
 
-var y = 0, z = 0
-
-var color_ramp = [
-	'#ffffcc',
-	'#ffeda0',
-	'#fed976',
-	'#feb24c',
-	'#fd8d3c',
-	'#fc4e2a',
-	'#e31a1c',
-	'#bd0026',
-	'#800026'
-]
+var z = 0
 
 // risk profiler
 // v1.0
 
 ;(function ($) {
 
-	// custom select class
+  // custom select class
 
-	function rp_risks(item, options) {
+  function rp_risks(item, options) {
 
-		// options
+    // options
 
-		var defaults = {
+    var defaults = {
 			map: {
 				object: null,
 				panes: [],
@@ -62,23 +50,23 @@ var color_ramp = [
 				data: [],
 				features: []
 			},
-			aggregation: {
-				'current': {},
-				'previous': null,
-				'settings': {
-					'default': [
-						{ min: 11, max: 15, agg: 's', prop: 'Sauid', bbox: true },
-						{ min: 1, max: 10, agg: 'csd', prop: 'csduid', bbox: false }
-					]
-				}
-			},
+      aggregation: {
+        'current': {},
+        'previous': null,
+        'settings': {
+          'default': [
+            { min: 11, max: 15, agg: 's', prop: 'Sauid', bbox: true },
+            { min: 1, max: 10, agg: 'csd', prop: 'csduid', bbox: false }
+          ]
+        }
+      },
 			indicator: {
 				key: 'eC_Fatality',
 				retrofit: 'b0'
 			},
 			legend: {
 				max: 0,
-				grades: [],
+        grades: [],
 				colors: [
 					'#ffffcc',
 					'#ffeda0',
@@ -117,33 +105,33 @@ var color_ramp = [
 				feature_count: 0,
 				update_count: 0
 			},
-			debug: false
-		};
+      debug: false
+    };
 
-		this.options = $.extend(true, defaults, options);
+    this.options = $.extend(true, defaults, options);
 
-		this.item = $(item);
-		this.init();
-	}
+    this.item = $(item);
+    this.init();
+  }
 
-	rp_risks.prototype = {
+  rp_risks.prototype = {
 
-		// init
+    // init
 
-		init: function () {
+    init: function () {
 
-			var plugin = this;
-			var plugin_item = this.item;
-			var plugin_settings = plugin.options;
-			var plugin_elements = plugin_settings.elements;
+      var plugin = this;
+      var plugin_item = this.item;
+      var plugin_settings = plugin.options;
+      var plugin_elements = plugin_settings.elements;
 
-			//
-			// INITIALIZE
-			//
+      //
+      // INITIALIZE
+      //
 
-			if (plugin_settings.debug == true) {
-				console.log('risks', 'initializing')
-			}
+      if (plugin_settings.debug == true) {
+        console.log('risks', 'initializing')
+      }
 
 			if ($('body').hasClass('lang-fr')) {
 				plugin_settings.lang = 'fr'
@@ -156,7 +144,7 @@ var color_ramp = [
 
 			// OBJECT
 
-			plugin_settings.map.object = L.map('map', {
+	    plugin_settings.map.object = L.map('map', {
 				zoomControl: false,
 				maxZoom: 14,
 				crs: L.CRS.EPSG900913,
@@ -205,7 +193,7 @@ var color_ramp = [
 				for (var i = 1; i <= grades.length; i++) {
 
 					var row_markup = '<div class="legend-item" data-toggle="tooltip" data-placement="top" style="background-color: '
-						+ plugin_settings.legend.colors[i - 1] + ';"'
+            + plugin_settings.legend.colors[i - 1] + ';"'
 						+ ' title="'
 						+ prepend
 						+ grades[i - 1].toLocaleString(undefined, {
@@ -253,7 +241,7 @@ var color_ramp = [
 			}
 
 			L.tileLayer(basemap_URL, {
-				attribution: basemap_att
+		    attribution: basemap_att
 			}).addTo(map)
 
 			// PANES
@@ -313,16 +301,16 @@ var color_ramp = [
 			plugin_settings.search.element = L.DomUtil.create('div', 'map-search')
 
 			L.Control.Search = L.Control.extend({
-				onAdd: function(map) {
+		    onAdd: function(map) {
 
 					plugin_settings.search.element.innerHTML = '<input name="map-search-input" id="map-search-input" class="form-control" placeholder="Search communities">'
 
-					return plugin_settings.search.element
-				}
+	        return plugin_settings.search.element
+		    }
 			})
 
 			L.control.search = function(opts) {
-				return new L.Control.Search(opts)
+		    return new L.Control.Search(opts)
 			}
 
 			plugin_settings.map.search = L.control.search({
@@ -372,7 +360,7 @@ var color_ramp = [
 					plugin_settings.search.clear.show()
 
 					$.ajax({
-						url: 'https://geogratis.gc.ca/services/geolocation/' + plugin_settings.lang + '/locate?q=*' + term + '*',
+						url: 'http://geogratis.gc.ca/services/geolocation/' + plugin_settings.lang + '/locate?q=*' + term + '*',
 						success: function(data) {
 
 							if (data.length) {
@@ -558,7 +546,7 @@ var color_ramp = [
 
 								$('.app-main').removeClass('feature-selected')
 
-							}
+			        }
 
 						}, 500)
 
@@ -782,7 +770,7 @@ var color_ramp = [
 
 			plugin.set_indicator(JSON.parse(init_item.attr('data-indicator')))
 
-		},
+    },
 
 		set_indicator: function(indicator) {
 
@@ -839,7 +827,7 @@ var color_ramp = [
 				plugin_settings.indicator.ranking.forEach(function(item_id, i) {
 
 					var result = plugin_settings.sidebar.items.filter(obj => {
-						return obj.post_id === parseInt(item_id)
+					  return obj.post_id === parseInt(item_id)
 					})
 
 					if (result.length) {
@@ -909,11 +897,11 @@ var color_ramp = [
 
 			var map = plugin_settings.map.object
 
-			var settings = $.extend(true, {
+      var settings = $.extend(true, {
 				event: null
 			}, fn_options)
 
-			// console.log('prep', plugin_settings.indicator.key)
+			console.log('prep', plugin_settings.indicator.key)
 
 			var fetch = false
 
@@ -943,8 +931,8 @@ var color_ramp = [
 			})
 
 			// conditions for fetching new data
-			// 1. zoom action changed the aggregation setting
-			// 2. previous aggregation is empty - initial load of scenario
+      // 1. zoom action changed the aggregation setting
+      // 2. previous aggregation is empty - initial load of scenario
 
 			// if (settings.event == null) {
 			// 	console.log('no event')
@@ -957,33 +945,33 @@ var color_ramp = [
 			// 	console.log('new aggregation')
 			// }
 
-			if (
+      if (
 				settings.event == null ||
-				(
-					plugin_settings.aggregation.previous !== null &&
-					plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
-				) ||
-				plugin_settings.aggregation.previous == null
-			) {
+        (
+          plugin_settings.aggregation.previous !== null &&
+          plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
+        ) ||
+        plugin_settings.aggregation.previous == null
+      ) {
 
-				// RESET MAP FEATURES
+        // RESET MAP FEATURES
 
-				// reset legend max
-				plugin_settings.legend.max = 0
+        // reset legend max
+        plugin_settings.legend.max = 0
 
-				// fetch new data
-				fetch = true
+        // fetch new data
+        fetch = true
 
-			}
+      }
 
-			if (fetch == true) {
+      if (fetch == true) {
 
 				// console.log('update map')
 
-				// get the tiles
+        // get the tiles
 				plugin.update_map()
 
-			}
+      }
 
 
 		},
@@ -1026,7 +1014,7 @@ var color_ramp = [
 				tiles: plugin_settings.map.tiles,
 				options: {
 					pane: 'data',
-					getFeatureId: function(feature) {
+		      getFeatureId: function(feature) {
 
 						// if (feature.properties[indicator_key] > z) {
 						// 	z = feature.properties[indicator_key]
@@ -1038,9 +1026,9 @@ var color_ramp = [
 						}
 
 						return feature.properties[feature_ID_key]
-					},
+		      },
 					bounds: bounds,
-					vectorTileLayerStyles: plugin.set_choro_style('psra_indicators_' + plugin_settings.aggregation.current.agg, indicator_key)
+		      vectorTileLayerStyles: plugin.set_choro_style('psra_indicators_' + plugin_settings.aggregation.current.agg, indicator_key)
 				},
 				functions: {
 					add: function(e) {
@@ -1087,40 +1075,22 @@ var color_ramp = [
 
 								var aggregation = plugin_settings.indicator.aggregation[current_agg]
 								
-								var rounding = parseInt(aggregation['rounding'])
+								var this_val = plugin._format_figure(e.layer.properties[indicator_key])
 								
-								var tooltip_val
-								
-								var this_val = plugin._format_figure(e.layer.properties[indicator_key], rounding)
-								
-								if (e.layer.properties.csdname == 'Calgary') {
-									console.log(e.layer.properties[indicator_key], this_val)
+								if (this_val.charAt(0) == '<') {
+									this_val = rp.less_than
+										+ ' '
+										+ this_val.substring(1)
 								}
 								
-								if (plugin._format_figure(e.layer.properties[indicator_key], rounding).charAt(0) == '<') {
-									
-									tooltip_val = rp.less_than
-										+ ' '
-										+ plugin_settings.indicator.legend.prepend
-										+ plugin._format_figure(e.layer.properties[indicator_key]).substring(1)
-										+ ' '
-										+ plugin_settings.indicator.legend.append
-										
-								} else {
-									
-									tooltip_val = plugin_settings.indicator.legend.prepend 
-										+ this_val 
-										+ ' '
-										+ plugin_settings.indicator.legend.append
-									
-									
-								}
-								
-								return tooltip_val
+								return plugin_settings.indicator.legend.prepend
+									+ this_val
+									+ ' '
+									+ plugin_settings.indicator.legend.append
 									
 							})
-								.setLatLng(e.latlng)
-								.addTo(map)
+				        .setLatLng(e.latlng)
+				        .addTo(map)
 
 						}
 
@@ -1130,17 +1100,17 @@ var color_ramp = [
 						var properties = e.layer.properties
 
 						// if we have a clicked feature, reset its style
-						if (plugin_settings.map.clicked_feature != null) {
-							plugin_settings.map.tiles.resetFeatureStyle(plugin_settings.map.clicked_feature)
-						}
+		        if (plugin_settings.map.clicked_feature != null) {
+		          plugin_settings.map.tiles.resetFeatureStyle(plugin_settings.map.clicked_feature)
+		        }
 
 						plugin_settings.community = properties
 
 						$('.app-main').addClass('feature-selected')
 
-						// set the clicked feature id
+		        // set the clicked feature id
 
-						plugin_settings.map.clicked_feature = properties[feature_ID_key]
+		        plugin_settings.map.clicked_feature = properties[feature_ID_key]
 						plugin_settings.map.clicked_fill = e.layer.options.fillColor
 
 						// set the clicked feature style
@@ -1148,13 +1118,13 @@ var color_ramp = [
 						plugin.set_clicked_style(plugin_settings.map.clicked_fill)
 
 						// set the popup content
-						plugin_settings.map.popup.setContent(function() {
+		        plugin_settings.map.popup.setContent(function() {
 
 							return plugin.popup_content(properties)
 
 						})
-							.setLatLng(e.latlng)
-							.openOn(map)
+			        .setLatLng(e.latlng)
+			        .openOn(map)
 
 					},
 					complete: function() {
@@ -1205,34 +1175,15 @@ var color_ramp = [
 					fillColor
 
 			var rounding = parseInt(plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
-			
+
+			// console.log(pbf_key, indicator_key)
+
 			layer_style[pbf_key] = function(properties) {
-				
-				var rounded_color = 0
-				
-				if (typeof properties[indicator_key] != 'undefined') {
-				
-					rounded_color = properties[indicator_key] * Math.pow(10, rounding)
-					
-					// if (rounded_color != 0 && z < 20) {
-					// 	
-					// 	console.log(properties[indicator_key], rounded_color, fillColor)
-					// 	z+=1
-					// }
-					
-				}
-	
+
+				var rounded_color = properties[indicator_key] * Math.pow(10, rounding)
+
 				fillColor = plugin._choro_color(rounded_color)
-					
-				if (properties.csdname == 'Calgary') {
-					console.log('hey i found calgary')
-				}
-				if (properties.csduid == 4806016) {
-					
-					console.log(indicator_key, properties[indicator_key], rounded_color, fillColor)
-					
-				}
-				
+
 				return {
 					fillColor: fillColor,
 					fillOpacity: 0.8,
@@ -1248,82 +1199,61 @@ var color_ramp = [
 
 		_choro_color: function(d) {
 
-			var plugin = this
-			var plugin_settings = plugin.options
+      var plugin = this
+      var plugin_settings = plugin.options
 
 			var current_agg = plugin_settings.aggregation.current.agg,
 					agg_settings = plugin_settings.indicator.aggregation[current_agg]
 
+			var grades = [].concat(agg_settings.legend).reverse()
+
 			var rounding = parseInt(agg_settings['rounding'])
 
-			var return_i = 0
-			
-			agg_settings.legend.forEach(function(grade, i) {
-				
-				if (d >= grade) {
-					return_i = i
-				}
-				
-			})
-			
-			// if (plugin_settings.community.csduid == 4806016) {
-			if (z < 100 && d == 0) {
-				console.log(d, return_i, color_ramp[return_i])
-				z += 1
-			}
-			
-			return color_ramp[return_i]
-
-			// return d >= grades[0] ? '#800026' :
-			// 	d >= grades[1] ? '#bd0026' :
-			// 	d >= grades[2] ? '#e31a1c' :
-			// 	d >= grades[3] ? '#fc4e2a' :
-			// 	d >= grades[4] ? '#fd8d3c' :
-			// 	d >= grades[5] ? '#feb24c' :
-			// 	d >= grades[6] ? '#fed976' :
-			// 	d >= grades[7] ? '#ffeda0' :
-			// 	'#ffffcc'
+			return d >= grades[0] ? '#800026' :
+				d >= grades[1] ? '#bd0026' :
+				d >= grades[2] ? '#e31a1c' :
+				d >= grades[3] ? '#fc4e2a' :
+				d >= grades[4] ? '#fd8d3c' :
+				d >= grades[5] ? '#feb24c' :
+				d >= grades[6] ? '#fed976' :
+				d >= grades[7] ? '#ffeda0' :
+        '#ffffcc'
 
 		},
 
 		popup_content: function(properties) {
 
-			var plugin = this
-			var plugin_settings = plugin.options
-			
-			var current_agg = plugin_settings.aggregation.current.agg
-			
-			var aggregation = plugin_settings.indicator.aggregation[current_agg]
+      var plugin = this
+      var plugin_settings = plugin.options
 
 			// console.log(properties)
 
-			var popup_name = properties.csdname,
-					popup_name_label = 'Census Subdivision'
+			var popup_name = properties.csdname
 
-			if (current_agg == 's') {
+			if (plugin_settings.aggregation.current.agg == 's') {
 				popup_name += ' (' + properties.fsauid + ')'
-				popup_name_label = 'Forward Sortation Area'
 			}
 
 			var popup_markup = '<div class="popup-detail p-2">'
-			
-				popup_markup += '<h6 class="mb-0">' + popup_name_label + '</h6>'
 
-				popup_markup += '<h5 class="risk-popup-city mb-3">' + popup_name + '</h5>'
+				popup_markup += '<h5 class="risk-popup-city mb-1">' + popup_name + '</h5>'
 				
-				popup_markup += '<h6 class="mb-0">' + plugin_settings.indicator.title + '</h6>'
+				var current_agg = plugin_settings.aggregation.current.agg
+				
+				var aggregation = plugin_settings.indicator.aggregation[current_agg]
 
-				var this_val = plugin._format_figure(properties[plugin_settings.indicator.key + '_' + plugin_settings.api.retrofit], parseInt(aggregation['rounding']))
+				var this_val = properties[plugin_settings.indicator.key + '_' + plugin_settings.api.retrofit]
 				
-				if (this_val.charAt(0) == '<') {
-					this_val = rp.less_than + ' ' + this_val.substring(1)
-				}
-				
-				popup_markup += '<div class="risk-popup-rank text-primary">' 
+				// if (this_val < 1) {
+				// 	this_val = plugin._format_figure(this_val)
+				// } else {
+				// 	this_val = plugin._round(this_val, aggregation['rounding']).toLocaleString(undefined, { maximumFractionDigits: aggregation['decimals'] })
+				// }
+
+				popup_markup += '<div class="risk-popup-rank text-primary">'
 					+ plugin_settings.indicator.legend.prepend
-					+ this_val
-					+ ' '
-					+ plugin_settings.indicator.legend.append
+					+ plugin._format_figure(properties[plugin_settings.indicator.key + '_' + plugin_settings.api.retrofit])
+					+ ' ' + plugin_settings.indicator.legend.append
 					+ '</div>'
 
 			popup_markup += '</div>'
@@ -1340,16 +1270,16 @@ var color_ramp = [
 
 		},
 
-		item_detail: function(fn_options) {
+    item_detail: function(fn_options) {
 
-			var plugin = this
-			var plugin_item = this.item
-			var plugin_settings = plugin.options
-			var plugin_elements = plugin_settings.elements
+      var plugin = this
+      var plugin_item = this.item
+      var plugin_settings = plugin.options
+      var plugin_elements = plugin_settings.elements
 
 			var map = plugin_settings.map.object
 
-			// options
+      // options
 
 			var defaults = {
 				item_id: 1
@@ -1360,7 +1290,7 @@ var color_ramp = [
 				fn_options = {}
 			}
 
-			var settings = $.extend(true, defaults, fn_options)
+      var settings = $.extend(true, defaults, fn_options)
 
 			console.log('risks', 'detail', plugin_settings.community)
 
@@ -1418,7 +1348,7 @@ var color_ramp = [
 					}
 
 					// populate indicator values
-					
+
 					detail_content.find('[data-indicator').each(function() {
 
 						var this_key = $(this).attr('data-indicator')
@@ -1431,156 +1361,81 @@ var color_ramp = [
 						}
 
 						var this_val
-						
-						if (typeof plugin_settings.community[this_key + '_' + plugin_settings.api.retrofit] != 'undefined') {
-							
+
+						if (plugin_settings.community[this_key + '_' + plugin_settings.api.retrofit]) {
 							this_val = plugin_settings.community[this_key + '_' + plugin_settings.api.retrofit]
-							
-						} else if (typeof plugin_settings.community[this_key] != 'undefined') {
-							
-							this_val = plugin_settings.community[this_key]
-							
 						} else {
-							
-							// indicator not found
-							
-							$(this).hide()
-							
+							this_val = plugin_settings.community[this_key]
 						}
-						
-						if (typeof this_val != 'undefined') {
-						
-							// use new formatting function
-							
-							if (
-								this_key == 'eqri_abs_score' ||
-								this_key == 'eqri_norm_score'
-							) {
-								
-								// this_val = plugin._significant_figs(this_val)
-								
-								this_val = this_val.toFixed(1)
-								
-							} else if (
-								this_key == 'eAALt_Asset'
-							) {
-								
-								this_val = plugin._format_figure(this_val)
-								
-								// replace < with 'less than'
-								
-								if (this_val.charAt(0) == '<') {
-									this_val = rp.less_than + ' ' + this_val.substring(1)
-								}
-								
-							} else {
-								
-								rounding = parseInt(plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
-								
-								this_val = plugin._format_figure(this_val, rounding)
-								
-								// if (this_key == 'eAALm_Bldg') {
-								// 	this_val = (this_val * 100) + '%'
-								// }
-															
-							}
-							
-							if (typeof $(this).attr('data-prepend') != 'undefined') {
-	
-								this_val = $(this).attr('data-prepend') + this_val
-	
-							}
-	
-							if (typeof $(this).attr('data-append') != 'undefined') {
-	
-								this_val += $(this).attr('data-append')
-	
-							}
-							
-							if ($(this).hasClass('range')) {
-								
-								$(this).attr('data-val', this_val)
-								
-							} else if (
-								this_key == 'eqri_abs_rank' ||
-								this_key == 'eqri_norm_rank'
-							) {
-								
-								// abs
-								// Very Low Score
-								// Low Score
-								// Moderate Score
-								// High Score
-								// Very High Score
-								
-								// norm
-								// Very Low Score
-								// Relatively Low Score
-								// Relatively Moderate Score
-								// Relatively High Score
-								// Very High Score
-								
-								var well = 0
-								
-								switch (this_val) {
-									case 'Very Low Score' : 
-										well = 0
-										break;
-										
-									case 'Low Score' :
-									case 'Relatively Low Score' :
-										well = 1
-										break
-										
-									case 'Moderate Score' :
-									case 'Relatively Moderate Score' :
-										well = 2
-										break
-										
-									case 'High Score' :
-									case 'Relatively High Score' :
-										well = 3
-										break
-										
-									case 'Very High Score' :
-										well = 4
-										break
-										
-								}
-								
-								// set this label
-								$(this).html(this_val)
-								
-								// find the well
-								
-								console.log(this_key, this_val, well)
-								
-								var this_range = $('body').find('.range[data-indicator="' + this_key.replace('rank', 'score') + '"]')
-								
-								var this_range_val = this_range.attr('data-val')
-								
-								this_range.find('.well').eq(well).addClass('active').html(this_range_val)
-								
-							} else {
-								
-								$(this).html(this_val)
-								
-							}
-	
-						} // if != undefined
-						
-					}) // each [data-indicator]
-					
-					
+
+						if (typeof $(this).attr('data-decimals') != 'undefined') {
+
+							this_val = this_val.toFixed(parseInt($(this).attr('data-decimals')))
+
+						}
+
+						if (typeof $(this).attr('data-prepend') != 'undefined') {
+
+							this_val = $(this).attr('data-prepend') + this_val
+
+						}
+
+						if (typeof $(this).attr('data-append') != 'undefined') {
+
+							this_val += $(this).attr('data-append')
+
+						}
+
+						$(this).html(this_val)
+
+					})
+
+					// create score markers
+
 					setTimeout(function() {
-						
-						$('body').find('.score-chart-rank').animate({
-							opacity: 1
-						}, 600)
-						
+
+						detail_content.find('.score-chart').each(function() {
+
+							var score_chart = $(this),
+									score_key = $(this).find('[data-indicator]').attr('data-indicator')
+									score_label = $(this).find('.label'),
+									score_marker = $(this).find('.marker')
+
+							// treated score value
+							var score = parseFloat(plugin_settings.community[score_key + '_' + plugin_settings.api.retrofit])
+
+							// score as percentage of max
+							var score_percent = score / plugin_settings.sidebar.max[score_key]
+
+							if (score_percent > 1) {
+								score_percent = 1
+							}
+
+							var css_prop = 'left',
+									css_val = (score_percent * 100) + '%'
+
+							if (score_percent > 0.7) {
+								css_prop = 'right'
+								css_val = (100 - (score_percent * 100)) + '%'
+							}
+
+							score_label.css(css_prop, css_val)
+
+							// animate marker
+							score_marker.animate({
+								left: (score_percent * 100) + '%'
+							}, {
+								duration: 1000,
+								easing: 'swing',
+								complete: function() {
+									$('body').find('.score-chart .label').fadeIn(150)
+								}
+							})
+
+						})
+
 					}, 1000)
 
-					
 					// fetch the feature from geoapi, use its geometry to zoom to the vector tile feature
 
 					var feature_ID_key = (plugin_settings.aggregation.current.agg == 's') ? 'Sauid' : 'csduid'
@@ -1612,69 +1467,69 @@ var color_ramp = [
 					if (plugin_settings.community.fsauid) {
 
 						var request_data = {
-							"aggs": {
-								"0": {
-									"terms": {
-										"field": "properties.eEL_Period",
-										"order": {
-											"1": "asc"
-										},
-										"size": 15
-									},
-									"aggs": {
-										"1": {
-											"sum": {
-												"field": "properties.eEL_b0"
-											}
-										},
-										"2": {
-											"avg": {
-												"field": "properties.e5L_b0"
-											}
-										},
-										"3": {
-											"sum": {
-												"field": "properties.e95L_b0"
-											}
-										}
-									}
-								}
-							},
-							"size": 0,
-							"fields": [],
-							"script_fields": {},
-							"stored_fields": [ "*" ],
-							"runtime_mappings": {},
-							"_source": { "excludes": [] },
-							"query": {
-								"bool": {
-									"must": [],
-									"filter": [
-										{
-											"match_phrase": {
-												"properties.eEL_FSAUID.keyword": plugin_settings.community.fsauid
-											}
-										},
-										{
-											"match_phrase": {
-												"properties.eEL_OccGen.keyword": "RES"
-											}
-										},
-										{
-											"match_phrase": {
-												"properties.eEL_BldgType.keyword": "Concrete"
-											}
-										},
-										{
-											"match_phrase": {
-												"properties.eEL_type.keyword": "structural"
-											}
-										}
-									],
-									"should": [],
-									"must_not": []
-								}
-							}
+						  "aggs": {
+						    "0": {
+						      "terms": {
+						        "field": "properties.eEL_Period",
+						        "order": {
+						          "1": "asc"
+						        },
+						        "size": 15
+						      },
+						      "aggs": {
+						        "1": {
+						          "sum": {
+						            "field": "properties.eEL_b0"
+						          }
+						        },
+						        "2": {
+						          "avg": {
+						            "field": "properties.e5L_b0"
+						          }
+						        },
+						        "3": {
+						          "sum": {
+						            "field": "properties.e95L_b0"
+						          }
+						        }
+						      }
+						    }
+						  },
+						  "size": 0,
+						  "fields": [],
+						  "script_fields": {},
+						  "stored_fields": [ "*" ],
+						  "runtime_mappings": {},
+						  "_source": { "excludes": [] },
+						  "query": {
+						    "bool": {
+						      "must": [],
+						      "filter": [
+						        {
+						          "match_phrase": {
+						            "properties.eEL_FSAUID.keyword": plugin_settings.community.fsauid
+						          }
+						        },
+						        {
+						          "match_phrase": {
+						            "properties.eEL_OccGen.keyword": "RES"
+						          }
+						        },
+						        {
+						          "match_phrase": {
+						            "properties.eEL_BldgType.keyword": "Concrete"
+						          }
+						        },
+						        {
+						          "match_phrase": {
+						            "properties.eEL_type.keyword": "structural"
+						          }
+						        }
+						      ],
+						      "should": [],
+						      "must_not": []
+						    }
+						  }
 						}
 
 						var this_series = [
@@ -1714,7 +1569,7 @@ var color_ramp = [
 										headerFormat: '',
 										formatter: function() {
 
-											return '<strong>' + this.x + 'y RP:</strong> $' + plugin._format_figure(this.y)
+											return '<strong>' + this.x + 'y RP:</strong> $' + plugin._round_dollars(this.y)
 
 										}
 									},
@@ -1798,7 +1653,7 @@ var color_ramp = [
 								"script_fields": {},
 								"stored_fields": [ "*" ],
 								"runtime_mappings": {},
-								"_source": { "excludes": [] },
+							  "_source": { "excludes": [] },
 								"query": {
 									"bool": {
 										"must": [],
@@ -1842,7 +1697,7 @@ var color_ramp = [
 										plugin_settings.map.layers.fsa = new L.GeoJSON(source, {
 											style: {
 												fill: false,
-												color: '#000000',
+												color: '#8b0707',
 												weight: 2,
 												opacity: 0.6
 											},
@@ -1896,14 +1751,14 @@ var color_ramp = [
 				},
 				complete: function() {
 
-					$('body').removeClass('spinner-on')
+          $('body').removeClass('spinner-on')
 					$('#spinner-progress').text('')
 
 				}
 			})
 
 
-		},
+    },
 
 		_round: function(num, power) {
 			return num * Math.pow(10, power)
@@ -1928,30 +1783,23 @@ var color_ramp = [
 
 		},
 		
-		_format_figure: function(num, rounding = 0) {
+		_format_figure: function(num) {
 			
 			var plugin = this
 			var plugin_settings = plugin.options
 			
 			var rounded_num = num
 			
-			if (typeof num == 'undefined') {
-				num = 0
-			}
+			// console.log(plugin_settings.indicator)
 			
-			if (rounding != 0) {
-				num = num * Math.pow(10, rounding)
-			}
-			
-			if (plugin_settings.indicator.key.includes('_Fatality')) {
+			if (plugin_settings.indicator.key == 'eCr_Fatality') {
 				
 				if (num == 0) {
 					rounded_num = 0
 				} else {
+					console.log(1)
 					rounded_num = plugin._significant_figs(num)
 				}
-				
-				console.log('fatality', num, rounded_num)
 				
 			} else if (
 				plugin_settings.indicator.key.includes('eDtr') ||
@@ -1982,14 +1830,10 @@ var color_ramp = [
 				
 				// standard formatting for injuries/damage
 				
-				if (num == 0) {
+				if (num < 1) {
 					rounded_num = 0
-				} else if (num <= 1) {
-					rounded_num = rp.one_or_less
-				} else if ( num <= 10) {
-					rounded_num = 10
-				} else if (num <= 100) {
-					rounded_num = plugin._round(num, -1).toFixed(0) * 10
+				} else if (num < 10) {
+					rounded_num = '<10'
 				} else {
 					rounded_num = plugin._significant_figs(num)
 				}
@@ -2017,10 +1861,6 @@ var color_ramp = [
 				// 0.XX
 				
 				rounded_num = num.toPrecision(2)
-				
-			} else if (num < 100) {
-				
-				rounded_num = parseFloat(num.toFixed(2))
 				
 			} else if (num < 1000) {
 				
@@ -2084,38 +1924,38 @@ var color_ramp = [
 				
 			}
 			
-			// console.log(num, rounded_num)
+			console.log(num, rounded_num)
 			
 			return rounded_num
 			
 		}
 
-	}
+  }
 
-	// jQuery plugin interface
+  // jQuery plugin interface
 
-	$.fn.rp_risks = function (opt) {
-		var args = Array.prototype.slice.call(arguments, 1);
+  $.fn.rp_risks = function (opt) {
+    var args = Array.prototype.slice.call(arguments, 1);
 
-		return this.each(function () {
+    return this.each(function () {
 
-			var item = $(this);
-			var instance = item.data('rp_risks');
+      var item = $(this);
+      var instance = item.data('rp_risks');
 
-			if (!instance) {
+      if (!instance) {
 
-				// create plugin instance if not created
-				item.data('rp_risks', new rp_risks(this, opt));
+        // create plugin instance if not created
+        item.data('rp_risks', new rp_risks(this, opt));
 
-			} else {
+      } else {
 
-				// otherwise check arguments for method call
-				if (typeof opt === 'string') {
-					instance[opt].apply(instance, args);
-				}
+        // otherwise check arguments for method call
+        if (typeof opt === 'string') {
+          instance[opt].apply(instance, args);
+        }
 
-			}
-		});
-	}
+      }
+    });
+  }
 
 }(jQuery));

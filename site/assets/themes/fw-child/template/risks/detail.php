@@ -3,6 +3,10 @@
 		<div class="row justify-content-center mb-5 text-white">
 			<div class="col-8">
 				<h4 class="city-name"></h4>
+				<p class="city-rank text-gray-200">
+					<span class="rp-icon icon-rank text-body mr-2"></span>
+					<span data-indicator="eqri_abs_rank">eqri_abs_rank</span>
+				</p>
 			</div>
 
 					</div>
@@ -20,89 +24,73 @@
 
 							<h6 class="mb-0 p-3">Integrated Seismic Risk Index</h6>
 
-							<div class="row mx-3 bg-gray-200">
-								
-								<div class="col-6 p-3 order-1">
-									<h5 class="mb-0">Risk Score — Total Impact</h5>
-								</div>
+							<div class="row align-items-end border-bottom">
 
-								<div class="col-6 px-3 order-3">
+								<div class="col-6 px-3 pt-3 order-1">
 									<div id="abs-score-chart" class="score-chart">
-										<div class="range d-flex" data-indicator="eqri_abs_score">
-											<div class="well well-1" style="background-color: #4575b4;"></div>
-											<div class="well well-2" style="background-color: #91bfdb;"></div>
-											<div class="well well-3" style="background-color: #fee090;"></div>
-											<div class="well well-4" style="background-color: #fc8d59;"></div>
-											<div class="well well-5" style="background-color: #d73027;"></div>
-										</div>
+										<div class="range"></div>
+										<div class="marker"></div>
+										<div class="label" data-indicator="eqri_abs_score" data-decimals="2"></div>
 									</div>
-								</div>
-								
-								<div class="col-6 order-5">
-									<h6 class="mb-0 p-3 score-chart-rank" data-indicator="eqri_abs_rank">eqri_abs_rank</h6>
-								</div>
-								
-								<div class="col-6 p-3 border-left order-2">
-									<h5 class="mb-0">Risk Score — Percentage Impact (Normalized)</h5>
 								</div>
 
-								<div class="col-6 px-3 border-left order-4">
+								<div class="col-6 p-3 order-3">
+									<h5 class="mb-0">Absolute Risk Score</h5>
+								</div>
+
+								<div class="col-6 px-3 pt-3 border-left order-2">
 									<div id="norm-score-chart" class="score-chart">
-										<div class="range d-flex" data-indicator="eqri_norm_score">
-											<div class="well well-1" style="background-color: #4575b4;"></div>
-											<div class="well well-2" style="background-color: #91bfdb;"></div>
-											<div class="well well-3" style="background-color: #fee090;"></div>
-											<div class="well well-4" style="background-color: #fc8d59;"></div>
-											<div class="well well-5" style="background-color: #d73027;"></div>
-										</div>
+										<div class="range"></div>
+										<div class="marker"></div>
+										<div class="label" data-indicator="eqri_norm_score" data-decimals="2"></div>
 									</div>
 								</div>
-								
-								<div class="col-6 order-6 border-left">
-									<h6 class="mb-0 p-3 score-chart-rank" data-indicator="eqri_norm_rank">eqri_norm_rank</h6>
+
+								<div class="col-6 p-3 border-left order-4">
+									<h5 class="mb-0">Normalized Risk Score</h5>
 								</div>
 							</div>
 
 							<div class="row border-bottom p-3">
 
-								<div class="col-6 pr-3">
+								<div class="col-8">
 									<h6>Average Annual Fatalities</h6>
 
 									<div data-indicator="eC_Fatality">eC_Fatality</div>
 								</div>
 
-								<div class="col-6 pr-3">
-									<h6>Annual Probability of Fatality</h6>
+								<div class="col-4">
+									<h6 class="text-gray-400">Ratio</h6>
 
 									<div data-indicator="eCr_Fatality">eCr_Fatality</div>
 								</div>
 							</div>
 
 							<div class="row border-bottom p-3">
-								<div class="col-6 pr-3">
-									<h6>Buildings with Complete Damage over 50 years</h6>
+								<div class="col-8">
+									<h6>Buildings with Complete Damage</h6>
 
 									<div data-indicator="eDt_Complete">eDt_Complete</div>
 								</div>
 
-								<div class="col-6 pr-3">
-									<h6>Probability of Complete Damage over 50 years</h6>
+								<div class="col-4">
+									<h6 class="text-gray-400">Ratio</h6>
 
 									<div data-indicator="eDtr_Complete">eDtr_Complete</div>
 								</div>
 							</div>
 
 							<div class="row p-3">
-								<div class="col-6 pr-3">
-									<h6>Annual Economic Loss</h6>
+								<div class="col-8">
+									<h6>Building Asset Loss</h6>
 
-									<div data-indicator="eAALt_Asset" data-decimals="2" data-prepend="$" data-append=" CAD">eAALt_Bldg</div>
+									<div data-indicator="eAALt_Bldg" data-decimals="2" data-prepend="$" data-append=" CAD">eAALt_Bldg</div>
 								</div>
 
-								<div class="col-6 pr-3">
-									<h6>Annual Economic Loss Ratio</h6>
+								<div class="col-4">
+									<h6 class="text-gray-400">Ratio</h6>
 
-									<div data-indicator="eAALm_Bldg" data-append="%">eAALm_Bldg</div>
+									<div data-indicator="eAALm_Bldg">eAALm_Bldg</div>
 								</div>
 							</div>
 

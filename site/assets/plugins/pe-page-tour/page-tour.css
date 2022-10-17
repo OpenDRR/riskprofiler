@@ -68,7 +68,7 @@
 }
 .page-tour[data-bubble="top right"]:after {
   top: -10px;
-  right: -10px;
+  left: -10px;
   transform: rotate(135deg);
   border-bottom-color: rgba(255, 255, 255, 0.9);
 }
