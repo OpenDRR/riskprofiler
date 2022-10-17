@@ -249,8 +249,6 @@ const api_url = 'https://api.riskprofiler.ca'
 						settings.complete()
 					}
 
-
-
         }
 			})
 
@@ -266,9 +264,9 @@ const api_url = 'https://api.riskprofiler.ca'
 				order: null
 			}, fn_options)
 
-			console.log($('body').find('.sidebar-item:visible'))
+			console.log($('body').find('.sidebar-item'))
 
-			var result = $('body').find('.sidebar-item[data-' + settings.key + ']:visible').sort(function (a, b) {
+			var result = $('body').find('.sidebar-item[data-' + settings.key + ']').sort(function (a, b) {
 
 				var item = $(a).attr('data-' + settings.key)
 				var compare = $(b).attr('data-' + settings.key)
@@ -292,7 +290,7 @@ const api_url = 'https://api.riskprofiler.ca'
 
 			$('body').find('.sidebar-items').html(result)
 
-			// console.log('sort', settings.key, settings.order)
+			console.log('sort', settings.key, settings.order)
 
 		},
 
@@ -497,38 +495,18 @@ const api_url = 'https://api.riskprofiler.ca'
 
 			var plugin = this,
 					rounded_num
-					
-			if (num == 0) {
-				
-				rounded_num = '$0'
-				
-			} else if (num < 1000) {
-				
-				rounded_num = rp.less_than_1000
-				
-			} else if (num >= 1000 ) {
-				
-				if (num > 1000000000) {
-					rounded_num = '$' + plugin._round(num, -9).toFixed(1) + ' billion'
-				} else if (num > 100000) {
-					rounded_num = '$' + plugin._round(num, -6).toFixed(1) + ' million'
-				} else {
-					rounded_num = '$' + plugin._round(num, -3).toFixed(1) + ' thousand'
-				}
-				
+
+			if (num > 1000000000) {
+				rounded_num = plugin._round(num, -9).toFixed(2) + ' billion'
+			} else if (num > 100000) {
+				rounded_num = plugin._round(num, -6).toFixed(2) + ' million'
+			} else {
+				rounded_num = num.toLocaleString('en-CA', {
+					maximumFractionDigits: 0
+				})
 			}
 
-			// if (num > 1000000000) {
-			// 	rounded_num = plugin._round(num, -9).toFixed(2) + ' billion'
-			// } else if (num > 100000) {
-			// 	rounded_num = plugin._round(num, -6).toFixed(2) + ' million'
-			// } else {
-			// 	rounded_num = num.toLocaleString('en-CA', {
-			// 		maximumFractionDigits: 0
-			// 	})
-			// }
-
-			return rounded_num
+			return '$' + rounded_num
 
 		}
 

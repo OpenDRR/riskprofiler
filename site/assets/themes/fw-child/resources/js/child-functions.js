@@ -148,6 +148,41 @@ var child_logging = true
 			// console.log('new cookie value: ', Cookies.get('risk-profiler-terms'))
 			
 		})
+		
+		//
+		// FAQ
+		//
+		
+		if ($('body').attr('id') == 'page-frequently-asked-questions') {
+			
+			$('main .fw-column').first().find('.block-type-text').each(function() {
+				
+				$(this).find('h5').addClass('accordion-trigger').each(function() {
+					
+					$(this).nextUntil('h5').wrapAll('<div class="accordion-content">')
+					
+					
+				})
+				
+			})
+			
+			$('main').find('.accordion-content').hide()
+			
+			$('main').on('click', '.accordion-trigger', function(e) {
+				
+				if ($(this).hasClass('open')) {
+					
+					$(this).removeClass('open').next('.accordion-content').slideUp(250)
+					
+				} else {
+					
+					$(this).addClass('open').next('.accordion-content').slideDown(500)
+					
+				}
+				
+			})
+			
+		}
 
     if (child_logging == true) {
       console.log('end of child-functions.js')

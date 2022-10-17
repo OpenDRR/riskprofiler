@@ -9,13 +9,13 @@ var grades, color_ramp
 
 ;(function ($) {
 
-  // custom select class
+	// custom select class
 
-  function rp_scenarios(item, options) {
+	function rp_scenarios(item, options) {
 
-    // options
+		// options
 
-    var defaults = {
+		var defaults = {
 			api: {
 				version: '1.4.3',
 				base_URL: geoapi_url + '/collections/opendrr_dsra_',
@@ -23,21 +23,21 @@ var grades, color_ramp
 				lang: 'en_US',
 				bbox: null
 			},
-      aggregation: {
-        'current': {},
-        'previous': null,
-        'settings': {
-          'shake': [
-            { min: 10, max: 15, agg: '1km', prop: 'sH_PGA_max', bbox: true },
-            { min: 6, max: 9, agg: '5km', prop: 'sH_PGA_max', bbox: true },
-            { min: 1, max: 5, agg: '5km', prop: 'sH_PGA_max', bbox: false }
-          ],
-          'default': [
-            { min: 11, max: 15, agg: 's', prop: 'Sauid', bbox: true },
-            { min: 1, max: 10, agg: 'csd', prop: 'csduid', bbox: false }
-          ]
-        }
-      },
+			aggregation: {
+				'current': {},
+				'previous': null,
+				'settings': {
+					'shake': [
+						{ min: 10, max: 15, agg: '1km', prop: 'sH_PGA_max', bbox: true },
+						{ min: 6, max: 9, agg: '5km', prop: 'sH_PGA_max', bbox: true },
+						{ min: 1, max: 5, agg: '5km', prop: 'sH_PGA_max', bbox: false }
+					],
+					'default': [
+						{ min: 11, max: 15, agg: 's', prop: 'Sauid', bbox: true },
+						{ min: 1, max: 10, agg: 'csd', prop: 'csduid', bbox: false }
+					]
+				}
+			},
 			map: {
 				object: null,
 				legend: null,
@@ -596,7 +596,7 @@ var grades, color_ramp
 			indicator: {},
 			legend: {
 				max: 0,
-        grades: [],
+				grades: [],
 				colors: {
 					shake: [
 						'#ffffcc',
@@ -662,31 +662,31 @@ var grades, color_ramp
 			},
 			current_view: 'init',
 			lang_prepend: '',
-      debug: false
-    };
+			debug: false
+		};
 
-    this.options = $.extend(true, defaults, options);
+		this.options = $.extend(true, defaults, options);
 
-    this.item = $(item);
-    this.init();
-  }
+		this.item = $(item);
+		this.init();
+	}
 
-  rp_scenarios.prototype = {
+	rp_scenarios.prototype = {
 
-    // init
+		// init
 
-    init: function () {
+		init: function () {
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
-      //
-      // INITIALIZE
-      //
+			//
+			// INITIALIZE
+			//
 
-      if (plugin_settings.debug == true) {
-        console.log('initializing')
-      }
+			if (plugin_settings.debug == true) {
+				console.log('initializing')
+			}
 
 			if ($('body').hasClass('lang-fr')) {
 				plugin_settings.lang_prepend = '/fr'
@@ -709,7 +709,7 @@ var grades, color_ramp
 
 			// OBJECT
 
-	    plugin_settings.map.object = L.map('map', {
+			plugin_settings.map.object = L.map('map', {
 				zoomControl: false,
 				maxZoom: 15,
 				crs: L.CRS.EPSG900913,
@@ -819,7 +819,7 @@ var grades, color_ramp
 					}
 
 					var row_markup = '<div class="legend-item" data-toggle="tooltip" data-placement="top" style="background-color: '
-            + color_ramp[i - 1] + ';"'
+						+ color_ramp[i - 1] + ';"'
 						+ ' title="'
 						+ prepend
 						+ this_val
@@ -876,14 +876,14 @@ var grades, color_ramp
 
 			L.tileLayer(basemap_URL, {
 				pane: 'basemap',
-		    attribution: basemap_att,
-	      detectRetina: true
+				attribution: basemap_att,
+				detectRetina: true
 			}).addTo(map)
 
 			// L.tileLayer( 'https://osm-{s}.gs.mil/tiles/default_pc/{z}/{x}/{y}.png', {
-	    //   subdomains: '1234',
-	    //   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-	    //   detectRetina: true
+			//   subdomains: '1234',
+			//   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+			//   detectRetina: true
 			// }).addTo(map)
 
 			// CLUSTERS
@@ -930,7 +930,7 @@ var grades, color_ramp
 
 						// reset it
 
-	          plugin_settings.map.layers.tiles.resetFeatureStyle(plugin_settings.map.selected_feature)
+						plugin_settings.map.layers.tiles.resetFeatureStyle(plugin_settings.map.selected_feature)
 
 						plugin_settings.map.selected_feature = null
 
@@ -946,7 +946,7 @@ var grades, color_ramp
 						
 						feature_deselected = true
 
-	        }
+					}
 
 					setTimeout(function() {
 
@@ -1111,10 +1111,45 @@ var grades, color_ramp
 					}
 
 				},
-        complete: function() {
-          $('body').removeClass('spinner-on')
+				complete: function() {
+					$('body').removeClass('spinner-on')
 					$('#spinner-progress').text('')
-        }
+				}
+			})
+			
+			$('body').on('input', '#control-search-input', function() {
+			
+				var search_val = $(this).val().toUpperCase(),
+						results
+			
+				if (search_val != '') {
+			
+					$('.sidebar-item-title').each(function() {
+			
+						// console.log($(this).text().toUpperCase(), search_val, $(this).text().toUpperCase().indexOf(search_val))
+			
+						if ($(this).text().toUpperCase().indexOf(search_val) === -1) {
+			
+							$(this).closest('.sidebar-item').hide()
+			
+						} else {
+			
+							$(this).closest('.sidebar-item').show()
+			
+						}
+			
+					})
+			
+					// results = $('.sidebar-item-header:contains("' + search_val + '")')
+					//
+					// console.log(results)
+			
+				} else {
+			
+					$('body').find('.sidebar-item').show()
+			
+				}
+			
 			})
 
 			//
@@ -1124,13 +1159,13 @@ var grades, color_ramp
 			// set options
 
 			Highcharts.setOptions({
-		    lang: {
-		      thousandsSep: ','
-		    },
+				lang: {
+					thousandsSep: ','
+				},
 				credits: {
 					enabled: false
 				}
-		  })
+			})
 
 			// each chart element
 
@@ -1166,22 +1201,23 @@ var grades, color_ramp
 								series_name = this.series.userOptions.custom.full_name + ' (' + this.series.name + ')'
 							}
 							
-							var tooltip_val
+							var this_val = plugin._format_figure(this.y),
+									tooltip_val
 							
 							// if (plugin._round_scale(this.y) == '<1000') {
-							if (plugin._format_figure(this.y).charAt(0) == '<') {
+							if (this_val.charAt(0) == '<') {
 								
 								tooltip_val = rp.less_than 
 									+ ' ' 
 									+ plugin_settings.indicator.legend.prepend 
-									+ plugin._format_figure(this.y).substring(1)
+									+ this_val.substring(1)
 									+ ' ' 
 									+ plugin_settings.indicator.legend.append
 									
 							} else {
 								
 								tooltip_val = plugin_settings.indicator.legend.prepend
-									+ plugin._format_figure(this.y) 
+									+ this_val
 									+ ' ' 
 									+ plugin_settings.indicator.legend.append
 									
@@ -1198,7 +1234,7 @@ var grades, color_ramp
 					},
 					chart: {
 						type: 'column',
-				    height: 250,
+						height: 250,
 						marginTop: 30,
 						styledMode: true,
 						events: {
@@ -1287,7 +1323,7 @@ var grades, color_ramp
 
 
 
-		    })
+				})
 
 				$.each(request.object.series, function (j, data) {
 
@@ -1354,8 +1390,8 @@ var grades, color_ramp
 			// tabs
 
 			$('.chart-section.has-tabs li').on('click', function (e) {
-			  e.preventDefault()
-			  $(this).tab('show')
+				e.preventDefault()
+				$(this).tab('show')
 			})
 
 			//
@@ -1371,7 +1407,7 @@ var grades, color_ramp
 
 					plugin_settings.map.current_zoom = e.target.getZoom()
 					
-          plugin_settings.aggregation.previous = plugin_settings.aggregation.current.agg
+					plugin_settings.aggregation.previous = plugin_settings.aggregation.current.agg
 
 					plugin.get_layer({
 						event: 'zoomend'
@@ -1455,37 +1491,37 @@ var grades, color_ramp
 
 			$('.app-sidebar').on('click', '.indicator-item', function() {
 
-        var this_indicator = JSON.parse($(this).attr('data-indicator'))
+				var this_indicator = JSON.parse($(this).attr('data-indicator'))
 
-        if (
+				if (
 					this_indicator.key != plugin_settings.indicator.key &&
 					!$(this).hasClass('selected')
 				) {
 
-  				// close popup
+					// close popup
 
-  				map.closePopup()
+					map.closePopup()
 
 					// reset chart data
 					$('.chart-container').attr('data-series', '')
 
-  				// switch retrofit off
+					// switch retrofit off
 
-  				// if ($('#retrofit-toggle .togglebox').attr('data-state') == 'on') {
-  				// 	$('#retrofit-toggle .togglebox').trigger('click')
-  				// }
+					// if ($('#retrofit-toggle .togglebox').attr('data-state') == 'on') {
+					// 	$('#retrofit-toggle .togglebox').trigger('click')
+					// }
 
-  				// set classes
+					// set classes
 
-  				$('.app-sidebar').find('.indicator-item').removeClass('selected')
-  				$(this).addClass('selected')
+					$('.app-sidebar').find('.indicator-item').removeClass('selected')
+					$(this).addClass('selected')
 
-  				// update layer
+					// update layer
 
-  				plugin.set_indicator(this_indicator)
-  				plugin.get_layer()
+					plugin.set_indicator(this_indicator)
+					plugin.get_layer()
 
-  			}
+				}
 			})
 			
 			// click the cancellable 'selected feature' breadcrumb
@@ -1507,8 +1543,8 @@ var grades, color_ramp
 
 						plugin_settings.current_view = 'init'
 
-            plugin_settings.aggregation.current = {}
-            plugin_settings.aggregation.previous = null
+						plugin_settings.aggregation.current = {}
+						plugin_settings.aggregation.previous = null
 
 						plugin_settings.api.bbox = null
 
@@ -1568,10 +1604,10 @@ var grades, color_ramp
 
 
 					},
-          complete: function() {
-	          $('body').removeClass('spinner-on')
+					complete: function() {
+						$('body').removeClass('spinner-on')
 						$('#spinner-progress').text('')
-          }
+					}
 				})
 
 			})
@@ -1645,7 +1681,7 @@ var grades, color_ramp
 			//
 			// }
 
-    },
+		},
 		
 		_get_table_title: function(chart_name) {
 			
@@ -1700,14 +1736,14 @@ var grades, color_ramp
 
 		},
 
-    item_select: function(fn_options) {
+		item_select: function(fn_options) {
 
-      var plugin = this
-      //var plugin_item = this.item
-      var plugin_settings = plugin.options
-      //var plugin_elements = plugin_settings.elements
+			var plugin = this
+			//var plugin_item = this.item
+			var plugin_settings = plugin.options
+			//var plugin_elements = plugin_settings.elements
 
-      // options
+			// options
 
 			var defaults = {
 				scenario: null,
@@ -1721,7 +1757,7 @@ var grades, color_ramp
 				fn_options = {}
 			}
 
-      var settings = $.extend(true, defaults, fn_options)
+			var settings = $.extend(true, defaults, fn_options)
 
 			// console.log('select', settings)
 
@@ -1772,16 +1808,16 @@ var grades, color_ramp
 
 			}
 
-    },
+		},
 
-    item_detail: function(fn_options) {
+		item_detail: function(fn_options) {
 
-      var plugin = this
-      //var plugin_item = this.item
-      var plugin_settings = plugin.options
-      //var plugin_elements = plugin_settings.elements
+			var plugin = this
+			//var plugin_item = this.item
+			var plugin_settings = plugin.options
+			//var plugin_elements = plugin_settings.elements
 
-      // options
+			// options
 
 			var defaults = {
 				item_id: 1,
@@ -1793,7 +1829,7 @@ var grades, color_ramp
 				fn_options = {}
 			}
 
-      var settings = $.extend(true, defaults, fn_options)
+			var settings = $.extend(true, defaults, fn_options)
 
 			// console.log('detail', plugin_settings.scenario.key)
 
@@ -1824,6 +1860,16 @@ var grades, color_ramp
 				},
 				success: function(data) {
 
+					// format figures from template
+					
+					// $('body').find('.format-me').each(function() {
+					// 	var this_val = parseFloat($(this).text())
+					// 	
+					// 	console.log(this_val)
+					// 	
+					// 	$(this).text(plugin._format_figure(this_val))
+					// })
+	
 					// console.log('detail', 'success')
 
 					plugin_settings.current_view = 'detail'
@@ -1877,14 +1923,14 @@ var grades, color_ramp
 			})
 
 
-    },
+		},
 
 		get_bounds: function(fn_options) {
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
-      var settings = $.extend(true, {
+			var settings = $.extend(true, {
 				scenario: null,
 				fit: true
 			}, fn_options)
@@ -1967,7 +2013,7 @@ var grades, color_ramp
 				feature_ID_key = 'gridid_1'
 			
 				if (aggregation.agg == '5km') {
-					tile_url.collection = tile_url.collection.slice(0, -4) + 'bin'
+					
 					feature_ID_key = 'gridid_5'
 				}
 				
@@ -2016,16 +2062,16 @@ var grades, color_ramp
 
 		get_layer: function(fn_options) {
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
-      var settings = $.extend(true, {
+			var settings = $.extend(true, {
 				event: null
 			}, fn_options)
 
 			// console.log('prep', plugin_settings.indicator.key)
 
-      var fetch = false
+			var fetch = false
 
 			if (plugin_settings.scenario == {}) {
 
@@ -2046,18 +2092,18 @@ var grades, color_ramp
 
 				// go through the aggregation settings
 				// to find the right keys
-	      // for the current indicator and zoom level
+				// for the current indicator and zoom level
 
-	      var agg_key = 'default'
+				var agg_key = 'default'
 
-	      if (plugin_settings.indicator.key == 'sH_PGA') {
+				if (plugin_settings.indicator.key == 'sH_PGA') {
 
 					agg_key = 'shake'
 
 					$('.app-main').removeClass('indicator-selected')
 					$('#chart-togglebox').togglebox('disable')
 
-	      } else {
+				} else {
 
 					$('.app-main').addClass('indicator-selected')
 					$('#chart-togglebox').togglebox('enable')
@@ -2073,64 +2119,64 @@ var grades, color_ramp
 
 				}
 
-	      plugin_settings.aggregation.settings[agg_key].forEach(function (i) {
+				plugin_settings.aggregation.settings[agg_key].forEach(function (i) {
 
-	        // console.log('checking ' + plugin_settings.map.current_zoom + ' vs ' + i.min + ', ' + i.max )
+					// console.log('checking ' + plugin_settings.map.current_zoom + ' vs ' + i.min + ', ' + i.max )
 
-	        if (
-	          plugin_settings.map.current_zoom >= i.min &&
-	          plugin_settings.map.current_zoom <= i.max
-	        ) {
+					if (
+						plugin_settings.map.current_zoom >= i.min &&
+						plugin_settings.map.current_zoom <= i.max
+					) {
 
-	          // found the agg settings that match the zoom level
+						// found the agg settings that match the zoom level
 
-	          if (plugin_settings.aggregation.current.agg != i.agg) {
+						if (plugin_settings.aggregation.current.agg != i.agg) {
 
-	            // agg settings doesn't match the plugin's current aggregation
+							// agg settings doesn't match the plugin's current aggregation
 
-	            plugin_settings.aggregation.current = i
+							plugin_settings.aggregation.current = i
 
-	          }
+						}
 
-	        }
+					}
 
-	      })
+				})
 
-	      // conditions for fetching new data
-	      // 1. zoom action changed the aggregation setting
-	      // 2. previous aggregation is empty - initial load of scenario
-	      // 3. current aggregation uses bbox
+				// conditions for fetching new data
+				// 1. zoom action changed the aggregation setting
+				// 2. previous aggregation is empty - initial load of scenario
+				// 3. current aggregation uses bbox
 
 				// if (settings.event == 'zoomend') {
 				// 	console.log('prev agg', plugin_settings.aggregation.previous)
 				// 	console.log('new agg', plugin_settings.aggregation.current.agg)
 				// }
 
-	      if (
+				if (
 					settings.event == null ||
-	        (
-	          plugin_settings.aggregation.previous !== null &&
-	          plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
-	        ) ||
-	        plugin_settings.aggregation.previous == null /*||
-	        plugin_settings.aggregation.current.bbox == true*/
-	      ) {
+					(
+						plugin_settings.aggregation.previous !== null &&
+						plugin_settings.aggregation.current.agg !== plugin_settings.aggregation.previous
+					) ||
+					plugin_settings.aggregation.previous == null /*||
+					plugin_settings.aggregation.current.bbox == true*/
+				) {
 
 					// console.log('fetch')
 
-	        // RESET MAP FEATURES
+					// RESET MAP FEATURES
 
-	        // reset legend max
-	        plugin_settings.legend.max = 0
+					// reset legend max
+					plugin_settings.legend.max = 0
 
-	        // UPDATE PARAMS
+					// UPDATE PARAMS
 
-	        // fetch new data
-	        fetch = true
+					// fetch new data
+					fetch = true
 
-	      }
+				}
 
-	      if (fetch == true) {
+				if (fetch == true) {
 
 					// spinner
 					$('body').addClass('spinner-on')
@@ -2138,7 +2184,7 @@ var grades, color_ramp
 					// console.log('get max vals now')
 					plugin.get_max_vals()
 
-	      }
+				}
 
 			}
 
@@ -2148,8 +2194,8 @@ var grades, color_ramp
 
 		get_max_vals: function() {
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 			var map = plugin_settings.map.object
 
 			$('#spinner-progress').text('Retrieving scenario data')
@@ -2157,7 +2203,7 @@ var grades, color_ramp
 			// console.log('get max vals', plugin_settings.indicator.max)
 
 			// set bounds by the scenario meta
-      var bounds = L.latLngBounds(L.latLng(
+			var bounds = L.latLngBounds(L.latLng(
 				plugin_settings.scenario.bounds.sw_lat,
 				plugin_settings.scenario.bounds.sw_lng
 			), L.latLng(
@@ -2192,14 +2238,14 @@ var grades, color_ramp
 						{
 							rendererFactory: L.canvas.tile,
 							interactive: false,
-				      getFeatureId: function(feature) {
+							getFeatureId: function(feature) {
 
 								if (feature.properties[indicator_key] > plugin_settings.indicator.max.csd) {
 									plugin_settings.indicator.max.csd = feature.properties[indicator_key]
 								}
 
-				        return feature.properties[feature_ID_key]
-				      },
+								return feature.properties[feature_ID_key]
+							},
 							bounds: bounds
 						}
 					).on('load', function() {
@@ -2211,14 +2257,14 @@ var grades, color_ramp
 							{
 								rendererFactory: L.canvas.tile,
 								interactive: false,
-					      getFeatureId: function(feature) {
+								getFeatureId: function(feature) {
 
 									if (feature.properties[indicator_key] > plugin_settings.indicator.max.s) {
 										plugin_settings.indicator.max.s = feature.properties[indicator_key]
 									}
 
-					        return feature.properties[feature_ID_key]
-					      },
+									return feature.properties[feature_ID_key]
+								},
 								bounds: bounds
 							}
 						).on('load', function() {
@@ -2254,11 +2300,11 @@ var grades, color_ramp
 
 			// console.log('get tiles')
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 			var map = plugin_settings.map.object
 
-      var settings = $.extend(true, {
+			var settings = $.extend(true, {
 				fit: false
 			}, fn_options)
 
@@ -2278,7 +2324,7 @@ var grades, color_ramp
 
 			// set bounds by the scenario meta
 
-      var bounds = L.latLngBounds(L.latLng(
+			var bounds = L.latLngBounds(L.latLng(
 				plugin_settings.scenario.bounds.sw_lat,
 				plugin_settings.scenario.bounds.sw_lng
 			), L.latLng(
@@ -2313,7 +2359,7 @@ var grades, color_ramp
 				feature_ID_key = 'gridid_1'
 
 				if (aggregation.agg == '5km') {
-					tile_url.collection = tile_url.collection.slice(0, -4) + 'bin'
+					
 					feature_ID_key = 'gridid_5'
 				}
 
@@ -2394,15 +2440,17 @@ var grades, color_ramp
 				tiles: plugin_settings.map.layers.tiles,
 				options: {
 					pane: 'data',
-		      getFeatureId: function(feature) {
-		        return feature.properties[feature_ID_key]
-		      },
+					getFeatureId: function(feature) {
+						return feature.properties[feature_ID_key]
+					},
 					bounds: bounds,
-		      vectorTileLayerStyles: plugin.choro_style(tile_url.collection + '_' + aggregation.agg, indicator_key)
+					vectorTileLayerStyles: plugin.choro_style(tile_url.collection + '_' + aggregation.agg, indicator_key)
 				},
 				functions: {
 					add: function(e) {
 
+						console.log(e)
+					
 						// set the tile var to the new layer that was created
 						plugin_settings.map.layers.tiles = e.target
 						
@@ -2429,8 +2477,8 @@ var grades, color_ramp
 							// set the popup content
 
 							plugin_settings.map.popup.setContent(plugin.popup_content(e.layer.properties, indicator_key))
-				        .setLatLng(e.latlng)
-				        .openOn(map)
+								.setLatLng(e.latlng)
+								.openOn(map)
 
 						}
 
@@ -2446,29 +2494,29 @@ var grades, color_ramp
 
 						L.DomEvent.stop(e)
 
-		        // if we have a selected feature, reset the style
-		        if (plugin_settings.map.selected_feature != null) {
-		          plugin_settings.map.layers.tiles.resetFeatureStyle(plugin_settings.map.selected_feature)
-		        }
+						// if we have a selected feature, reset the style
+						if (plugin_settings.map.selected_feature != null) {
+							plugin_settings.map.layers.tiles.resetFeatureStyle(plugin_settings.map.selected_feature)
+						}
 
 						$('.app-main').addClass('feature-selected')
 
-		        // set the selected feature id
-		        plugin_settings.map.selected_feature = e.layer.properties[feature_ID_key]
+						// set the selected feature id
+						plugin_settings.map.selected_feature = e.layer.properties[feature_ID_key]
 
-		        // set the selected feature style
-		        plugin_settings.map.layers.tiles.setFeatureStyle(plugin_settings.map.selected_feature, {
-		          fill: true,
+						// set the selected feature style
+						plugin_settings.map.layers.tiles.setFeatureStyle(plugin_settings.map.selected_feature, {
+							fill: true,
 							fillColor: '#9595a0',
 							color: '#2b2c42',
-		          weight: 0.8,
-		          fillOpacity: 0.5
-		        })
+							weight: 0.8,
+							fillOpacity: 0.5
+						})
 
-		        // set the popup content
-		        plugin_settings.map.popup.setContent(plugin.popup_content(e.layer.properties, indicator_key))
-			        .setLatLng(e.latlng)
-			        .openOn(map)
+						// set the popup content
+						plugin_settings.map.popup.setContent(plugin.popup_content(e.layer.properties, indicator_key))
+							.setLatLng(e.latlng)
+							.openOn(map)
 							
 						// update the breadcrumb
 						
@@ -2537,8 +2585,8 @@ var grades, color_ramp
 
 		set_epicenter: function() {
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			var marker_coords = new L.LatLng(plugin_settings.scenario.coords.lat, plugin_settings.scenario.coords.lng)
 
@@ -2550,8 +2598,8 @@ var grades, color_ramp
 
 		_choro_color: function(d) {
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			var rounding = plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding']
 
@@ -2578,8 +2626,8 @@ var grades, color_ramp
 
 		popup_content: function(properties, indicator_key) {
 
-      var plugin = this
-      var plugin_settings = plugin.options
+			var plugin = this
+			var plugin_settings = plugin.options
 
 			var indicator = plugin_settings.indicator,
 					current_agg = plugin_settings.aggregation.current.agg,
@@ -2779,24 +2827,24 @@ var grades, color_ramp
 						match_phrase['properties.' + plugin_settings.aggregation.current.prop + '.keyword'] = plugin_settings.map.selected_feature
 
 						request_data['query'] = {
-					    "bool": {
-					      "must": [],
-					      "filter": [
-					        {
-					          "bool": {
-					            "should": [
-					              {
-					                "match_phrase": match_phrase
-					              }
-					            ],
-					            "minimum_should_match": 1
-					          }
-					        }
-					      ],
-					      "should": [],
-					      "must_not": []
-					    }
-					  }
+							"bool": {
+								"must": [],
+								"filter": [
+									{
+										"bool": {
+											"should": [
+												{
+													"match_phrase": match_phrase
+												}
+											],
+											"minimum_should_match": 1
+										}
+									}
+								],
+								"should": [],
+								"must_not": []
+							}
+						}
 
 					}
 
@@ -2943,15 +2991,27 @@ var grades, color_ramp
 				
 				// injuries/damage
 				
-				if (num < 1) {
+				if (num == 0) {
 					rounded_num = 0
-				} else if (num < 10) {
-					rounded_num = '<10'
+				} else if (num <= 1) {
+					rounded_num = rp.one_or_less
+				} else if ( num <= 10) {
+					rounded_num = '1 – 10'
+				} else if (num <= 100) {
+					
+					// console.log((Math.floor(plugin._round(num, -1)) * 10) + ' – ' + ((Math.floor(plugin._round(num, -1)) + 1) * 10))
+					
+					this_floor = Math.floor(plugin._round(num, -1))
+					
+					rounded_num = this_floor * 10 + ' – ' + ((this_floor + 1) * 10)
+					
+					// rounded_num = plugin._round(num, -1).toFixed(0) * 10
 				} else {
 					rounded_num = plugin._significant_figs(num)
 				}
 				
 			}
+			
 			
 			return rounded_num.toString()
 			
@@ -3031,32 +3091,32 @@ var grades, color_ramp
 			
 		}
 
-  }
+	}
 
-  // jQuery plugin interface
+	// jQuery plugin interface
 
-  $.fn.rp_scenarios = function (opt) {
-    var args = Array.prototype.slice.call(arguments, 1);
+	$.fn.rp_scenarios = function (opt) {
+		var args = Array.prototype.slice.call(arguments, 1);
 
-    return this.each(function () {
+		return this.each(function () {
 
-      var item = $(this);
-      var instance = item.data('rp_scenarios');
+			var item = $(this);
+			var instance = item.data('rp_scenarios');
 
-      if (!instance) {
+			if (!instance) {
 
-        // create plugin instance if not created
-        item.data('rp_scenarios', new rp_scenarios(this, opt));
+				// create plugin instance if not created
+				item.data('rp_scenarios', new rp_scenarios(this, opt));
 
-      } else {
+			} else {
 
-        // otherwise check arguments for method call
-        if (typeof opt === 'string') {
-          instance[opt].apply(instance, args);
-        }
+				// otherwise check arguments for method call
+				if (typeof opt === 'string') {
+					instance[opt].apply(instance, args);
+				}
 
-      }
-    });
-  }
+			}
+		});
+	}
 
 }(jQuery));
