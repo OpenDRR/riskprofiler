@@ -14,5 +14,5 @@ jobs:
       - name: Check links
         uses: ruzickap/action-my-broken-link-checker@v2
         with:
-          url: https://beta.riskprofiler.ca
+          url: https://www.riskprofiler.ca
           cmd_params: --header="User-Agent:curl/7.54.0"
