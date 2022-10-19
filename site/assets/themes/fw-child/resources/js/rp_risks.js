@@ -1223,15 +1223,6 @@ var color_ramp = [
 				}
 	
 				fillColor = plugin._choro_color(rounded_color)
-					
-				if (properties.csdname == 'Calgary') {
-					console.log('hey i found calgary')
-				}
-				if (properties.csduid == 4806016) {
-					
-					console.log(indicator_key, properties[indicator_key], rounded_color, fillColor)
-					
-				}
 				
 				return {
 					fillColor: fillColor,
@@ -1267,10 +1258,10 @@ var color_ramp = [
 			})
 			
 			// if (plugin_settings.community.csduid == 4806016) {
-			if (z < 100 && d == 0) {
-				console.log(d, return_i, color_ramp[return_i])
-				z += 1
-			}
+			// if (z < 100 && d == 0) {
+			// 	console.log(d, return_i, color_ramp[return_i])
+			// 	z += 1
+			// }
 			
 			return color_ramp[return_i]
 
@@ -1419,9 +1410,11 @@ var color_ramp = [
 
 					// populate indicator values
 					
-					detail_content.find('[data-indicator').each(function() {
+					detail_content.find('[data-indicator]').each(function() {
 
-						var this_key = $(this).attr('data-indicator')
+						var temp_key = $(this).attr('data-indicator'),
+								this_key = $(this).attr('data-indicator'),
+								this_val
 
 						if (plugin_settings.aggregation.current.agg == 's') {
 
@@ -1429,8 +1422,6 @@ var color_ramp = [
 							this_key = this_key.replace('eCr_', 'eCtr_')
 
 						}
-
-						var this_val
 						
 						if (typeof plugin_settings.community[this_key + '_' + plugin_settings.api.retrofit] != 'undefined') {
 							
@@ -1461,27 +1452,23 @@ var color_ramp = [
 								
 								this_val = this_val.toFixed(1)
 								
-							} else if (
-								this_key == 'eAALt_Asset'
-							) {
-								
-								this_val = plugin._format_figure(this_val)
-								
-								// replace < with 'less than'
-								
-								if (this_val.charAt(0) == '<') {
-									this_val = rp.less_than + ' ' + this_val.substring(1)
-								}
-								
 							} else {
 								
-								rounding = parseInt(plugin_settings.indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
+								// get indicator data from the list
 								
-								this_val = plugin._format_figure(this_val, rounding)
+								console.log(temp_key, $('body').find('#risk-var-' + temp_key))
 								
-								// if (this_key == 'eAALm_Bldg') {
-								// 	this_val = (this_val * 100) + '%'
-								// }
+								if ($('body').find('#risk-var-' + temp_key).length) {
+									
+									this_indicator = JSON.parse($('#risk-var-' + temp_key).attr('data-indicator'))
+									
+									rounding = parseInt(this_indicator.aggregation[plugin_settings.aggregation.current.agg]['rounding'])
+									
+									console.log(temp_key, this_val, plugin._format_figure(this_val, rounding, this_indicator))
+									
+									this_val = plugin._format_figure(this_val, rounding, this_indicator)
+									
+								}
 															
 							}
 							
@@ -1928,12 +1915,16 @@ var color_ramp = [
 
 		},
 		
-		_format_figure: function(num, rounding = 0) {
+		_format_figure: function(num, rounding = 0, indicator = null) {
 			
 			var plugin = this
 			var plugin_settings = plugin.options
 			
 			var rounded_num = num
+			
+			if (indicator == null) {
+				indicator = plugin_settings.indicator
+			}
 			
 			if (typeof num == 'undefined') {
 				num = 0
@@ -1943,7 +1934,7 @@ var color_ramp = [
 				num = num * Math.pow(10, rounding)
 			}
 			
-			if (plugin_settings.indicator.key.includes('_Fatality')) {
+			if (indicator.key.includes('_Fatality')) {
 				
 				if (num == 0) {
 					rounded_num = 0
@@ -1951,11 +1942,9 @@ var color_ramp = [
 					rounded_num = plugin._significant_figs(num)
 				}
 				
-				console.log('fatality', num, rounded_num)
-				
 			} else if (
-				plugin_settings.indicator.key.includes('eDtr') ||
-				plugin_settings.indicator.key.includes('eAALm')
+				indicator.key.includes('eDtr') ||
+				indicator.key.includes('eAALm')
 			) {
 				
 				// ratios
@@ -1966,7 +1955,7 @@ var color_ramp = [
 					rounded_num = plugin._significant_figs(num)
 				}
 					
-			} else if (plugin_settings.indicator.type == 'dollars') {
+			} else if (indicator.type == 'dollars') {
 				
 				// dollars
 				
@@ -2006,13 +1995,36 @@ var color_ramp = [
 			
 			var rounded_num = num
 			
-			if (num > 0 && num <= 0.01) {
+			if (num.toString().includes('e-')) {
 				
-				// 0.0X
+				var exponent = num.toString().split('e-'),
+						zeros = parseInt(exponent[1]) - 1,
+						digit = exponent[0].split('.')[0]
 				
-				rounded_num = num.toPrecision(1)
+				rounded_num = '0.' + '0'.repeat(zeros) + digit
 				
-			} else if (num > 0.01 && num < 1) {
+			} else if (num < 0.01) {
+				
+				// 0.0[...]X
+				
+				rounded_num = ''
+				
+				var num = num.toString().split(''),
+						loop_continue = true
+				
+				num.forEach(function(digit) {
+					
+					if (loop_continue == true) {
+						rounded_num += digit
+						
+						if (digit != '0' && digit != '.') {
+							loop_continue = false
+						}
+					}
+					
+				})
+				
+			} else if (num < 1) {
 				
 				// 0.XX
 				
