@@ -71,19 +71,19 @@ configure_simply_static() {
 
 	# Add additional URLs
 	additional_urls=(
-		http://riskprofiler2.demo/community/
-		http://riskprofiler2.demo/favicon.ico
-		http://riskprofiler2.demo/fr/community/
-		http://riskprofiler2.demo/fr/scenario/
-		http://riskprofiler2.demo/scenario/
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/risks/control-bar.php
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/risks/detail.php
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/risks/filter.php
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/risks/items.php
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/scenarios/control-bar.php
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/scenarios/control-filter.php
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/scenarios/control-sort.php
-		http://riskprofiler2.demo/site/assets/themes/fw-child/template/scenarios/items.php
+		http://riskprofiler.local/community/
+		http://riskprofiler.local/favicon.ico
+		http://riskprofiler.local/fr/community/
+		http://riskprofiler.local/fr/scenario/
+		http://riskprofiler.local/scenario/
+		http://riskprofiler.local/site/assets/themes/fw-child/template/risks/control-bar.php
+		http://riskprofiler.local/site/assets/themes/fw-child/template/risks/detail.php
+		http://riskprofiler.local/site/assets/themes/fw-child/template/risks/filter.php
+		http://riskprofiler.local/site/assets/themes/fw-child/template/risks/items.php
+		http://riskprofiler.local/site/assets/themes/fw-child/template/scenarios/control-bar.php
+		http://riskprofiler.local/site/assets/themes/fw-child/template/scenarios/control-filter.php
+		http://riskprofiler.local/site/assets/themes/fw-child/template/scenarios/control-sort.php
+		http://riskprofiler.local/site/assets/themes/fw-child/template/scenarios/items.php
 	)
 
 
@@ -95,19 +95,19 @@ configure_simply_static() {
 	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
 	declare -p scenarios
 	for i in "${scenarios[@]}"; do
-		additional_urls+=( "http://riskprofiler2.demo/fr/scenario/${i}/" )
-		additional_urls+=( "http://riskprofiler2.demo/scenario/${i}/" )
+		additional_urls+=( "http://riskprofiler.local/fr/scenario/${i}/" )
+		additional_urls+=( "http://riskprofiler.local/scenario/${i}/" )
 	done
 	IFS=$'\n' eval 'echo "${additional_urls[*]}"' | wp option patch update simply-static 'additional_urls'
 
-	# This one is apparently not needed?  http://riskprofiler2.demo/community/ and http://riskprofiler2.demo/fr/community/ alone suffice?
+	# This one is apparently not needed?  http://riskprofiler.local/community/ and http://riskprofiler.local/fr/community/ alone suffice?
 	# # Read and display names of communities from WordPress posts
 	# # Example: communities=([0]="halifax" [1]="montreal" [2]="ottawa" [3]="winnipeg" [4]="calgary" [5]="vancouver")
 	# mapfile -t communities < <(wp post list --post_type=community --field=post_name)
 	# declare -p communities
 	# for i in "${communities[@]}"; do
-	# 	additional_urls+=( "http://riskprofiler2.demo/fr/community/${i}/" )
-	# 	additional_urls+=( "http://riskprofiler2.demo/community/${i}/" )
+	# 	additional_urls+=( "http://riskprofiler.local/fr/community/${i}/" )
+	# 	additional_urls+=( "http://riskprofiler.local/community/${i}/" )
 	# done
 	# IFS=$'\n' eval 'echo "${additional_urls[*]}"' | wp option patch update simply-static 'additional_urls'
 	# ################################################################################################################
