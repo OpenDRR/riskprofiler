@@ -241,6 +241,10 @@ fixup_static_site() {
 	sed -i "s#\(plugin_settings\.lang_prepend + '/community\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
 		site/assets/themes/fw-child/resources/js/rp_risks.js
 
+	# Fix relative link directory level in the "Learn More — Callouts" template for the Learn More page
+	sed -i 's#"\./\.\./earthquake-scenario-information/index\.html"#"./earthquake-scenario-information/index.html"#' \
+		learn-more/index.html
+
 	popd
 	set +x
 }
