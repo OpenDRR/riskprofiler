@@ -143,6 +143,7 @@ configure_simply_static() {
 }
 
 get_git_describe() {
+	wp option delete options_git_describe
 	wp option add options_git_describe "$OPTIONS_GIT_DESCRIBE"
 }
 
