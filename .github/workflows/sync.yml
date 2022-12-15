@@ -3,7 +3,7 @@ name: Sync with H7
 on:
   # "Scheduled workflows run on the latest commit on the default or base branch."
   schedule:
-    - cron: '38 */6 * * *'
+    - cron: '38 0 * * *'
 
   # "To trigger the workflow_dispatch event, your workflow must be in the default branch."
   # To run this manually from the command-line:
