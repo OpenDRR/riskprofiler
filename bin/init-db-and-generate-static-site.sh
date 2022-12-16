@@ -8,6 +8,9 @@
 
 set -eo pipefail
 
+# Note: Please increment the RiskProfiler version number before each release.
+RISKPROFILER_VERSION=1.0.1
+
 import_db() {
 	echo "Waiting for the db container to be ready..."
 	bash /usr/local/bin/wait-for-it db:3306 -t 60
@@ -147,7 +150,12 @@ get_git_describe() {
 	wp option add options_git_describe "$OPTIONS_GIT_DESCRIBE"
 }
 
-get_api_version() {
+set_riskprofiler_version() {
+	wp option update options_version "$RISKPROFILER_VERSION"
+	wp option update options_fr_version "$RISKPROFILER_VERSION"
+}
+
+set_api_version() {
 	# profile.js, rp_scenarios.js and rp_risks.js all have the API version defined
 	API_VERSION=$(grep -r version: site/assets/themes/fw-child/resources/js/ | sed -E 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/' | sort -u)
 	wp option update options_api_version "$API_VERSION"
@@ -295,7 +303,8 @@ main() {
 
 	configure_simply_static
 	get_git_describe
-	get_api_version
+	set_riskprofiler_version
+	set_api_version
 	patch_version_php
 	simply_static_site_export
 	fixup_static_site
