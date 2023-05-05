@@ -2,13 +2,13 @@
 <html>
 	<head>
 		<title>Redirecting...</title>
-		<meta http-equiv="refresh" content="0;url=./site/wp-includes/images/w-logo-blue-white-bg.png">
+		<meta http-equiv="refresh" content="0;url=.//site/wp-includes/images/w-logo-blue-white-bg.png">
 	</head>
 	<body>
 		<script type="text/javascript">
-			window.location = "./site/wp-includes/images/w-logo-blue-white-bg.png";
+			window.location = ".//site/wp-includes/images/w-logo-blue-white-bg.png";
 		</script>
 
-		<p>You are being redirected to <a href="./site/wp-includes/images/w-logo-blue-white-bg.png">./site/wp-includes/images/w-logo-blue-white-bg.png</a></p>
+		<p>You are being redirected to <a href=".//site/wp-includes/images/w-logo-blue-white-bg.png">.//site/wp-includes/images/w-logo-blue-white-bg.png</a></p>
 	</body>
 </html>

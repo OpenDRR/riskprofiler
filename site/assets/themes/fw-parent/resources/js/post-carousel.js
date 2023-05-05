@@ -48,10 +48,8 @@
 
       // item ID
 
-      // plugin_settings.item_id = plugin_item.attr('id')
-      // plugin_settings.item_id = plugin_item.closest('.block-type-query').attr('id')
-			plugin_settings.item_id = plugin_item.closest('.block-type-query_new').attr('id')
-
+			plugin_settings.item_id = plugin_item.closest('.block-type-query').attr('id')
+      
 			// max pages
 
 			plugin_settings.max_pages = plugin_item.attr('data-max-pages')
@@ -67,9 +65,9 @@
       // find & destroy
 
       swipers.forEach(function(i) {
-
+        
         if (i.id == this_swiper_id) {
-
+          
           // plugin_settings.slider_settings = i.settings
 
           plugin_elements.carousel = i.instance
@@ -108,11 +106,14 @@
       // INIT
       //
 
-			console.log(plugin_item.attr('per-page'))
-			console.log(plugin_elements.carousel)
-			console.log(plugin_elements.carousel.params)
+      if (plugin_settings.debug == true) {
+        console.log('post carousel', plugin_elements.carousel.params)
+      }
 
-			if (parseInt(plugin_item.attr('per-page')) <= plugin_elements.carousel.params.slidesPerView) {
+			if (
+        parseInt(plugin_item.attr('data-per-page')) != -1 &&
+        parseInt(plugin_item.attr('data-per-page')) <= plugin_elements.carousel.params.slidesPerView
+      ) {
 				console.log('init, get next')
 	      plugin_instance._get_next()
 			}

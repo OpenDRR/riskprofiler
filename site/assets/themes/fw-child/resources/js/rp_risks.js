@@ -315,7 +315,7 @@ var color_ramp = [
 			L.Control.Search = L.Control.extend({
 				onAdd: function(map) {
 
-					plugin_settings.search.element.innerHTML = '<input name="map-search-input" id="map-search-input" class="form-control" placeholder="Search communities">'
+					plugin_settings.search.element.innerHTML = '<input name="map-search-input" id="map-search-input" class="form-control" placeholder="' + rp.search_communities + '">'
 
 					return plugin_settings.search.element
 				}
@@ -479,6 +479,14 @@ var color_ramp = [
 					enabled: false
 				}
 			})
+			
+			if (plugin_settings.lang == 'fr') {
+				Highcharts.setOptions({
+					lang: {
+						numericSymbols: [" k", " M", " G", " T", " P", " E"]
+					}
+				})
+			}
 
 			//
 			// EVENTS
@@ -586,7 +594,7 @@ var color_ramp = [
 				complete: function() {
 
 					plugin_settings.sidebar.list = $('body').find('.sidebar-items')
-
+					
 					plugin.sort_sidebar()
 
 					plugin.prep_for_api()
@@ -829,6 +837,8 @@ var color_ramp = [
 			var plugin_settings = plugin.options
 
 			// console.log('sort', plugin_settings.indicator.ranking)
+			
+			console.log(plugin_settings.indicator)
 
 			$('.app-sidebar-content').html(plugin_settings.sidebar.list)
 
@@ -1289,11 +1299,11 @@ var color_ramp = [
 			// console.log(properties)
 
 			var popup_name = properties.csdname,
-					popup_name_label = 'Census Subdivision'
+					popup_name_label = rp.census_subdivision
 
 			if (current_agg == 's') {
 				popup_name += ' (' + properties.fsauid + ')'
-				popup_name_label = 'Forward Sortation Area'
+				popup_name_label = rp.forward_sortation_area
 			}
 
 			var popup_markup = '<div class="popup-detail p-2">'
@@ -1323,7 +1333,7 @@ var color_ramp = [
 
 				// popup_markup += '<p>real: ' + properties[plugin_settings.indicator.key + '_' + plugin_settings.api.retrofit] + '</p>'
 
-				popup_markup += '<span class="risk-detail-link btn btn-outline-primary" data-id="' + plugin_settings.aggregation.current.prop + '">View Details</span>'
+				popup_markup += '<span class="risk-detail-link btn btn-outline-primary" data-id="' + plugin_settings.aggregation.current.prop + '">' + rp.view_details + '</span>'
 
 			popup_markup += '</div>'
 
@@ -1535,12 +1545,19 @@ var color_ramp = [
 										
 								}
 								
+								let val_string = this_val.toLowerCase().replaceAll(' ', '_')
+								
+								if (rp[val_string] != '') {
+									$(this).html(rp[val_string])
+								} else {
+									$(this).html(this_val)
+								}
+								
 								// set this label
-								$(this).html(this_val)
 								
 								// find the well
 								
-								console.log(this_key, this_val, well)
+								console.log(this_key, this_val, val_string, well)
 								
 								var this_range = $('body').find('.range[data-indicator="' + this_key.replace('rank', 'score') + '"]')
 								
@@ -1665,9 +1682,9 @@ var color_ramp = [
 						}
 
 						var this_series = [
-							{ name: '5%', data: [] },
-							{ name: 'Mean', data: [] },
-							{ name: '95%', data: [] }
+							{ name: rp.five_percent, data: [] },
+							{ name: rp.mean, data: [] },
+							{ name: rp.ninety_five_percent, data: [] }
 						]
 
 						$.ajax({
@@ -1700,9 +1717,17 @@ var color_ramp = [
 										useHTML: true,
 										headerFormat: '',
 										formatter: function() {
+											
+											let output = '<strong>' + this.x + 'y RP:</strong> '
 
-											return '<strong>' + this.x + 'y RP:</strong> $' + plugin._format_figure(this.y)
-
+											if (plugin_settings.lang == 'fr') {
+												output += plugin._format_figure(this.y) + ' $'
+											} else {
+												output += '$' + plugin._format_figure(this.y)
+											}
+												
+											return output
+											
 										}
 									},
 									chart: {
@@ -1716,13 +1741,13 @@ var color_ramp = [
 									xAxis: {
 										reversed: false,
 										title: {
-											text: 'Return period (years)'
+											text: rp.return_period_years
 										},
 										tickInterval: 250
 									},
 									yAxis: {
 										title: {
-											text: 'Loss (CAD)'
+											text: rp.loss_cad
 										},
 									},
 									plotOptions: {
@@ -1902,9 +1927,9 @@ var color_ramp = [
 					rounded_num
 
 			if (num > 1000000000) {
-				rounded_num = plugin._round(num, -9).toFixed(2) + ' billion'
+				rounded_num = plugin._round(num, -9).toFixed(2) + ' ' + rp.billion
 			} else if (num > 100000) {
-				rounded_num = plugin._round(num, -6).toFixed(2) + ' million'
+				rounded_num = plugin._round(num, -6).toFixed(2) + ' ' + rp.million
 			} else {
 				rounded_num = num.toLocaleString('en-CA', {
 					maximumFractionDigits: 0
@@ -2044,55 +2069,55 @@ var color_ramp = [
 				
 				// X.X thousand
 				
-				rounded_num = plugin._round(num, -3).toFixed(1).replace(/[.,]0$/, '') + ' thousand'
+				rounded_num = plugin._round(num, -3).toFixed(1).replace(/[.,]0$/, '') + ' ' + rp.thousand
 				
 			} else if (num < 100000) {
 				
 				// XX thousand
 				
-				rounded_num = plugin._round(num, -3).toFixed(0) + ' thousand'
+				rounded_num = plugin._round(num, -3).toFixed(0) + ' ' + rp.thousand
 				
 			} else if (num < 1000000) {
 				
 				// XX0 thousand
 				
-				rounded_num = (plugin._round(num, -4).toFixed(0) * 10) + ' thousand'
+				rounded_num = (plugin._round(num, -4).toFixed(0) * 10) + ' ' + rp.thousand
 				
 			} else if (num < 10000000) {
 				
 				// X.X million
 				
-				rounded_num = plugin._round(num, -6).toFixed(1).replace(/[.,]0$/, '') + ' million'
+				rounded_num = plugin._round(num, -6).toFixed(1).replace(/[.,]0$/, '') + ' ' + rp.million
 				
 			} else if (num < 100000000) {
 				
 				// XX million
 				
-				rounded_num = plugin._round(num, -6).toFixed(0) + ' million'
+				rounded_num = plugin._round(num, -6).toFixed(0) + ' ' + rp.million
 				
 			} else if (num < 1000000000) {
 				
 				// XX0 million
 				
-				rounded_num = (plugin._round(num, -7).toFixed(0) * 10) + ' million'
+				rounded_num = (plugin._round(num, -7).toFixed(0) * 10) + ' ' + rp.million
 				
 			} else if (num < 10000000000) {
 				
 				// X.X billion
 				
-				rounded_num = plugin._round(num, -9).toFixed(1).replace(/[.,]0$/, '') + ' billion'
+				rounded_num = plugin._round(num, -9).toFixed(1).replace(/[.,]0$/, '') + ' ' + rp.million
 				
 			} else if (num < 100000000000) {
 				
 				// XX billion
 				
-				rounded_num = plugin._round(num, -9).toFixed(0) + ' billion'
+				rounded_num = plugin._round(num, -9).toFixed(0) + ' ' + rp.million
 				
 			} else if (num < 1000000000000) {
 				
 				// XX0 billion
 				
-				rounded_num = (plugin._round(num, -10).toFixed(0) * 10) + ' billion'
+				rounded_num = (plugin._round(num, -10).toFixed(0) * 10) + ' ' + rp.million
 				
 			}
 			

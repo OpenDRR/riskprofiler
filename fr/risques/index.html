@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html class="no-js" lang="fr-CA">
+  <head>
+		<meta charset="UTF-8">
+
+		
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Les Risques Sismiques Probabilistes &#8211; RiskProfiler</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="alternate" hreflang="en" href="./../../risks/index.html">
+<link rel="alternate" hreflang="fr" href="./index.html">
+<link rel="alternate" hreflang="x-default" href="./../../risks/index.html">
+<link rel="dns-prefetch" href="//unpkg.com">
+<link rel="dns-prefetch" href="//s.w.org">
+<link rel="stylesheet" id="wpml-menu-item-0-css" href="./../../site/assets/plugins/sitepress-multilingual-cms/templates/language-switchers/menu-item/style.min.css?ver=1" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="./../../site/assets/themes/fw-parent/resources/vendor/font-awesome-pro/css/all.css" type="text/css" media="all">
+<link rel="stylesheet" id="page-tour-css" href="./../../site/assets/plugins/pe-page-tour/page-tour.css?ver=1.0" type="text/css" media="all">
+<link rel="stylesheet" id="leaflet-css" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css?ver=1.7.1" type="text/css" media="all">
+<link rel="stylesheet" id="leaflet-cluster-css" href="./../../site/assets/themes/fw-child/resources/vendor/Leaflet.markercluster-1.4.1/dist/MarkerCluster.css" type="text/css" media="all">
+<link rel="stylesheet" id="leaflet-cluster-default-css" href="./../../site/assets/themes/fw-child/resources/vendor/Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css" type="text/css" media="all">
+<link rel="stylesheet" id="leaflet-pulse-css" href="./../../site/assets/themes/fw-child/resources/vendor/leaflet-icon-pulse/dist/L.Icon.Pulse.css" type="text/css" media="all">
+<link rel="stylesheet" id="highcharts-css" href="./../../site/assets/themes/fw-child/resources/css/highcharts.css" type="text/css" media="all">
+<link rel="stylesheet" id="child-style-css" href="./../../site/assets/themes/fw-child/style.css" type="text/css" media="all">
+<script type="text/javascript" src="./../../site/wp-includes/js/jquery/jquery.min.js?ver=3.6.0" id="jquery-core-js"></script>
+<script type="text/javascript" src="./../../site/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2" id="jquery-migrate-js"></script>
+<script type="text/javascript" id="wpml-cookie-js-extra">
+/* <![CDATA[ */
+var wpml_cookies = {"wp-wpml_current_language":{"value":"fr","expires":1,"path":"\/"}};
+var wpml_cookies = {"wp-wpml_current_language":{"value":"fr","expires":1,"path":"\/"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./../../site/assets/plugins/sitepress-multilingual-cms/res/js/cookies/language-cookie.js?ver=4.5.14" id="wpml-cookie-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-child/resources/vendor/pe-togglebox/togglebox.js?ver=1" id="togglebox-js"></script>
+<link rel="https://api.w.org/" href="./../wp-json/index.html">
+<link rel="alternate" type="application/json" href="./../wp-json/wp/v2/pages/1355/index.html">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="./../../site/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="./../../site/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.9.3">
+<link rel="canonical" href="./index.html">
+<link rel="shortlink" href="./../index.html?p=1355">
+<link rel="alternate" type="application/json+oembed" href="./../wp-json/oembed/1.0/embed/index.html?url=http%3A%2F%2F%2Ffr%2Frisques%2F">
+<link rel="alternate" type="text/xml+oembed" href="./../wp-json/oembed/1.0/embed/index.html?url=http%3A%2F%2F%2Ffr%2Frisques%2F#038;format=xml">
+<meta name="generator" content="WPML ver:4.5.14 stt:1,4;">
+
+<link rel="apple-touch-icon" sizes="57x57" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/favicon-16x16.png">
+<link rel="manifest" href="./../../site/assets/themes/fw-child/resources/vendor/favicon/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="./../../site/assets/themes/fw-child/resources/vendor/favicon/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+
+  </head>
+
+  <body id="page-risques" class="page-template-default page page-id-1355 spinner-on app-page lang-fr">
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-dark-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0.49803921568627"></fefuncr><fefuncg type="table" tablevalues="0 0.49803921568627"></fefuncg><fefuncb type="table" tablevalues="0 0.49803921568627"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.54901960784314 0.98823529411765"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.71764705882353 0.25490196078431"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-red"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 0.27843137254902"></fefuncg><fefuncb type="table" tablevalues="0.5921568627451 0.27843137254902"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-midnight"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0"></fefuncr><fefuncg type="table" tablevalues="0 0.64705882352941"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-magenta-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.78039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.94901960784314"></fefuncg><fefuncb type="table" tablevalues="0.35294117647059 0.47058823529412"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-green"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.65098039215686 0.40392156862745"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.44705882352941 0.4"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-orange"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.098039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.66274509803922"></fefuncg><fefuncb type="table" tablevalues="0.84705882352941 0.41960784313725"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg>
+<div id="main-header" class="fw-section fw-page-section first-of-type p-0 template-1325">
+	<div class="section-wrap">
+
+		<div id="main-header-container-1" class="fw-container container-fluid auto-generated first-of-type">
+			<div class="row fw-container-row ">
+
+				<div id="header-logo" class="fw-column align-self-center px-lg-3 first-of-type col-3 col-sm-2 col-md-1">
+
+					<div id="header-logo-block-1" class="block-type-animation fw-block first-of-type">
+						
+<div id="header-logo-block-1-animation" class="animation" data-anim-loop="true" data-anim-in-view="false" data-anim-rewind="false" data-anim-path="http://riskprofiler.demo/site/assets/uploads/2021/10/lf20_mmrbfbcv.json">
+</div>
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="header-wordmark" class="fw-column align-self-center col-7 col-sm-8 col-md-2">
+
+					<div id="header-wordmark-block-1" class="block-type-image fw-block first-of-type">
+						
+<div class="image-wrap d-flex flex-column">
+
+  
+  <div class="image order-1">
+    
+    <a href="./../layout/default/index.html" class="image-link d-block">
+
+    
+    <img src="./../../site/assets/uploads/2021/10/RiskProfiler-Logo-Wordmark.svg" alt="">
+
+    
+    </a>
+
+      </div>
+
+  </div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="main-header-container-1-column-3" class="fw-column d-flex align-items-center justify-content-center col-2 d-md-none">
+
+					<div id="menu-icon" class="block-type-text fw-block first-of-type">
+						
+<div class="block-text">
+	<p><i class="fas fa-bars"></i></p>
+</div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="header-primary" class="fw-column pt-1 col-10 offset-1 col-md-5 offset-md-0 col-lg-6">
+
+					<div id="header-primary-block-1" class="block-type-menu fw-block first-of-type">
+						<ul class="menu-level-1 fw-menu nav align-items-end">
+<li class="fw-menu-item nav-item col-12 col-md-3-of-6 "><a href="./../scenarios/index.html" class="fw-menu-link nav-link py-3 px-lg-4"><span>Explorer les</span> Scénarios de séisme</a></li>
+<li class="fw-menu-item nav-item col-12 col-md-3-of-6 overlay-toggle"><a href="#psra" class="fw-menu-link nav-link py-3 px-lg-4"><span>Évaluer le</span> Risque sismique probabiliste</a></li>
+</ul>
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="header-secondary" class="fw-column pr-md-1 pr-lg-3 d-flex flex-column col-10 offset-1 col-md-4 offset-md-0 col-lg-3">
+
+					<div id="header-menu-secondary" class="block-type-menu fw-block flex-grow-1 d-flex flex-column flex-md-row align-items-center order-1 order-md-2 first-of-type">
+						<ul class="menu-level-1 fw-menu nav w-100 flex-column flex-md-row align-items-center justify-content-end">
+<li class="fw-menu-item nav-item"><a href="./../en-savoir-plus/index.html" class=" fw-menu-link nav-link">En savoir plus</a></li>
+<li class="fw-menu-item nav-item"><a href="./../telecharger-les-donnees/index.html" class=" fw-menu-link nav-link">Télécharger les données</a></li>
+<li class="fw-menu-item nav-item"><a href="./../contactez-nous/index.html" class=" fw-menu-link nav-link">Contactez-nous</a></li>
+</ul>
+
+					</div>
+<!-- block -->
+					<div id="header-menu-lang" class="block-type-menu fw-block align-self-center align-self-md-end order-2 order-md-1">
+						<ul class="menu-level-1 fw-menu nav">
+<li class="fw-menu-item nav-item"><a href="./index.html" class="menu-item wpml-ls-slot-15 wpml-ls-item wpml-ls-item-fr wpml-ls-current-language wpml-ls-menu-item wpml-ls-last-item fw-menu-link nav-link">
+<span class="wpml-ls-native" lang="fr">Français</span></a></li>
+<li class="fw-menu-item nav-item"><a href="./../../risks/index.html" class="menu-item wpml-ls-slot-15 wpml-ls-item wpml-ls-item-en wpml-ls-menu-item wpml-ls-first-item fw-menu-link nav-link">
+<span class="wpml-ls-native" lang="en">English</span></a></li>
+</ul>
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+
+			</div>
+<!-- row -->
+		</div>
+<!-- container -->
+	</div>
+<!-- .section-wrap -->
+</div>
+<!-- section --><main>
+<div id="risks" class="fw-section fw-page-section app-main py-0 template-1355">
+	<div class="section-wrap">
+<div class="app-head container-fluid bg-white">
+	<div class="app-head-back"><i class="far fa-long-arrow-left"></i></div>
+
+	<div class="app-controls">
+		<div class="app-controls-content">
+			<div class="controls-search flex-grow-1 py-2 mr-2 overflow-hidden">
+	<div class="d-flex align-items-center">
+		<!-- <span class="rp-icon icon-sort px-2"></span> -->
+	</div>
+</div>
+
+<div class="control-toggles d-flex">
+	<div id="control-toggle-sort" class="control-toggle px-3" data-control="sort">
+		<span class="rp-icon icon-sort"></span>
+	</div>
+
+	</div>
+		</div>
+	</div>
+
+	<div class="app-breadcrumb flex-grow-1">
+		<nav aria-label="breadcrumb">
+		  <ol class="breadcrumb border-bottom">
+		    <li class="breadcrumb-item persistent">Probabilistic Risks</li>
+				<li id="breadcrumb-indicator" class="breadcrumb-item cancellable">
+					<a href="#psra" class="overlay-toggle d-flex align-items-center bg-light py-1 px-2">
+						<span class="indicator-title"></span>
+						<i class="fas fa-times ml-2"></i>
+					</a>
+				</li>
+		  </ol>
+		</nav>
+	</div>
+
+	<div id="retrofit-toggle" class="app-retrofit d-flex align-items-center px-2 border-bottom border-left">
+		<div id="retrofit-togglebox"></div>
+		<h6 class="mb-0">Retrofit</h6>
+	</div>
+</div>
+
+<div class="app-container">
+	<div class="app-sidebar" data-width="">
+		<div class="app-sidebar-controls">
+
+			<div id="app-control-sort" class="app-sidebar-control app-sidebar-sort">
+<div class="px-2 pt-2 pb-1 d-flex flex-wrap">
+	<div class="sort-item d-flex mr-1 mb-1 rounded-pill selected" data-sort-key="rank" data-sort-order="asc">
+		<h6 class="mb-0 mr-2">Rank</h6>
+		<span class=""><i class="fas fa-caret-up"></i></span>
+	</div>
+
+	<div class="sort-item d-flex mr-1 mb-1 rounded-pill" data-sort-key="name" data-sort-order="asc">
+		<h6 class="mb-0 mr-2">Nom</h6>
+		<span class=""><i class="fas fa-caret-up"></i></span>
+	</div>
+
+	<div class="sort-item d-flex mr-1 mb-1 rounded-pill" data-sort-key="province" data-sort-order="asc">
+		<h6 class="mb-0 mr-2">Province</h6>
+		<span class=""><i class="fas fa-caret-up"></i></span>
+	</div>
+</div>
+</div>
+
+		</div>
+
+		
+		<div class="app-sidebar-content" data-items='[{"name":"Montréal","pr_val":"qc","pr_name":"Québec","post_id":731,"slug":"montreal","feature":2466023},{"name":"Fredericton","pr_val":"nb","pr_name":"New Brunswick","post_id":1405,"slug":"fredericton","feature":1310032},{"name":"Hamilton","pr_val":"on","pr_name":"Ontario","post_id":1406,"slug":"hamilton","feature":3525005},{"name":"Ottawa","pr_val":"on","pr_name":"Ontario","post_id":732,"slug":"ottawa","feature":3506008},{"name":"Vancouver","pr_val":"bc","pr_name":"Colombie-Britannique","post_id":733,"slug":"vancouver","feature":5915022},{"name":"Winnipeg","pr_val":"mb","pr_name":"Manitoba","post_id":734,"slug":"winnipeg","feature":4611040},{"name":"Toronto","pr_val":"on","pr_name":"Ontario","post_id":1415,"slug":"toronto","feature":3520005},{"name":"St. John&#8217;s","pr_val":"nl","pr_name":"Newfoundland and Labrador","post_id":1413,"slug":"st-johns","feature":1001519},{"name":"Laval","pr_val":"qc","pr_name":"Québec","post_id":1409,"slug":"laval","feature":2465005},{"name":"Mississauga","pr_val":"on","pr_name":"Ontario","post_id":1410,"slug":"mississauga","feature":3521005},{"name":"Calgary","pr_val":"ab","pr_name":"Alberta","post_id":729,"slug":"calgary","feature":4806016},{"name":"Brampton","pr_val":"on","pr_name":"Ontario","post_id":1402,"slug":"brampton","feature":3521010},{"name":"Yellowknife","pr_val":"nt","pr_name":"Northwest Territories","post_id":1417,"slug":"yellowknife","feature":6106023},{"name":"Whitehorse","pr_val":"yk","pr_name":"Yukon","post_id":1418,"slug":"whitehorse","feature":6001009},{"name":"Québec City","pr_val":"qc","pr_name":"Québec","post_id":1411,"slug":"quebec-city","feature":2423027},{"name":"Edmonton","pr_val":"ab","pr_name":"Alberta","post_id":1404,"slug":"edmonton","feature":4811061},{"name":"Kitchener","pr_val":"on","pr_name":"Ontario","post_id":1408,"slug":"kitchener","feature":3530013},{"name":"Surrey","pr_val":"bc","pr_name":"Colombie-Britannique","post_id":1414,"slug":"surrey","feature":5915004},{"name":"Halifax","pr_val":"ns","pr_name":"Nouvelle-Écosse","post_id":730,"slug":"halifax","feature":1209034},{"name":"Charlottetown","pr_val":"pe","pr_name":"Prince Edward Island","post_id":1403,"slug":"charlottetown","feature":1102075},{"name":"Iqaluit","pr_val":"nu","pr_name":"Nunavut","post_id":1407,"slug":"iqaluit","feature":6204003},{"name":"Victoria","pr_val":"bc","pr_name":"Colombie-Britannique","post_id":1416,"slug":"victoria","feature":5917034},{"name":"Regina","pr_val":"sk","pr_name":"Saskatchewan","post_id":1412,"slug":"regina","feature":4706027}]'>
+			<p class="m-2 alert alert-info">Loading regions…</p>
+		</div>
+	</div>
+
+	<div class="app-map">
+		<div id="map"></div>
+	</div>
+</div>
+
+	</div>
+<!-- .section-wrap -->
+</div>
+<!-- section --></main>
+<div id="main-footer" class="fw-section fw-page-section border-top p-0 template-1329">
+	<div class="section-wrap">
+
+		<div id="main-footer-container-1" class="fw-container container-fluid first-of-type">
+			<div class="row fw-container-row align-items-md-center">
+
+				<div id="main-footer-container-1-column-1" class="fw-column pr-4 first-of-type col-3 col-md-2 col-lg-1">
+
+					<div id="footer-logo" class="block-type-image fw-block bg-gray-200 p-3 first-of-type">
+						
+<div class="image-wrap d-flex flex-column">
+
+  
+  <div class="image order-1">
+    
+    <a href="./../layout/default/index.html" class="image-link d-block">
+
+    
+    <img src="./../../site/assets/uploads/2021/10/footer-logo.png" alt="Risk Profiler Logo Mark">
+
+    
+    </a>
+
+      </div>
+
+  </div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="footer-nav" class="fw-column d-flex flex-wrap align-items-center col-9 col-md-6 col-lg-8">
+
+					<div id="footer-nav-block-1" class="block-type-menu fw-block w-100 my-3 my-md-0 first-of-type">
+						<ul class="menu-level-1 fw-menu nav">
+<li class="fw-menu-item nav-item"><a href="./../en-savoir-plus/index.html" class=" fw-menu-link nav-link py-0 pl-0 pr-3 text-uppercase text-body">En savoir plus</a></li>
+<li class="fw-menu-item nav-item"><a href="./../contactez-nous/index.html" class=" fw-menu-link nav-link py-0 pl-0 pr-3 text-uppercase text-body">Contactez-nous</a></li>
+</ul>
+
+					</div>
+<!-- block --><p class="text-gray-400">RiskProfiler v1.0.1<span class="mx-1">•</span>Built with API v1.4.3<span class="mx-1">•</span>(<a href="https://github.com/OpenDRR/riskprofiler/tree/v1.0.1-API_v1.4.3-20221216-8-gb2d29a3" class="text-gray-400">1216-8-gb2d29a3</a>)<span class="mx-1">•</span></p>
+
+					<div id="footer-nav-block-2" class="block-type-text fw-block text-gray-400">
+						
+<div class="block-text">
+	<p>© 2023 RiskProfiler. <span style="font-weight: 400;">Tous droits réservés. <a href="https://www.canada.ca/fr/transparence/avis.html">Conditions</a></span></p>
+</div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="main-footer-container-1-column-3" class="fw-column pr-3 py-3 py-md-0 col-4 offset-3 col-sm-3 col-md-1 offset-md-0">
+
+					<div id="main-footer-container-1-column-3-block-1" class="block-type-image fw-block first-of-type">
+						
+<div class="image-wrap d-flex flex-column has-link">
+
+  
+  <div class="image order-1">
+    
+    <img src="./../../site/assets/uploads/2021/10/gem-logo-1-1024x365.png" alt="Global Earthquake Model — Working together to assess risk">
+
+      </div>
+
+  </div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="main-footer-container-1-column-4" class="fw-column pr-md-3 py-3 py-md-0 col-8 offset-3 col-sm-5 offset-sm-0 col-md-3 col-lg-2">
+
+					<div id="main-footer-container-1-column-4-block-1" class="block-type-image fw-block first-of-type">
+						
+<div class="image-wrap d-flex flex-column has-link">
+
+  
+  <div class="image order-1">
+    
+    <img src="./../../site/assets/uploads/2021/10/NRCan.svg" alt="Natural Resources Canada Logo">
+
+      </div>
+
+  </div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+
+			</div>
+<!-- row -->
+		</div>
+<!-- container -->
+	</div>
+<!-- .section-wrap -->
+</div>
+<!-- section -->
+<div id="psra" class="fw-section fw-page-section p-0 template-1332">
+	<div class="section-wrap">
+
+		<div id="psra-container-1" class="fw-container container-fluid overflow-hidden first-of-type">
+			<div class="row fw-container-row ">
+
+				<div id="psra-container-1-column-1" class="fw-column pt-6 pt-md-10 pb-6 first-of-type col-10 offset-1">
+
+					<div id="psra-container-1-column-1-block-1" class="block-type-heading fw-block first-of-type">
+						<h2 class="heading-text ">Risques sismiques probabilistes</h2>
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="psra-container-1-column-2" class="fw-column row bg-beige-100 col-12 col-md-6">
+
+					<div id="risks-text" class="block-type-text fw-block py-6 bg-beige-200 first-of-type">
+						
+<div class="block-text">
+	<p>Le risque sismique probabiliste <span lang="fr">considère l&#8217;impact de tous les tremblements de terre possibles, sur une période de temps d&#8217;intérêt. </span><span lang="fr">Pour explorer le risque dans votre région, veuillez sélectionner un indicateur ci-dessous.</span></p>
+</div>
+
+
+
+					</div>
+<!-- block -->
+					<div id="psra-items-filter" class="block-type-text fw-block col-10 offset-1 col-md-4-of-6 offset-md-1-of-6 pt-5">
+						
+<div class="block-text">
+	<h6 class="d-flex align-items-center">
+<span class="mr-3">Filtrer par</span><span class="item rounded-pill mr-2 py-1 px-2">Décès</span><br>
+<span class="item rounded-pill mr-2 py-1 px-2">Dommage</span><br>
+<span class="item rounded-pill mr-2 py-1 px-2">Dollars</span>
+</h6>
+</div>
+
+
+
+					</div>
+<!-- block -->
+					<div id="psra-items" class="block-type-query fw-block col-10 offset-1 col-md-4-of-6 offset-md-1-of-6 py-5">
+						
+<div id="psra-items-object" class=" renderable query-type-list" data-renderable-type="query_list" data-filters="" data-page="1" data-post-count="14" data-max-pages="0" data-per-page="-1">
+
+	
+	<div class="query-container ">
+
+		
+<div class="query-element list-group-flush type-query_items list-group">
+
+	
+	<div id="psra-items-item-1375" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eC_Fatality" class="risk-var" data-type="décès" data-indicator='{
+		"key": "eC_Fatality",
+		"title": "Nombre annuel moyen de décès",
+		"type": "death",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"2","max":"0.9026128279","legend":[0,0.10029031421111112,0.20058062842222224,0.30087094263333336,0.4011612568444445,0.5014515710555556,0.6017418852666667,0.7020321994777777,0.8023225136888888]},"s":{"rounding":"0","decimals":"4","max":"0.0276407533","legend":[0,0.0030711948111111116,0.006142389622222223,0.009213584433333335,0.012284779244444445,0.015355974055555556,0.01842716886666667,0.021498363677777778,0.02456955848888889]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"personne(s)"}	}'>
+	<a href="./../risks/index.html#eC_Fatality" class="risk-var-link d-block p-2"><span class="item-title">Nombre annuel moyen de décès</span><span class="item-description">Nombre prévu de décès annuels dans les bâtiments dus à de séismes éventuels.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1376" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eCr_Fatality" class="risk-var" data-type="décès" data-indicator='{
+		"key": "eCr_Fatality",
+		"title": "Probabilité annuelle de décès",
+		"type": "death",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"8","max":"0.0000071514","legend":[0,7.946e-7,1.5892e-6,2.3838e-6,3.1784e-6,3.973e-6,4.7676e-6,5.5622e-6,6.3568e-6]},"s":{"rounding":"0","decimals":"7","max":"0.0000146418","legend":[0,1.6268666666666662e-6,3.2537333333333324e-6,4.880599999999999e-6,6.5074666666666665e-6,8.134333333333333e-6,9.761199999999999e-6,1.1388066666666667e-5,1.3014933333333333e-5]}},
+		"legend": {"prepend":"","label_—_value":null,"append":""}	}'>
+	<a href="./../risks/index.html#eCr_Fatality" class="risk-var-link d-block p-2"><span class="item-title">Probabilité annuelle de décès</span><span class="item-description">Probabilité d’un décès dans un bâtiment à la suite d’un séisme au cours d’une année donnée. </span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1377" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eAALt_Asset" class="risk-var" data-type="dollars" data-indicator='{
+		"key": "eAALt_Asset",
+		"title": "Pertes économiques annuelles liées aux bâtiments et à leur contenu",
+		"type": "dollars",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"0","max":"76500000","legend":[0,8500000,17000000,25500000,34000000,42500000,51000000,59500000,68000000]},"s":{"rounding":"0","decimals":"0","max":"1800000","legend":[0,200000,400000,600000,800000,1000000,1200000,1400000,1600000]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"$ CA"}	}'>
+	<a href="./../risks/index.html#eAALt_Asset" class="risk-var-link d-block p-2"><span class="item-title">Pertes économiques annuelles liées aux bâtiments et à leur contenu</span><span class="item-description">Pertes économiques subies en lien avec les structures et le contenu des bâtiments au cours d’une année donnée.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1378" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eAALm_Asset" class="risk-var" data-type="dollars" data-indicator='{
+		"key": "eAALm_Asset",
+		"title": "Ratio des pertes économiques annuelles liées aux bâtiments et à leur contenu (%)",
+		"type": "dollars",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"2","decimals":"6","max":"0.27","legend":[0,0.03,0.06,0.09,0.12,0.15000000000000002,0.18,0.21000000000000002,0.24000000000000002]},"s":{"rounding":"2","decimals":"6","max":"0.45","legend":[0,0.04999999999999999,0.09999999999999998,0.14999999999999997,0.2,0.25,0.3,0.35,0.4]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"%"}	}'>
+	<a href="./../risks/index.html#eAALm_Asset" class="risk-var-link d-block p-2"><span class="item-title">Ratio des pertes économiques annuelles liées aux bâtiments et à leur contenu (%)</span><span class="item-description">Pertes liées aux bâtiments et à leur contenu, présentées sous forme de ratio par rapport à la valeur totale de ces biens. </span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1379" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDt_Slight" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDt_Slight",
+		"title": "Bâtiments légèrement endommagés sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"0","max":"13500","legend":[0,1500,3000,4500,6000,7500,9000,10500,12000]},"s":{"rounding":"0","decimals":"0","max":"297","legend":[0,33,66,99,132,165,198,231,264]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"bâtiment(s)"}	}'>
+	<a href="./../risks/index.html#eDt_Slight" class="risk-var-link d-block p-2"><span class="item-title">Bâtiments légèrement endommagés sur 50 ans</span><span class="item-description">Nombre total de bâtiments susceptibles de subir des dommages légers pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1380" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDtr_Slight" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDtr_Slight",
+		"title": "Probabilité de dommages légers sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"2","max":"0.72","legend":[0,0.07999999999999996,0.15999999999999992,0.24,0.31999999999999995,0.39999999999999997,0.48,0.5599999999999999,0.64]},"s":{"rounding":"0","decimals":"2","max":"1.71","legend":[0,0.18999999999999995,0.3799999999999999,0.5699999999999998,0.76,0.95,1.14,1.33,1.52]}},
+		"legend": {"prepend":"","label_—_value":null,"append":""}	}'>
+	<a href="./../risks/index.html#eDtr_Slight" class="risk-var-link d-block p-2"><span class="item-title">Probabilité de dommages légers sur 50 ans</span><span class="item-description">Probabilité de dommages légers sur une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1381" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDt_Moderate" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDt_Moderate",
+		"title": "Bâtiments modérément endommagés sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"0","max":"1305","legend":[0,145,290,435,580,725,870,1015,1160]},"s":{"rounding":"0","decimals":"0","max":"63","legend":[0,7,14,21,28,35,42,49,56]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"bâtiment(s)"}	}'>
+	<a href="./../risks/index.html#eDt_Moderate" class="risk-var-link d-block p-2"><span class="item-title">Bâtiments modérément endommagés sur 50 ans</span><span class="item-description">Nombre total de bâtiments susceptibles de subir des dommages modérés pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1382" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDtr_Moderate" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDtr_Moderate",
+		"title": "Probabilité de dommages modérés sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"2","max":"0.18","legend":[0,0.01999999999999999,0.03999999999999998,0.06,0.07999999999999999,0.09999999999999999,0.12,0.13999999999999999,0.16]},"s":{"rounding":"0","decimals":"2","max":"0.315","legend":[-5.551115123125783e-17,0.034999999999999976,0.06999999999999998,0.10499999999999998,0.13999999999999999,0.175,0.21,0.245,0.28]}},
+		"legend": {"prepend":"","label_—_value":null,"append":""}	}'>
+	<a href="./../risks/index.html#eDtr_Moderate" class="risk-var-link d-block p-2"><span class="item-title">Probabilité de dommages modérés sur 50 ans</span><span class="item-description">Probabilité de dommages modérés aux bâtiments pour une période de retour de 50 ans. </span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1383" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDt_Extensive" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDt_Extensive",
+		"title": "Bâtiments avec des dommages importants sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"0","max":"441","legend":[0,49,98,147,196,245,294,343,392]},"s":{"rounding":"0","decimals":"0","max":"36","legend":[0,4,8,12,16,20,24,28,32]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"bâtiment(s)"}	}'>
+	<a href="./../risks/index.html#eDt_Extensive" class="risk-var-link d-block p-2"><span class="item-title">Bâtiments avec des dommages importants sur 50 ans</span><span class="item-description">Nombre total de bâtiments susceptibles de subir des dommages importants pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1384" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDtr_Extensive" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDtr_Extensive",
+		"title": "Probabilité de dommages importants sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"6","max":".09","legend":[0,0.009999999999999995,0.01999999999999999,0.03,0.039999999999999994,0.049999999999999996,0.06,0.06999999999999999,0.08]},"s":{"rounding":"0","decimals":"6","max":"0.18","legend":[0,0.01999999999999999,0.03999999999999998,0.06,0.07999999999999999,0.09999999999999999,0.12,0.13999999999999999,0.16]}},
+		"legend": {"prepend":"","label_—_value":null,"append":""}	}'>
+	<a href="./../risks/index.html#eDtr_Extensive" class="risk-var-link d-block p-2"><span class="item-title">Probabilité de dommages importants sur 50 ans</span><span class="item-description">Probabilité de dommages importants aux bâtiments pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1385" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDt_Complete" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDt_Complete",
+		"title": "Bâtiments complètement détruits sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"0","max":"810","legend":[0,90,180,270,360,450,540,630,720]},"s":{"rounding":"0","decimals":"0","max":"45","legend":[0,5,10,15,20,25,30,35,40]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"bâtiment(s)"}	}'>
+	<a href="./../risks/index.html#eDt_Complete" class="risk-var-link d-block p-2"><span class="item-title">Bâtiments complètement détruits sur 50 ans</span><span class="item-description">Nombre total de bâtiments susceptibles de subir des dommages complets pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1386" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDtr_Complete" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDtr_Complete",
+		"title": "Probabilité de destruction complète sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"2","max":"0.144","legend":[-2.7755575615628914e-17,0.015999999999999986,0.03199999999999999,0.04799999999999999,0.06399999999999999,0.07999999999999999,0.09599999999999999,0.11199999999999999,0.128]},"s":{"rounding":"0","decimals":"2","max":"0.27","legend":[0,0.03,0.06,0.09,0.12,0.15000000000000002,0.18,0.21000000000000002,0.24000000000000002]}},
+		"legend": {"prepend":"","label_—_value":null,"append":""}	}'>
+	<a href="./../risks/index.html#eDtr_Complete" class="risk-var-link d-block p-2"><span class="item-title">Probabilité de destruction complète sur 50 ans</span><span class="item-description">Probabilité de destruction complète pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1387" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDt_Collapse" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDt_Collapse",
+		"title": "Bâtiments effondrés sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"0","max":"63","legend":[0,7,14,21,28,35,42,49,56]},"s":{"rounding":"0","decimals":"0","max":"9","legend":[0,1,2,3,4,5,6,7,8]}},
+		"legend": {"prepend":"","label_—_value":null,"append":"bâtiment(s)"}	}'>
+	<a href="./../risks/index.html#eDt_Collapse" class="risk-var-link d-block p-2"><span class="item-title">Bâtiments effondrés sur 50 ans</span><span class="item-description">Nombre total de bâtiments susceptibles de s’effondrer pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+	<div id="psra-items-item-1388" class="query-item list-group-item-action p-0 list-group-item ">
+
+		<!-- overlay-risks-indicator.php -->
+<div id="risk-var-eDtr_Collapse" class="risk-var" data-type="dommage" data-indicator='{
+		"key": "eDtr_Collapse",
+		"title": "Probabilité d’effondrement de bâtiment sur 50 ans",
+		"type": "damage",
+		"ranking": [],
+		"aggregation": {"csd":{"rounding":"0","decimals":"4","max":"0.0135","legend":[0,0.0014999999999999996,0.002999999999999999,0.004499999999999999,0.006,0.0075,0.009,0.010499999999999999,0.012]},"s":{"rounding":"0","decimals":"4","max":"0.027","legend":[0,0.002999999999999999,0.005999999999999998,0.008999999999999998,0.012,0.015,0.018,0.020999999999999998,0.024]}},
+		"legend": {"prepend":"","label_—_value":null,"append":""}	}'>
+	<a href="./../risks/index.html#eDtr_Collapse" class="risk-var-link d-block p-2"><span class="item-title">Probabilité d’effondrement de bâtiment sur 50 ans</span><span class="item-description">Probabilité d’effondrement des bâtiments pour une période de retour de 50 ans.</span></a>
+</div>
+
+	</div>
+
+	
+</div>
+
+	</div>
+
+	
+</div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+				<div id="psra-container-1-column-3" class="fw-column bg-beige-100 d-none d-md-block col-md-5">
+
+					<div id="psra-container-1-column-3-block-1" class="block-type-image fw-block mt-n4 ml-8 mr-n12 first-of-type">
+						
+<div class="image-wrap d-flex flex-column has-link">
+
+  
+  <div class="image order-1">
+    
+    <img src="./../../site/assets/uploads/2022/04/about-risks-1024x962.png" alt="">
+
+      </div>
+
+  </div>
+
+
+
+					</div>
+<!-- block -->
+				</div>
+<!-- column -->
+
+			</div>
+<!-- row -->
+		</div>
+<!-- container -->
+	</div>
+<!-- .section-wrap -->
+</div>
+<!-- section -->
+    <script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js" id="bootstrap-js-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/vendor/sticky-kit/dist/sticky-kit.js" id="sticky-kit-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/vendor/in-view/dist/in-view.min.js" id="in-view-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/vendor/js.cookie.min.js?ver=3.0.1" id="fw-cookie-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/vendor/pe-overlay/overlay.js" id="overlay-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/js/helper-functions.js" id="helpers-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/vendor/pe-smooth-scroll/smooth-scroll.js" id="smooth-scroll-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/js/global-functions.js" id="global-functions-js"></script>
+<script type="text/javascript" src="./../../site/wp-includes/js/jquery/ui/core.min.js?ver=1.13.1" id="jquery-ui-core-js"></script>
+<script type="text/javascript" src="./../../site/assets/plugins/pe-page-tour/page-tour.js?ver=1.0" id="page-tour-js"></script>
+<script type="text/javascript" id="child-functions-js-extra">
+/* <![CDATA[ */
+var admin_ajax_data = {"url":".\/\/site\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-child/resources/js/child-functions.js" id="child-functions-js"></script>
+<script type="text/javascript" src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js?ver=1.7.1" id="leaflet-js"></script>
+<script type="text/javascript" src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js" id="leaflet-vector-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/highcharts.js" id="highcharts-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/modules/exporting.js" id="highcharts-export-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-child/resources/vendor/Highcharts-9.3.3/code/modules/export-data.js" id="highcharts-export-data-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-child/resources/js/profiler.js" id="profiler-js"></script>
+<script type="text/javascript" id="rp-risks-js-extra">
+/* <![CDATA[ */
+var rp = {"less_than":"Less than","one_or_less":"1 or less","forward_sortation_area":"Forward Sortation Area","census_subdivision":"Census Subdivision","view_details":"View Details","search_communities":"Search Communities","very_low_score":"Very Low Score","low_score":"Low Score","moderate_score":"Moderate Score","high_score":"High Score","very_high_score":"Very High Score","relatively_low_score":"Relatively Low Score","relatively_moderate_score":"Relatively Moderate Score","relatively_high_score":"Relatively High Score","thousand":"thousand","million":"million","billion":"billion","return_period_years":"Return period (years)","loss_cad":"Loss (CAD)","five_percent":"5%","mean":"mean","ninety_five_percent":"95%"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-child/resources/js/rp_risks.js" id="rp-risks-js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.5.9/lottie.min.js" id="lottie-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/js/animation-functions.js" id="animation-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/js/renderer.js" id="renderer-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/js/post-grid.js" id="post-grid-js"></script>
+<script type="text/javascript" src="./../../site/assets/themes/fw-parent/resources/vendor/pe-acf-query/acf-query.js" id="acf-query-js"></script>
+						<style>.otgs-development-site-front-end a { color: white; }
+                            .otgs-development-site-front-end .icon {
+                                background: url(./../../site/assets/plugins/sitepress-multilingual-cms/vendor/otgs/installer//res/img/icon-wpml-info-white.svg) no-repeat;
+                                width: 20px;
+                                height: 20px;
+                                display: inline-block;
+                                position: absolute;
+                                margin-left: -23px;
+                            }
+                            .otgs-development-site-front-end {
+                                background-size: 32px;
+                                padding: 22px 0px;
+                                font-size: 12px;
+                                font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+                                line-height: 18px;
+                                text-align: center;
+                                color: white;
+                                background-color: #33879E;
+                            }</style>
+						<div class="otgs-development-site-front-end">
+<span class="icon"></span>This site is registered on <a href="https://wpml.org/">wpml.org</a> as a development site.</div>
+    <div id="spinner">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    
+    <style type="text/css">#footer-nav-block-2 a { color: var(--body); }</style>
+
+    
+<script>(function ($) {
+		$(function() {
+			$('#page-tour').page_tour({"default_open":true,"cookie":{"name":"rp-page-tour","expires":30},"labels":{"start_over":"Start Over","close":"Close","dont_show":"Don’t show again","next":"Next"},"classes":{"content":"p-1","footer":"p-0 border-top","close":"btn-sm btn-white border-right mr-1","dont_show":"mb-0 p-1","next":"btn-sm btn-primary"}})
+		});
+	}(jQuery));</script>
+
+
+<div id="cookie-modal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header bg-light">
+				<h5 class="modal-title">Disclaimer</h5>
+			</div>
+			
+			<div class="modal-body">
+				<p><b>Tous les produits sont publiés sous la </b><a href="https://ouvert.canada.ca/fr/licence-du-gouvernement-ouvert-canada"><b>licence du gouvernement ouvert – Canada</b></a><b>. Veuillez consulter la licence pour connaître</b><b> ses conditions d’utilisation. </b><span style="font-weight: 400;">Comme l’indique la licence du gouvernement ouvert – Canada, l’information est fournie sans garantie. </span></p>
+<p><span style="font-weight: 400;">L’information sur le risque sismique présentée dans RiskProfiler est fondée sur des modèles à l’échelle nationale des aléas sismiques, de l’exposition des bâtiments et de la vulnérabilité des bâtiments, et représente les conditions types d’une région donnée, mais peut ne pas représenter précisément les conditions locales. Les résultats ne doivent pas être utilisés pour des applications propres à un bâtiment ou à des immobilisations et doivent être interprétés dans le contexte approprié d’une collectivité locale. Tous les renseignements représentent le risque attendu de séismes hypothétiques. L’approche de modélisation est assujettie à d’importantes sources d’incertitude inhérentes à tout modèle de risque sismique. Par conséquent, </span><b>les renseignements devraient être considérés comme des estimations</b><span style="font-weight: 400;"> et interprétés dans le contexte des limites de la modélisation. Des estimations sont fournies pour les effets des dommages causés par les secousses sur les bâtiments et leurs occupants, des dommages causés par les aléas secondaires (répliques sismiques, tsunamis, glissements de terrain, incendies subséquents, etc.) et des dommages aux infrastructures linéaires. Les coûts liés aux perturbations subséquentes ne sont pas inclus. RiskProfiler fournit une représentation visuelle des valeurs, qui sont arrondies au besoin. Voir l’analyse des incertitudes et de l’utilisation prévue </span><span style="font-weight: 400;">ici</span><span style="font-weight: 400;">. </span></p>
+<p><span style="font-weight: 400;">La source de RiskProfiler doit être citée comme suit : Hobbs, T.E., Van Ulden, J., Rotheram, D., Chow, W., LeSueur, P., Journeay, J.M., Ulmi, M., Ulmi, D., Fok, A., Van de Valk, J., Hastings, N., Herring, J., Wong, T., Evans, P., Safaie, S., 2022. RiskProfiler; Commission géologique du Canada, </span><a href="http://www.riskprofiler.ca/"><span style="font-weight: 400;">www.riskprofiler.ca</span></a></p>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Agree and continue</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+  </body>
+</html>

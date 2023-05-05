@@ -95,7 +95,8 @@
 							<div class="row p-3">
 								<div class="col-6 pr-3">
 									<h6>Annual Economic Loss</h6>
-
+									
+									
 									<div data-indicator="eAALt_Asset" data-decimals="2" data-prepend="$" data-append=" CAD">eAALt_Bldg</div>
 								</div>
 

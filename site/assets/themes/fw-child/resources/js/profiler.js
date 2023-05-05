@@ -148,7 +148,9 @@ const api_url = 'https://api.riskprofiler.ca'
 			var defaults = {
 				url: '',
 				method: 'GET',
-				data: null,
+				data: {
+					lang: plugin_settings.lang
+				},
 				before: null,
 				success: null,
 				complete: null
@@ -158,8 +160,10 @@ const api_url = 'https://api.riskprofiler.ca'
 				defaults.url = fn_options
 				fn_options = {}
 			}
-
+			
       var settings = $.extend(true, defaults, fn_options)
+			
+			// console.log(settings)
 
 			$('body').addClass('spinner-on')
 			// $('#spinner-progress').text('Initializing')

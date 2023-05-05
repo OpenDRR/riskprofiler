@@ -15,7 +15,7 @@
       open: false,
       current: null,
       position: 'top',
-      bg: '0,0,0,0.6',
+      bg: null,
       opacity: 0.6,
       debug: false,
       elements: {
@@ -174,8 +174,6 @@
 
           if (typeof $(this).attr('data-overlay-bg') !== 'undefined') {
             plugin_settings.bg = $(this).attr('data-overlay-bg');
-          } else {
-            plugin_settings.bg = '0,0,0,0.6'
           }
 
           if (plugin_settings.debug == true) {
@@ -322,7 +320,9 @@
 
       // plugin_elements.wrap.css('background-color', 'rgba(0,0,0,' + plugin_settings.opacity + ')');
 
-      plugin_elements.wrap.css('background-color', 'rgba(' + plugin_settings.bg + ')');
+			if (plugin_settings.bg != null) {
+				plugin_elements.wrap.css('background-color', 'rgba(' + plugin_settings.bg + ')')
+			}
 
       setTimeout(function() {
 
@@ -392,6 +392,8 @@
 
 	            var inline_html = $(settings.href).clone().appendTo(new_content)
 	            inline_html.show()
+							
+							plugin_elements.wrap.attr('data-content-id', settings.href.substring(1))
 
 	          }
 

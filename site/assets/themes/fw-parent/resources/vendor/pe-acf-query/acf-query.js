@@ -131,7 +131,7 @@
           if (plugin_settings.debug == true) {
             console.log(plugin_item.attr('id') + ' items', $(data).find('#' + plugin_item.attr('id') + ' .query-item'))
 
-						// console.log('args', settings.args)
+						console.log('args', settings.args)
 
 						$(data).find('.ajax-output').each(function() {
 							console.log($(this).html())
@@ -223,8 +223,6 @@
         complete: null
       }, fn_options)
 
-      console.log('eval');
-
       plugin_settings.active_filters = []
 
       plugin_item.find('.query-filter-item').each(function() {
@@ -244,10 +242,10 @@
 	              filter_key = $(this).attr('data-filter-key'),
 	              filter_value = $(this).attr('data-filter-value')
 
-	          var new_arg = filter_type + '_'
+	          var new_arg = filter_type + '|'
 
 	          if (typeof filter_key !== 'undefined') {
-	            new_arg += filter_key + '_'
+	            new_arg += filter_key + '|'
 	          }
 
 	          new_arg += filter_value
@@ -261,7 +259,7 @@
       })
 
       plugin_item.attr('data-filters', plugin_settings.active_filters)
-
+			
       if (typeof settings.complete == 'function') {
         settings.complete(plugin_settings.active_filters)
       }
