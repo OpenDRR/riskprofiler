@@ -229,12 +229,16 @@ fixup_static_site() {
 	cd riskprofiler
 
 	# The relative path to the animated logo is currently wrong in HTML files
-	# in second- and third-level directories
+	# in second- and third-level directories.  Or it could be an absolute URL
+	# that needs to be changed to a relative one.
+	sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="site#' index.html
 	for i in */index.html; do
 		sed -i 's#data-anim-path="\.\/site#data-anim-path="../site#' "${i}"
+		sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="../site#' "${i}"
 	done
 	for i in */*/index.html; do
 		sed -i 's#data-anim-path="\.\/site#data-anim-path="../../site#' "${i}"
+		sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="../../site#' "${i}"
 	done
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
