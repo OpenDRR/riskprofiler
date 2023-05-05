@@ -9,7 +9,7 @@
 set -eo pipefail
 
 # Note: Please increment the RiskProfiler version number before each release.
-RISKPROFILER_VERSION=1.0.1
+RISKPROFILER_VERSION=1.1.0
 
 import_db() {
 	echo "Waiting for the db container to be ready..."
