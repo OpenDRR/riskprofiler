@@ -1,6 +1,6 @@
 #!/bin/bash
 # SPDX-License-Identifier: MIT
-# Copyright © 2022 Government of Canada
+# Copyright © 2022, 2023 Government of Canada
 #
 # This script uses WP-CLI to import WordPress database, create admin user,
 # and generate static HTML files using Simply Static plugin, for the
@@ -27,6 +27,12 @@ update_wp_core_and_simply_static() {
 	# Updating WordPress core and Simply Static adds about 1 minute to the build.
 	echo "Updating WordPress core and Simply Static plugin..."
 	wp core update
+	wp plugin update simply-static
+	wp core update-db
+}
+
+update_simply_static() {
+	echo "Updating Simply Static plugin..."
 	wp plugin update simply-static
 	wp core update-db
 }
@@ -300,6 +306,7 @@ main() {
 	# Updating WordPress core and Simply Static would add about 1 minute to the build,
 	# thus disabled by default.
 	#update_wp_core_and_simply_static
+	#update_simply_static
 
 	configure_simply_static
 	get_git_describe
