@@ -264,6 +264,13 @@ fixup_static_site() {
 	sed -i 's#"\./\.\./earthquake-scenario-information/index\.html"#"./earthquake-scenario-information/index.html"#' \
 		learn-more/index.html
 
+	# Fix links to French home page.  This is already fixed upstream;
+	# check to make sure logo images link to the "Accueil" post
+	# in both Header (FR) and Footer (FR) templates.
+	grep -l -r '/layout/[^/]\+/' . | while IFS= read -r line; do
+		sed -i 's#/layout/[^/]\+/#/#' "${line}"
+	done
+
 	popd
 	set +x
 }
