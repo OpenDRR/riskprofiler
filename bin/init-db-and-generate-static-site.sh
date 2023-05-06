@@ -201,6 +201,11 @@ patch_version_php() {
 EOF
 }
 
+trigger_wpml_st_sync_translation_files() {
+	# The *.mo files are not regenerated before access to a French page
+	curl http://riskprofiler.demo/fr/ -o /dev/null
+}
+
 simply_static_site_export() {
 	set -x
 	wp cron event schedule 'simply_static_site_export_cron'
@@ -333,6 +338,7 @@ main() {
 	set_riskprofiler_version
 	set_api_version
 	patch_version_php
+	trigger_wpml_st_sync_translation_files
 	simply_static_site_export
 	fixup_static_site
 
