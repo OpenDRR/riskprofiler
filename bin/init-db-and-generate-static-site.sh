@@ -123,6 +123,15 @@ configure_simply_static() {
 
 	# Add additional files
 	wp option patch update simply-static 'additional_files' <<-EOF
+		/var/www/html/site/assets/languages/wpml/acf-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/default-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/fw-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/pe-page-tour-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/rp-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/rp-post-types-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/sitepress-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/wpml-media-fr_CA.mo
+		/var/www/html/site/assets/languages/wpml/wpml-translation-management-fr_CA.mo
 		/var/www/html/site/assets/plugins/pe-page-tour/page-tour.css.map
 		/var/www/html/site/assets/themes/fw-child/resources/css/child.css.map
 		/var/www/html/site/assets/themes/fw-child/resources/css/highcharts.css.map
