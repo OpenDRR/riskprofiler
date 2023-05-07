@@ -242,12 +242,13 @@ var color_ramp = [
 
 			// BASEMAP
 
-			var basemap_URL = 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&region=CA',
-					basemap_att = 'Map data © 2022 Google | <a href="https://www.google.com/intl/en_ca/help/terms_maps/" target="_blank">Terms of use</a>'
+			var current_year = new Date().getFullYear()
+			var basemap_URL = 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&region=CA'
+			var basemap_att = 'Map data © ' + current_year + ' Google | <a href="https://www.google.com/intl/en_ca/help/terms_maps/" target="_blank">Terms of use</a>'
 
 			if ($('body').hasClass('lang-fr')) {
 				basemap_URL += '&hl=fr-CA'
-				basemap_att = 'Données cartographiques © 2022 Google | <a href="https://www.google.com/intl/fr_ca/help/terms_maps/" target="_blank">Conditions d’utilisation</a>'
+				basemap_att = 'Données cartographiques © ' + current_year + ' Google | <a href="https://www.google.com/intl/fr_ca/help/terms_maps/" target="_blank">Conditions d’utilisation</a>'
 			} else {
 				basemap_URL += '&hl=en'
 			}
@@ -1393,7 +1394,7 @@ var color_ramp = [
 			plugin.set_selected_style()
 
 			$(document).profiler('get_sidebar', {
-				url: 'risks/detail.php',
+				url: (plugin_settings.lang == 'fr') ? 'risks/detail-fr.php' : 'risks/detail.php',
 				before: function() {
 
 					$('.app-page').attr('data-sidebar-width', 'half')

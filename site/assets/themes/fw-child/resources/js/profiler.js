@@ -176,8 +176,14 @@ const api_url = 'https://api.riskprofiler.ca'
 
 			if (settings.url.charAt(0) == '/' || settings.url.charAt(0) == '.' || settings.url.indexOf('http') !== -1) {
 				ajax_url = settings.url
+				ajax_url = ajax_url.replace('.//scenario/', '../scenario/')
+				ajax_url = ajax_url.replace('.//fr/scenario/', '../../fr/scenario/')
+				ajax_url = ajax_url.replace(/\/$/, '/index.html')
+				if (ajax_url !== settings.url) {
+					console.log('ajax_url corrected from ' + settings.url + ' to ' + ajax_url)
+				}
 			} else {
-				ajax_url = '../site/assets/themes/fw-child/template/' + settings.url
+				ajax_url = ((plugin_settings.lang == 'fr') ? '../..' : '..') + '/site/assets/themes/fw-child/template/' + settings.url
 			}
 
 			// console.log('get ' + ajax_url)
@@ -237,7 +243,7 @@ const api_url = 'https://api.riskprofiler.ca'
 			// bar
 
 			$.ajax({
-				url: '../site/assets/themes/fw-child/template/' + settings.dir + '/control-bar.php',
+				url: '/site/assets/themes/fw-child/template/' + settings.dir + '/control-bar.php',
 				success: function(bar_data) {
 
 					$('.app-controls-content').html(bar_data)
