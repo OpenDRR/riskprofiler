@@ -273,13 +273,23 @@ fixup_static_site() {
 	# Change "./fr/" to "../../fr/"
 	sed -E -i 's#("url":")(\.\\/fr\\/)#\1\..\\/.\2#' fr/scenario/index.html
 
-	# Point to index.html for Amazon S3, an make the links work when site is hosted in a subdirectory
+	# Point to index.html for Amazon S3, and make the links work when site is hosted in a subdirectory
 	sed -E -i 's#"url":".[^"]*#&index.html#' \
 		scenario/index.html site/assets/themes/fw-child/template/scenarios/items.php
 	sed -i "s#\(plugin_settings\.lang_prepend + '/scenario\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
 		site/assets/themes/fw-child/resources/js/rp_scenarios.js
 	sed -i "s#\(plugin_settings\.lang_prepend + '/community\)'#(plugin_settings\.lang_prepend \? '../..' : '..') + \1/index.html'#" \
 		site/assets/themes/fw-child/resources/js/rp_risks.js
+
+	# Fix scenarios not loading due to wrong path (#116)
+	sed -i "/ajax_url = settings\.url/a\\\
+				ajax_url = ajax_url.replace('.//scenario/', '../scenario/')\n\
+				ajax_url = ajax_url.replace('.//fr/scenario/', '../../fr/scenario/')\n\
+				ajax_url = ajax_url.replace(/\\\\/$/, '/index.html')\n\
+				if (ajax_url !== settings.url) {\n\
+					console.log('ajax_url corrected from ' + settings.url + ' to ' + ajax_url)\n\
+				}" \
+		site/assets/themes/fw-child/resources/js/profiler.js
 
 	# Fix relative link directory level in the "Learn More — Callouts" template for the Learn More page
 	sed -i 's#"\./\.\./earthquake-scenario-information/index\.html"#"./earthquake-scenario-information/index.html"#' \
