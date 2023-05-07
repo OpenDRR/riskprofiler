@@ -260,6 +260,10 @@ fixup_static_site() {
 		sed -i 's#data-anim-path="\.\/site#data-anim-path="../../site#' "${i}"
 		sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="../../site#' "${i}"
 	done
+	for i in */*/*/index.html; do
+		sed -i 's#data-anim-path="\.\/site#data-anim-path="../../../site#' "${i}"
+		sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="../../../site#' "${i}"
+	done
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
 	sed -E -i "s#url(:| =) ('/site.*settings\.url)#url\1 ((plugin_settings.lang == 'fr') ? '../..' : '..') + \2#" \
