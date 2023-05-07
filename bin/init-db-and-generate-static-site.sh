@@ -202,8 +202,14 @@ EOF
 }
 
 trigger_wpml_st_sync_translation_files() {
-	# The *.mo files are not regenerated before access to a French page
+	ls -l /var/www/html/site/assets/languages/wpml/*.mo || :
+	# Need to remove existing MO files first as they may have a
+	# newer timestamp which causes WPML not to regenerate them.
+	rm -f /var/www/html/site/assets/languages/wpml/*.mo
+	# Access a French page to trigger synchronization of MO files
+	# with translated strings in the database.
 	curl http://riskprofiler.demo/fr/ -o /dev/null
+	ls -l /var/www/html/site/assets/languages/wpml/*.mo
 }
 
 simply_static_site_export() {
