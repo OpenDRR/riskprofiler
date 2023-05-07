@@ -262,7 +262,8 @@ fixup_static_site() {
 	done
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
-	sed -E -i "s#url(:| =) '/site#url\1 '../site#" site/assets/themes/fw-child/resources/js/profiler.js
+	sed -E -i "s#url(:| =) ('/site.*settings\.url)#url\1 ((plugin_settings.lang == 'fr') ? '../..' : '..') + \2#" \
+		site/assets/themes/fw-child/resources/js/profiler.js
 
 	# Prevent erroneous prepending of "/site/assets/themes/fw-child/template/"
 	sed -i "s#settings.url.charAt(0) == '/'#& || settings.url.charAt(0) == '.'#" site/assets/themes/fw-child/resources/js/profiler.js
@@ -290,6 +291,12 @@ fixup_static_site() {
 	grep -l -r '/layout/[^/]\+/' . | while IFS= read -r line; do
 		sed -i 's#/layout/[^/]\+/#/#' "${line}"
 	done
+
+	# Generate static detail-fr.php from dynamic detail.php?lang=fr (#115)
+	curl http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/detail.php?lang=fr \
+		-o site/assets/themes/fw-child/template/risks/detail-fr.php
+	sed -i "s#url: 'risks/detail\.php',#url: (plugin_settings.lang == 'fr') ? 'risks/detail-fr.php' : 'risks/detail.php',#" \
+		site/assets/themes/fw-child/resources/js/rp_risks.js
 
 	popd
 	set +x
