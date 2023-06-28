@@ -177,30 +177,6 @@ set_api_version() {
 	wp option update options_fr_api_version "$API_VERSION"
 }
 
-patch_version_php() {
-	# Append build number to the site version
-	sed -i -f - site/assets/themes/fw-child/template/version.php <<'EOF'
-/^?>/i\
-	if ($git_describe = get_option ( 'options_git_describe' )) {\
-		list($version, $api_version, $release_date, $commits_since, $commit_hash) = explode("-", $git_describe);\
-\
-		if ($commits_since == 0) {\
-			$git_describe = implode('-', [$version, $api_version, $release_date]);\
-		}\
-\
-		$build_number = sprintf("%04d", $release_date - 20220000);\
-		if ($commits_since > 0) {\
-			$build_number = implode('-', [$build_number, $commits_since, $commit_hash]);\
-		}\
-\
-		echo '(<a href="https://github.com/OpenDRR/riskprofiler/tree/' . $git_describe . '" class="text-gray-400">' . $build_number . '</a>)';\
-\
-		echo '<span class="mx-1">•</span>';\
-	}\
-
-EOF
-}
-
 trigger_wpml_st_sync_translation_files() {
 	ls -l /var/www/html/site/assets/languages/wpml/*.mo || :
 	# Need to remove existing MO files first as they may have a
@@ -364,7 +340,6 @@ main() {
 	get_git_describe
 	set_riskprofiler_version
 	set_api_version
-	patch_version_php
 	trigger_wpml_st_sync_translation_files
 	simply_static_site_export
 	fixup_static_site
