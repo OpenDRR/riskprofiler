@@ -12,7 +12,7 @@ Si vous recherchez notre interface utilisateur final ou toute documentation asso
 
 ### [Un nouvel outil pour évaluer le risque sismique au Canada](https://ressources-naturelles.canada.ca/la-science-simplifiee/articles/un-nouvel-outil-pour-evaluer-le-risque-sismique-au-canada/25203)
 
-Qu’arriverait-il si un tremblement de terre se produisait dans votre région? Une équipe de Ressources naturelles Canada a quelques réponses à ce sujet. Elle a réalisé la mise en forme des données pour un nouvel outil de planification en ligne — le [RiskProfiler](https://www.riskprofiler.ca/fr/index.html) —, qui permet d’effectuer une analyse des dommages, blessures et coûts financiers que risque de générer un séisme donné. Les conséquences d’un tel événement pourraient en effet être colossales. [En savoir plus…](https://ressources-naturelles.canada.ca/la-science-simplifiee/articles/un-nouvel-outil-pour-evaluer-le-risque-sismique-au-canada/25203)<br clear="both">
+Qu’arriverait-il si un tremblement de terre se produisait dans votre région? Une équipe de Ressources naturelles Canada a quelques réponses à ce sujet. Elle a réalisé la mise en forme des données pour un nouvel outil de planification en ligne — le [RiskProfiler](https://www.riskprofiler.ca/fr/index.html) —, qui permet d’effectuer une analyse des dommages, blessures et coûts financiers que risque de générer un séisme donné. Les conséquences d’un tel événement pourraient en effet être colossales. [En savoir plus…](https://ressources-naturelles.canada.ca/la-science-simplifiee/articles/un-nouvel-outil-pour-evaluer-le-risque-sismique-au-canada/25203)<br clear="both">
 
 ---
 
