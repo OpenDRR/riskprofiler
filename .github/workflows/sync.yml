@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Use a personal access token to trigger export-static-site.yml workflow
           # token: ${{ secrets.GH_PAT }}
@@ -52,7 +52,7 @@ jobs:
 
           echo '### `git commit wp-app`:' >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
-          git commit wp-app -m "Update to HabitatSeven’s $NEW_DATE code
+          git commit wp-app -m "Update to OpenDRR/h7-riskprofiler $NEW_DATE code
           
           Changes since $OLD_DATE:
           $(git submodule summary)" |& tee -a "$GITHUB_STEP_SUMMARY"

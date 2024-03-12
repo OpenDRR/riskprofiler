@@ -9,10 +9,26 @@ on:
       - 'v*'
   workflow_dispatch:
 
-concurrency: export-static-site
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
 
 jobs:
-  export-static-site:
+  # Build job
+  build:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     env:
@@ -21,10 +37,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
 
       - name: Run "docker compose up" to export static site for RiskProfiler
         run: |
@@ -33,18 +53,13 @@ jobs:
           export OPTIONS_GIT_DESCRIBE=$(git describe --long --tags)
           docker compose up --abort-on-container-exit --exit-code-from wpcli
 
-      - name: Deploy to gh-pages branch as GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./html_static/riskprofiler
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: riskprofiler-ca-static-site
           path: html_static/riskprofiler
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload debug log artifact
+        uses: actions/upload-artifact@v4
         with:
           name: simply-static-debug-log
           path: wp-app/site/assets/plugins/simply-static/debug.txt
@@ -66,3 +81,25 @@ jobs:
           file: 'html_static/*.tar.gz;html_static/*.zip'
           tags: true
           draft: false
+
+  # Deployment job
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write
+      id-token: write
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
