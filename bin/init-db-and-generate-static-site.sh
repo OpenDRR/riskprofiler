@@ -80,19 +80,19 @@ configure_simply_static() {
 
 	# Add additional URLs
 	additional_urls=(
-		http://riskprofiler.demo/community/
-		http://riskprofiler.demo/favicon.ico
-		http://riskprofiler.demo/fr/community/
-		http://riskprofiler.demo/fr/scenario/
-		http://riskprofiler.demo/scenario/
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/control-bar.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/detail.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/filter.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/items.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-bar.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-filter.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/control-sort.php
-		http://riskprofiler.demo/site/assets/themes/fw-child/template/scenarios/items.php
+		"http://${WORDPRESS_HOST}/community/"
+		"http://${WORDPRESS_HOST}/favicon.ico"
+		"http://${WORDPRESS_HOST}/fr/community/"
+		"http://${WORDPRESS_HOST}/fr/scenario/"
+		"http://${WORDPRESS_HOST}/scenario/"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/risks/control-bar.php"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/risks/detail.php"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/risks/filter.php"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/risks/items.php"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/scenarios/control-bar.php"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/scenarios/control-filter.php"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/scenarios/control-sort.php"
+		"http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/scenarios/items.php"
 	)
 
 
@@ -104,19 +104,19 @@ configure_simply_static() {
 	mapfile -t scenarios < <(wp post list --post_type=scenario --field=post_name)
 	declare -p scenarios
 	for i in "${scenarios[@]}"; do
-		additional_urls+=( "http://riskprofiler.demo/fr/scenario/${i}/" )
-		additional_urls+=( "http://riskprofiler.demo/scenario/${i}/" )
+		additional_urls+=( "http://${WORDPRESS_HOST}/fr/scenario/${i}/" )
+		additional_urls+=( "http://${WORDPRESS_HOST}/scenario/${i}/" )
 	done
 	IFS=$'\n' eval 'echo "${additional_urls[*]}"' | wp option patch update simply-static 'additional_urls'
 
-	# This one is apparently not needed?  http://riskprofiler.demo/community/ and http://riskprofiler.demo/fr/community/ alone suffice?
+	# This one is apparently not needed?  http://${WORDPRESS_HOST}/community/ and http://${WORDPRESS_HOST}/fr/community/ alone suffice?
 	# # Read and display names of communities from WordPress posts
 	# # Example: communities=([0]="halifax" [1]="montreal" [2]="ottawa" [3]="winnipeg" [4]="calgary" [5]="vancouver")
 	# mapfile -t communities < <(wp post list --post_type=community --field=post_name)
 	# declare -p communities
 	# for i in "${communities[@]}"; do
-	# 	additional_urls+=( "http://riskprofiler.demo/fr/community/${i}/" )
-	# 	additional_urls+=( "http://riskprofiler.demo/community/${i}/" )
+	# 	additional_urls+=( "http://${WORDPRESS_HOST}/fr/community/${i}/" )
+	# 	additional_urls+=( "http://${WORDPRESS_HOST}/community/${i}/" )
 	# done
 	# IFS=$'\n' eval 'echo "${additional_urls[*]}"' | wp option patch update simply-static 'additional_urls'
 	# ################################################################################################################
@@ -184,7 +184,7 @@ trigger_wpml_st_sync_translation_files() {
 	rm -f /var/www/html/site/assets/languages/wpml/*.mo
 	# Access a French page to trigger synchronization of MO files
 	# with translated strings in the database.
-	curl http://riskprofiler.demo/fr/ -o /dev/null
+	curl "http://${WORDPRESS_HOST}/fr/" -o /dev/null
 	ls -l /var/www/html/site/assets/languages/wpml/*.mo
 }
 
@@ -227,18 +227,18 @@ fixup_static_site() {
 	# The relative path to the animated logo is currently wrong in HTML files
 	# in second- and third-level directories.  Or it could be an absolute URL
 	# that needs to be changed to a relative one.
-	sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="site#' index.html
+	sed -i 's#data-anim-path="http://[^/]\+/site#data-anim-path="site#' index.html
 	for i in */index.html; do
 		sed -i 's#data-anim-path="\.\/site#data-anim-path="../site#' "${i}"
-		sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="../site#' "${i}"
+		sed -i 's#data-anim-path="http://[^/]\+/site#data-anim-path="../site#' "${i}"
 	done
 	for i in */*/index.html; do
 		sed -i 's#data-anim-path="\.\/site#data-anim-path="../../site#' "${i}"
-		sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="../../site#' "${i}"
+		sed -i 's#data-anim-path="http://[^/]\+/site#data-anim-path="../../site#' "${i}"
 	done
 	for i in */*/*/index.html; do
 		sed -i 's#data-anim-path="\.\/site#data-anim-path="../../../site#' "${i}"
-		sed -i 's#data-anim-path="http://riskprofiler\.demo/site#data-anim-path="../../../site#' "${i}"
+		sed -i 's#data-anim-path="http://[^/]\+/site#data-anim-path="../../../site#' "${i}"
 	done
 
 	# Change PHP file paths to relative paths to allow serving from subdirectories
@@ -283,7 +283,7 @@ fixup_static_site() {
 	done
 
 	# Generate static detail-fr.php from dynamic detail.php?lang=fr (#115)
-	curl http://riskprofiler.demo/site/assets/themes/fw-child/template/risks/detail.php?lang=fr \
+	curl "http://${WORDPRESS_HOST}/site/assets/themes/fw-child/template/risks/detail.php?lang=fr" \
 		-o site/assets/themes/fw-child/template/risks/detail-fr.php
 	sed -i "s#url: 'risks/detail\.php',#url: (plugin_settings.lang == 'fr') ? 'risks/detail-fr.php' : 'risks/detail.php',#" \
 		site/assets/themes/fw-child/resources/js/rp_risks.js
