@@ -1,4 +1,4 @@
-name: Sync with H7
+name: Sync with OpenDRR/h7-riskprofiler
 
 on:
   # "Scheduled workflows run on the latest commit on the default or base branch."
@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  sync-with-h7:
+  sync-with-h7-riskprofiler:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
