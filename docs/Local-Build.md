@@ -49,7 +49,7 @@ Example: <https://opendrr.github.io/riskprofiler/>
 
 ### Flux de travail
 
-1. Démarrer la pile en utilisant :
+1. Démarrer la pile en utilisant :
 
     `docker compose up`
     
@@ -64,4 +64,4 @@ Example: <https://opendrr.github.io/riskprofiler/>
 
 Le site statique peut être déployé sur les pages GitHub en extrayant l'archive ZIP créée par le plugin Simply Static dans le dossier *docs* de votre dépôt. Activez les pages GitHub comme d'habitude en vous assurant qu'elles pointent vers le dossier *docs*. 
 
-Exemple : <https://opendrr.github.io/riskprofiler>
+Exemple : <https://opendrr.github.io/riskprofiler>
