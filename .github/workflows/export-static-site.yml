@@ -44,7 +44,7 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: Run "docker compose up" to export static site for RiskProfiler
         run: |
@@ -52,11 +52,6 @@ jobs:
           export DOCKER_WP_UID_GID="$(id -u):$(id -g)"
           export OPTIONS_GIT_DESCRIBE=$(git describe --long --tags)
           docker compose up --abort-on-container-exit --exit-code-from wpcli
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: html_static/riskprofiler
 
       - name: Upload debug log artifact
         uses: actions/upload-artifact@v4
@@ -81,6 +76,17 @@ jobs:
           file: 'html_static/*.tar.gz;html_static/*.zip'
           tags: true
           draft: false
+
+      - name: Discourage search engines from indexing this preview site
+        run: |
+          for i in $(grep -lr '^<meta name="robots"' html_static/riskprofiler); do
+            sed -i '/^<meta name="robots"/s/content="[^"]\+"/content="noindex, nofollow"/' $i
+          done
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: html_static/riskprofiler
 
   # Deployment job
   deploy:
