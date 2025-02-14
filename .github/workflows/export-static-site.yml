@@ -35,6 +35,10 @@ jobs:
       DOCKER_BUILDKIT: 1
       TZ: America/Vancouver
 
+    # Set permissions of the GITHUB_TOKEN to allow release updates
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
